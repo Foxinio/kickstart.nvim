@@ -5,7 +5,7 @@ return {
 	config = function()
 		local home = vim.fn.expand("$HOME")
 		require("chatgpt").setup({
-				api_key_cmd = "gpg --decrypt " .. home .. "/gpt-access-key.txt.gpg"
+				api_key_cmd = "gpg --decrypt " .. home .. "/.ssh/gpt-access-key.txt.gpg"
 		})
 
 		require("which-key").register({
@@ -33,12 +33,4 @@ return {
 		"nvim-lua/plenary.nvim",
 		"nvim-telescope/telescope.nvim"
 	},
-	keys = {
-		{ '<C-h>', function () return vim.fn['codeium#Complete']() end, { expr = true, silent = true, mode = { 'i' } } },
-		{ '<C-g>', function () return vim.fn['codeium#Accept']() end, { expr = true, silent = true, mode = { 'i' } } },
-		{ '<c-.>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true, silent = true, mode = { 'i' } } },
-		{ '<c-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true, silent = true, mode = { 'i' } } },
-		{ '<c-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true, mode = { 'i' } } },
-	},
-	enabled = false,
 }
