@@ -65,7 +65,7 @@ vim.o.wildmode       = 'full'
 vim.o.wildignorecase = true
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt    = 'menu,menuone,noselect,noinsert'
+vim.o.completeopt    = 'menu,menuone,noselect,noinsert,preview'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors  = true

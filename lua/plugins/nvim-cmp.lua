@@ -1,6 +1,7 @@
 return {
 -- Autocompletion
 	'hrsh7th/nvim-cmp',
+	event = "BufReadPre",
 	dependencies = {
 		-- Snippet Engine & its associated nvim-cmp source
 		'L3MON4D3/LuaSnip',
@@ -9,6 +10,7 @@ return {
 		-- Adds LSP completion capabilities
 		'hrsh7th/cmp-nvim-lsp',
 		'hrsh7th/cmp-path',
+		"hrsh7th/cmp-cmdline",
 		'hrsh7th/cmp-buffer',
 
 		-- Adds a number of user-friendly snippets
@@ -140,14 +142,16 @@ return {
 		cmp.setup(opts)
 
 		cmp.setup.cmdline({ "/", "?" }, {
+			mapping = cmp.mapping.preset.cmdline(),
 			sources = {
 				{ name = "buffer" },
 			},
 		})
 
 		cmp.setup.cmdline(":", {
+			mapping = cmp.mapping.preset.cmdline(),
 			sources = cmp.config.sources({
-				-- { name = "path" },
+				{ name = "path" },
 			}, {
 				{ name = "cmdline" },
 			}),
