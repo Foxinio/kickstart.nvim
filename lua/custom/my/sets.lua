@@ -71,16 +71,76 @@ vim.o.completeopt    = 'menuone,noselect,noinsert,preview'
 vim.o.termguicolors  = true
 
 
--- in case default is ever changed
-vim.o.backspace = 'indent,eol,start'
-
--- vim.api.nvim_call_function("codeium#GetStatusString", {})
+vim.api.nvim_call_function("codeium#GetStatusString", {})
 
 --[[
 
 redundant set definitions, TODO walk through them and confirm reduncancy
 
+" Pick a leader key
+let mapleader = "\\"
+
+" Security
+set modelines=0
+
+" Show line numbers
+set number
+
+" Show file stats
+set ruler
+
+" Blink cursor on error instead of beeping (grr)
+set visualbell
+
+" Encoding
+set encoding=utf-8
+
 set guifont=Monospace\ 13
+
+" Whitespace
+set nowrap
+set sidescroll=2
+set formatoptions=tcqrn1
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
+" set expandtab
+set noshiftround
+set autoindent
+set smartindent
+
+" Cursor motion
+set scrolloff=3
+set sidescrolloff=3
+set backspace=indent,eol,start
+set matchpairs+=<:> " use % to jump between pairs
+runtime! macros/matchit.vim
+
+" Allow hidden buffers
+set hidden
+
+" Rendering
+set ttyfast
+
+" Status bar
+set laststatus=2
+
+" Last line
+set showmode
+set showcmd
+set wildmenu
+set wildmode=full
+set wildignorecase
+
+" Searching
+set hlsearch
+set incsearch
+set magic
+set ignorecase
+set smartcase
+set showmatch
+
 
 " Custom command definitions
 command! -nargs=* Vterm :vert term <args>

@@ -5,7 +5,7 @@ return {
 	},
 	opts = {
 		sort = {
-			sorter = "case_sensitive",
+			sorter = "case_insensitive",
 		},
 		view = {
 			width = 30,

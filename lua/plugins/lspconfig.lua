@@ -1,4 +1,6 @@
 -- LSP Configuration & Plugins
+local lst_signs = require('utils.lsp_texts').lsp_signs;
+
 return {
 	'neovim/nvim-lspconfig',
 	dependencies = {
@@ -15,8 +17,78 @@ return {
 		-- Additional lua configuration, makes nvim stuff amazing!
 		'folke/neodev.nvim',
 	},
+  opts = {
+		-- options for vim.diagnostic.config()
+		diagnostics = {
+			underline = true,
+			update_in_insert = false,
+			virtual_text = {
+				spacing = 4,
+				source = "if_many",
+				prefix = "●",
+				-- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+				-- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+				-- prefix = "icons",
+			},
+			severity_sort = true,
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = require('utils.lsp_texts').lsp_signs.Error,
+					[vim.diagnostic.severity.WARN] = require('utils.lsp_texts').lsp_signs.Warn,
+					[vim.diagnostic.severity.HINT] = require('utils.lsp_texts').lsp_signs.Hint,
+					[vim.diagnostic.severity.INFO] = require('utils.lsp_texts').lsp_signs.Info,
+				},
+			},
+		},
+		-- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
+		-- Be aware that you also will need to properly configure your LSP server to
+		-- provide the inlay hints.
+		inlay_hints = {
+			enabled = false,
+		},
+		-- add any global capabilities here
+		capabilities = {},
+		-- options for vim.lsp.buf.format
+		-- `bufnr` and `filter` is handled by the LazyVim formatter,
+		-- but can be also overridden when specified
+		format = {
+			formatting_options = nil,
+			timeout_ms = nil,
+		},
+		-- LSP Server Settings
+		---@type lspconfig.options
+		servers = {
+			lua_ls = {
+				-- mason = false, -- set to false if you don't want this server to be installed with mason
+				-- Use this to add any additional keymaps
+				-- for specific lsp servers
+				---@type LazyKeysSpec[]
+				-- keys = {},
+				settings = {
+					clangd = {},
+					-- gopls = {},
+					pyright = {},
+					rust_analyzer = {},
+					tsserver = {},
+					-- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
-	config = function () 
+					ocamllsp = {},
+					lua_ls = {
+						Lua = {
+							workspace = { checkThirdParty = false },
+							telemetry = { enable = false },
+							-- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+							diagnostics = {
+								-- disable = { 'missing-fields' },
+								globals = { "vim" },
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+	config = function ()
 
 		-- [[ Configure LSP ]]
 		--  This function gets run when an LSP connects to a particular buffer.
@@ -71,13 +143,9 @@ return {
 
 			nmap('<leader>f', vim.lsp.buf.format, 'format current buffer with lsp')
 			xmap('<leader>f', vim.lsp.buf.format, 'format current buffer with lsp')
-			-- nmap('<leader>f', vim.lsp.buf.formatting, 'format current buffer with lsp' )
-			-- xmap('<leader>f', vim.lsp.buf.formatging, 'format current buffer with lsp' )
 
-			-- if type(client.resolved_capabilities) == "table" then
-				-- print(dump(client.resolved_capabilities))
-				-- code lens 
-				-- if client.resolved_capabilities.code_lens then
+			if type(client.resolved_capabilities) == "table" then
+				if client.resolved_capabilities.code_lens then
 						local codelens = vim.api.nvim_create_augroup(
 								'LSPCodeLens',
 								{ clear = true }
@@ -89,10 +157,8 @@ return {
 								end,
 								buffer = bufnr,
 						})
-			--   end
-			-- elseif type(client.resolved_capabilities) == "nil" then
-			--   print("client has no member resolved_capabilities: [" .. tostring(client.resolved_capabilities) .. "]")
-			-- end
+			  end
+			end
 
 		end
 
@@ -154,7 +220,6 @@ return {
 
 		-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 
 		-- Ensure the servers above are installed
 		local mason_lspconfig = require 'mason-lspconfig'

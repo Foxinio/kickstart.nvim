@@ -42,8 +42,10 @@ vim.keymap.set('v', '<F1>', ':set invfullscreen<CR>')
 --  Textmate holdouts
 
 --  Formatting
--- vim.keymap.set('', '<leader>q', 'gqip')
+vim.keymap.set('', '<leader>q', 'gqip')
 
+--  Visualize tabs and newlines
+-- vim.o.listchars = { eol = '¬', tab =  '▸' }
 --  Uncomment this to enable by default:
 vim.o.list = true
 --  Or use your leader key + l to toggle on/off
@@ -75,4 +77,35 @@ vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']g', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+
+-- Comment bindings
+-- local comment_api = require("Comment.api")
+vim.keymap.set('n', "<C-/>", function()
+  return vim.v.count == 0
+      and '<Plug>(comment_toggle_linewise_current)'
+      or '<Plug>(comment_toggle_linewise_count)'
+end, { expr = true, silent = true })
+
+vim.keymap.set('x', "<C-/>", '<Plug>(comment_toggle_linewise_visual)',
+  { silent = true })
+
+-- Toggle current line (linewise) using C-/
+-- vim.keymap.set('n', '<C-_>', comment_api.toggle.linewise.current)
+
+-- Toggle current line (blockwise) using C-\
+-- vim.keymap.set('n', '<C-\\>', comment_api.toggle.blockwise.current)
+
+
+-- Toggle selection (linewise)
+-- vim.keymap.set('x', '<C-_>', function()
+-- vim.comment_api.nvim_feedkeys(esc, 'nx', false)
+-- comment_api.toggle.linewise(vim.fn.visualmode())
+-- end)
+
+-- Toggle selection (blockwise)
+-- vim.keymap.set('x', '<C-\\>', function()
+-- vim.comment_api.nvim_feedkeys(esc, 'nx', false)
+-- comment_api.toggle.blockwise(vim.fn.visualmode())
+-- end)
 

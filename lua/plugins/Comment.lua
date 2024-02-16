@@ -6,6 +6,5 @@ return {
 			line = '<C-_>',
 			block = '<C-_>'
 		}
-	}
+	},
 }
-
