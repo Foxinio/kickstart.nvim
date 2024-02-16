@@ -71,7 +71,7 @@ vim.o.completeopt    = 'menuone,noselect,noinsert,preview'
 vim.o.termguicolors  = true
 
 
-vim.api.nvim_call_function("codeium#GetStatusString", {})
+-- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
 --[[
 

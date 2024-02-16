@@ -1,4 +1,4 @@
-  -- Fuzzy Finder (files, lsp, etc)
+-- Fuzzy Finder (files, lsp, etc)
 return {
 	'nvim-telescope/telescope.nvim',
 	branch = '0.1.x',
@@ -96,6 +96,6 @@ return {
 		vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 	end
-},
+}
 
 

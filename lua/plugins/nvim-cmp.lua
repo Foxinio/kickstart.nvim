@@ -64,7 +64,7 @@ return {
 			Struct = "",
 			Event = "",
 			Operator = "",
-			TypeParameter = ""
+			TypeParameter = "",
 			Copilot = " ",
 			Namespace = " ",
 			Package = " ",
@@ -98,10 +98,10 @@ return {
 							return vim_item
 						end
 					end
-					vim_item.kind = cmp_kinds[vim_item.kind] or "") .. " " .. vim_item.kind
+					vim_item.kind = (cmp_kinds[vim_item.kind] or "") .. " " .. vim_item.kind
 					return vim_item
 				end,
-			}
+			},
 			mapping = cmp.mapping.preset.insert {
 				['<C-n>'] = cmp.mapping.select_next_item(),
 				['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -188,5 +188,5 @@ return {
 			}),
 		})
 	end,
-},
+}
 

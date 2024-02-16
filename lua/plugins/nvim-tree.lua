@@ -16,7 +16,7 @@ return {
 		filters = {
 			dotfiles = true,
 		},
-	}
+	},
 	config = function ()
 		-- require("nvim-tree").setup({
 		-- 	sort = {

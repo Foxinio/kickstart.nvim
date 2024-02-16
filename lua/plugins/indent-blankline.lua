@@ -7,4 +7,4 @@ return
 		main = 'ibl',
 		opts = {},
 		enabled = false,
-	},
+	}
