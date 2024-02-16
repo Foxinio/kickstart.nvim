@@ -35,12 +35,3 @@ require "basic.autocommands"
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
-local M = {}
-
-M.git_colors = {
-    GitAdd = "#A1C281",
-    GitChange = "#74ADEA",
-    GitDelete = "#FE747A",
-}
-M.lsp_signs = { Error = "✖ ", Warn = "! ", Hint = "󰌶 ", Info = " " }

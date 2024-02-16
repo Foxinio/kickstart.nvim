@@ -31,7 +31,8 @@ return {
 		luasnip.config.setup {}
 
 		local has_words_before = function()
-			if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+			if vim.bo.buftype == "prompt" then
+				print("prompt detected")
 				return false
 			end
 
@@ -137,16 +138,16 @@ return {
 	config = function(_, opts)
 		local cmp = require("cmp")
 		cmp.setup(opts)
+
 		cmp.setup.cmdline({ "/", "?" }, {
-			mapping = cmp.mapping.preset.cmdline(),
 			sources = {
 				{ name = "buffer" },
 			},
 		})
+
 		cmp.setup.cmdline(":", {
-			mapping = cmp.mapping.preset.cmdline(),
 			sources = cmp.config.sources({
-				{ name = "path" },
+				-- { name = "path" },
 			}, {
 				{ name = "cmdline" },
 			}),

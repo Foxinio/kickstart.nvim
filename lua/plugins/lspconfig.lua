@@ -44,7 +44,7 @@ return {
 		-- Be aware that you also will need to properly configure your LSP server to
 		-- provide the inlay hints.
 		inlay_hints = {
-			enabled = false,
+			enabled = true,
 		},
 		-- add any global capabilities here
 		capabilities = {},
@@ -56,14 +56,8 @@ return {
 			timeout_ms = nil,
 		},
 		-- LSP Server Settings
-		---@type lspconfig.options
 		servers = {
 			lua_ls = {
-				-- mason = false, -- set to false if you don't want this server to be installed with mason
-				-- Use this to add any additional keymaps
-				-- for specific lsp servers
-				---@type LazyKeysSpec[]
-				-- keys = {},
 				settings = {
 					clangd = {},
 					-- gopls = {},
