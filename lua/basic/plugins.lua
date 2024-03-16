@@ -2,9 +2,6 @@
 -- let g:OmniSharp_server_stdio = 1
 -- let g:OmniSharp_server_use_mono = 1
 
-vim.keymap.set('n', '<M-down>', '<Plug>CoqNext', { noremap = true })
-vim.keymap.set('n', '<M-up>',   '<Plug>CoqUndo', { noremap = true })
-
 --  This is necessary for VimTeX to load properly. The "indent" is optional.
 --  Note that most plugin managers will do this automatically.
 -- filetype plugin indent on

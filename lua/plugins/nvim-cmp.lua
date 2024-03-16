@@ -14,7 +14,9 @@ return {
 		'hrsh7th/cmp-buffer',
 
 		-- Adds a number of user-friendly snippets
-		'rafamadriz/friendly-snippets',
+		{
+			dir = '/media/foxinio/work/foxinio-work/To-Compile/friendly-snippets',
+		}
 		-- {
 		-- 	"zbirenbaum/copilot-cmp",
 		-- 	dependencies = "copilot.lua",
@@ -33,10 +35,6 @@ return {
 		luasnip.config.setup {}
 
 		local has_words_before = function()
-			if vim.bo.buftype == "prompt" then
-				print("prompt detected")
-				return false
-			end
 
 			local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 			return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -52,6 +50,7 @@ return {
 			},
 			completion = {
 				completeopt = 'menu,menuone,noinsert,popup,noselect',
+				autocomplete = false,
 			},
 			formatting = {
 				expandable_indicator = true,
@@ -69,6 +68,7 @@ return {
 					return vim_item
 				end,
 			},
+
 			mapping = cmp.mapping.preset.insert {
 				['<C-n>'] = cmp.mapping.select_next_item(),
 				['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -79,6 +79,18 @@ return {
 					behavior = cmp.ConfirmBehavior.Replace,
 					select = false,
 				},
+				['<Right>'] = cmp.mapping(function (fallback)
+					if cmp.visible() then
+						cmp.close()
+					end
+					fallback()
+				end, { 'i', 's' }),
+				['<Left>'] = cmp.mapping(function (fallback)
+					if cmp.visible() then
+						cmp.close()
+					end
+					fallback()
+				end, { 'i', 's' }),
 				['<Down>'] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
@@ -114,6 +126,7 @@ return {
 					end
 				end, { 'i', 's' }),
 			},
+
 			sources = {
 				{ name = 'nvim_lsp' },
 				-- { name = 'copilot' },
@@ -121,6 +134,7 @@ return {
 				{ name = 'buffer' },
 				{ name = 'luasnip' },
 			},
+
 			window = {
 					completion = {
 							border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
@@ -129,6 +143,7 @@ return {
 							border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
 					},
 			},
+
 			experimental = {
 				ghost_text = {
 					hl_group = "LspCodeLens",
@@ -137,7 +152,7 @@ return {
 		}
 	end,
 
-	config = function(_, opts)
+	setup = function(_, opts)
 		local cmp = require("cmp")
 		cmp.setup(opts)
 

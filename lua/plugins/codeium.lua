@@ -8,6 +8,15 @@ vim.keymap.set('i', '<c-.>', function() return vim.fn['codeium#CycleCompletions'
 vim.keymap.set('i', '<c-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true, silent = true })
 vim.keymap.set('i', '<c-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true })
 
+-- vim.api.nvim_create_augroup("CodiumAuGroup", {})
+-- vim.api.nvim_create_autocmd("CursorHoldI", {
+-- 	group = "CodiumAuGroup",
+-- 	desc = "Codium sugest code when no cursor movement detected",
+-- 	callback = function ()
+-- 		return vim.fn['codeium#Complete']()
+-- 	end,
+-- 	})
+
 return {
 	'Exafunction/codeium.vim',
 	-- keys = {

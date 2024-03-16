@@ -1,48 +1,48 @@
---  Move up/down editor lines
-vim.keymap.set('n', 'j', 'gj')
-vim.keymap.set('n', 'k', 'gk')
-
 --  Enter to insert new line below with staying in normal mode
 --  nmap <CR> o<ESC>
+vim.keymap.set('n', '<CR>', "o<ESC>", { desc = "Insert line below" })
+vim.keymap.set('n', '<S-CR>', "O<ESC>", { desc = "Insert line above" })
+
+-- Make <space> act as <C-w>
+vim.keymap.set('n', '<space>', '<c-w>', { desc = "+window" })
 
 -- delete text with 'x' without changing the internal register
 vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
+vim.keymap.set({ 'n', 'x' }, 's', '"_s')
 
+-- tabs manipulation
+vim.keymap.set('n', '<c-tab>', function() vim.cmd('tabnext') end, { desc = "Next tab" })
+vim.keymap.set('n', '<c-s-tab>', function() vim.cmd('tabNext') end, { desc = "Prev tab" })
 
 
 -- Terminal exit
 vim.keymap.set('t', '<Esc', '<C-\\><C-n>')
 
 --  Indent managment
-vim.keymap.set('n', '<TAB>', 'i<C-t><ESC>')
-vim.keymap.set('n', '<S-TAB>', 'i<C-d><ESC>')
-vim.keymap.set('v', '<TAB>', '>gv')
-vim.keymap.set('v', '<S-TAB>', '<gv')
+vim.keymap.set('n', '<TAB>', 'i<C-t><ESC>', { desc = "Indent line" })
+vim.keymap.set('n', '<S-TAB>', 'i<C-d><ESC>', { desc = "Unindent line" })
+vim.keymap.set('v', '<TAB>', '>gv', { desc = "Indent selection" })
+vim.keymap.set('v', '<S-TAB>', '<gv', { desc = "Unindent selection" })
 
 --  Text scrolling
-vim.keymap.set('n', '<S-Up>', '<C-y>')
-vim.keymap.set('n', '<S-Down>', '<C-e>')
-vim.keymap.set('n', '<S-Right>', '3zl')
-vim.keymap.set('n', '<S-Left>', '3zh')
-vim.keymap.set('n', '<S-ScrollWheelUp>', '3zh')
-vim.keymap.set('n', '<S-ScrollWheelDown>', '3zl')
+vim.keymap.set('n', '<S-Up>', '3<C-y>', { desc = "Scroll up" })
+vim.keymap.set('n', '<S-Down>', '3<C-e>', { desc = "Scroll down" })
+vim.keymap.set('n', '<S-Right>', '3zl', { desc = "Scroll right" })
+vim.keymap.set('n', '<S-Left>', '3zh', { desc = "Scroll left" })
+vim.keymap.set('n', '<S-ScrollWheelUp>', '3zh', { desc = "Scroll right" })
+vim.keymap.set('n', '<S-ScrollWheelDown>', '3zl', { desc = "Scroll left" })
 
 --  Make S-Y act same as S-D and S-C
-vim.keymap.set('n', '<S-Y>', 'v$hy')
+vim.keymap.set('n', '<S-Y>', 'v$hy', { desc = "Yank to end of line" })
 
 --  Searching
-vim.keymap.set('v', '<silent>/', 'y/\\<<C-R>"\\><CR>', { silent = true })
-vim.keymap.set('n', '<ESC>', ':let @/=""<cr>', { desc = "clear search", silent = true })
+vim.keymap.set('v', '/', 'y/\\<<C-R>"\\><CR>', { silent = true })
+vim.keymap.set('n', '<ESC>', ':let @/=""<cr>', { desc = "Clear search", silent = true })
 
 --  Remap help key.
 vim.keymap.set('i', '<F1>', '<ESC>:set invfullscreen<CR>a')
-vim.keymap.set('n', '<F1>', ':set invfullscreen<CR>')
-vim.keymap.set('v', '<F1>', ':set invfullscreen<CR>')
+vim.keymap.set({'n', 'v'}, '<F1>', ':set invfullscreen<CR>')
 
---  Textmate holdouts
-
---  Formatting
--- vim.keymap.set('', '<leader>q', 'gqip')
 
 --  Uncomment this to enable by default:
 vim.o.list = true
@@ -55,16 +55,9 @@ vim.api.nvim_create_user_command("Vterm", function (opts)
     vim.cmd(":vert term " .. opts)
 end, { nargs = 1 })
 vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config"), {})
---[[ vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting(), {}) ]]
--- command! -nargs=* Vterm :vert term <args>
---     command! Source :source ~/.vimrc
 
 
 -- [[ Basic Keymaps ]]
-
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })

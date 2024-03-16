@@ -1,5 +1,5 @@
 -- LSP Configuration & Plugins
-local lst_signs = require('utils.lsp_texts').lsp_signs;
+-- local lst_signs = require('utils.lsp_texts').lsp_signs;
 
 return {
 	'neovim/nvim-lspconfig',
@@ -66,7 +66,9 @@ return {
 					tsserver = {},
 					-- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
-					ocamllsp = {},
+					ocamllsp = {
+						single_file_support = true,
+					},
 					lua_ls = {
 						Lua = {
 							workspace = { checkThirdParty = false },
@@ -98,19 +100,31 @@ return {
 				vim.keymap.set('x', keys, func, { buffer = bufnr, desc = desc })
 			end
 
+			local function opt(jump_type)
+				return {
+					reuse_win = true,
+					jump_type,
+				}
+			end
+
+			local telescope = require 'telescope.builtin'
+
 			nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 			nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-			nmap('<leader>gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-			nmap('<leader>gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-			nmap('<leader>gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+			nmap('<leader>gd', function() telescope.lsp_definitions(opt("vsplit")) end, '[G]oto [D]efinition')
+			nmap('<leader>gr', function() telescope.lsp_references(opt("tab")) end, '[G]oto [R]eferences')
+			nmap('<leader>gI', function() telescope.lsp_implementations(opt('tab')) end, '[G]oto [I]mplementation')
 			nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
 			nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
 			nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+			nmap('<leader>wd', require('telescope.builtin').lsp_document_symbols, '[W]orkspace [D]ocument Symbols')
+			nmap('<leader>gt', function() telescope.lsp_type_definitions(opt("tab")) end, '[G]o to type definitions')
 			nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
 			nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
 			-- Lesser used LSP functionality
-			nmap('<leader>gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+			--
+			nmap('<leader>gD', function() vim.lsp.buf.declaration(opt()) end, '[G]oto [D]eclaration')
 			nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
 			nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
 			nmap('<leader>wl', function()

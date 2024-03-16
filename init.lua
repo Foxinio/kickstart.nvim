@@ -30,6 +30,13 @@ require "basic.bindings"
 require "basic.plugins"
 require "basic.sets"
 require "basic.autocommands"
+require "basic.abbreviations"
+require "basic.window-yank"
+require "utils.prints"
+
+if vim.g.neovide then
+  require "basic.neovide"
+end
 
 
 

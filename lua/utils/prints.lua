@@ -1,5 +1,4 @@
-local M = {
-function dump(o, lvl)
+local function dump(o, lvl)
   if lvl == nil then
     lvl = 0
   elseif lvl == 4 then
@@ -19,7 +18,14 @@ function dump(o, lvl)
   end
 end
 
-function list_keys(o)
+
+local function printTable(t, hierarchyLevel)
+	print(dump(t, hierarchyLevel))
+end
+
+rawset(_G, "printTable", printTable)
+
+local function list_keys(o)
    if type(o) == 'table' then
       local s = '{ '
       for k,v in pairs(o) do
@@ -30,7 +36,7 @@ function list_keys(o)
    end
 end
 
-function getAllData(t, prevData)
+local function getAllData(t, prevData)
   -- if prevData == nil, start empty, otherwise start with prevData
   local data = prevData or {}
 
@@ -51,7 +57,7 @@ function getAllData(t, prevData)
   return getAllData(index, data)
 end
 
-function printObj(obj, hierarchyLevel)
+local function printObj(obj, hierarchyLevel)
   if (hierarchyLevel == nil) then
     hierarchyLevel = 0
   elseif (hierarchyLevel == 4) then
@@ -79,6 +85,11 @@ function printObj(obj, hierarchyLevel)
   end
 end
 
+local M = {
+	dump = dump,
+	list_keys = list_keys,
+	getAllData = getAllData,
+	printObj = printObj,
 }
 
 return M

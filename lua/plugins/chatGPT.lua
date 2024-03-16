@@ -1,6 +1,7 @@
 -- ChatGPT plugin
 return {
 	"jackMort/ChatGPT.nvim",
+	-- enable = false,
 	event = "VeryLazy",
 	config = function()
 		local home = vim.fn.expand("$HOME")
@@ -9,7 +10,7 @@ return {
 		})
 
 		require("which-key").register({
-			c = {
+			cg = {
 				name = "ChatGPT",
 				c = { "<cmd>ChatGPT<CR>", "ChatGPT" },
 				e = { "<cmd>ChatGPTEditWithInstruction<CR>", "Edit with instruction", mode = { "n", "v" } },

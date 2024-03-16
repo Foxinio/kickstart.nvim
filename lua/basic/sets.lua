@@ -54,7 +54,7 @@ vim.o.smartcase      = true
 vim.wo.signcolumn    = 'yes'
 
 -- Decrease update time
-vim.o.updatetime     = 250
+vim.o.updatetime     = 2000
 vim.o.timeoutlen     = 300
 
 -- Last line
@@ -74,15 +74,16 @@ vim.o.termguicolors  = true
 -- in case default is ever changed
 vim.o.backspace = 'indent,eol,start'
 
+vim.o.cinwords = ""
+vim.o.cink = ""
+vim.o.indk = ""
+
 -- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
---[[
-
-redundant set definitions, TODO walk through them and confirm reduncancy
-
-set guifont=Monospace\ 13
-
-" Custom command definitions
-command! -nargs=* Vterm :vert term <args>
-command! Source :source ~/.vimrc
--- ]]
+-- adding python support
+-- vim.cmd([[
+-- 
+-- let g:python_host_prog = '/usr/bin/python'
+-- let g:python3_host_prog = '/usr/bin/python3'
+-- 
+-- ]])

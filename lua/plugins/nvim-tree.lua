@@ -6,7 +6,7 @@ return {
 	config = function ()
 		require("nvim-tree").setup({
 			sort = {
-				sorter = "case_sensitive",
+				sorter = "name",
 			},
 			view = {
 				width = 30,
@@ -18,5 +18,10 @@ return {
 				dotfiles = true,
 			},
 		})
-	end
+	end,
+	keys = {
+		{ '<leader>tt', ":NvimTreeToggle<CR>", { silent=true } },
+		{ '<leader>tf', ":NvimTreeFocus<CR>",  { silent=true } },
+		{ '<leader>t/', ":NvimTreeFocus<CR>" },
+	},
 }

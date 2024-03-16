@@ -3,7 +3,7 @@ return {
   'tpope/vim-rhubarb',
 
   "ap/vim-css-color",
-  "whonore/Coqtail",
+  "lervag/vimtex",
 
 
   -- Jupyter handling (never used)
