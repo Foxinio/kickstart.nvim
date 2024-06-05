@@ -6,5 +6,10 @@ return {
 	config = function ()
 		local presets = require("which-key.plugins.presets")
 		presets.operators["v"] = nil
+		require("which-key").register({
+			x = {
+				name = "Diagnostics",
+			}
+		})
 	end,
 }

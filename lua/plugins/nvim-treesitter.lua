@@ -22,7 +22,7 @@ return {
 				highlight = { enable = true },
 				indent = { enable = true },
 				incremental_selection = {
-					enable = false,
+					-- enable = false,
 					keymaps = {
 						init_selection = '<c-space>',
 						node_incremental = '<c-space>',

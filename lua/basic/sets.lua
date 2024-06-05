@@ -78,6 +78,14 @@ vim.o.cinwords = ""
 vim.o.cink = ""
 vim.o.indk = ""
 
+
+
+vim.api.nvim_exec([[
+
+set rtp^="/home/foxinio/.opam/default/share/ocp-indent/vim
+
+]], {})
+
 -- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
 -- adding python support

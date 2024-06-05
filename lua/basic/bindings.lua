@@ -69,3 +69,12 @@ vim.keymap.set('n', ']g', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+vim.keymap.set('n', '<leader>xn', function()
+		vim.api.nvim_echo({{"Current buffer: "}, { vim.fn.bufname() }}, true, {})
+	end,
+	{ desc = 'Print current buffer name' })
+
+
+vim.keymap.set('n', '<M-Down>', '<CMD>move +1<CR>', { desc = 'Swap line with one below', silent = true })
+vim.keymap.set('n', '<M-Up>',   '<CMD>move -2<CR>', { desc = 'Swap line with one above', silent = true })
+

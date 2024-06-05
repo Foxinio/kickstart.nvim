@@ -22,6 +22,7 @@ require('lazy').setup("plugins", {
 	ui = {
 		border = "rounded",
 	},
+  change_detection = { enabled = false },
 	checker = { enabled = true },
 	debug = false,
 })
@@ -33,6 +34,7 @@ require "basic.autocommands"
 require "basic.abbreviations"
 require "basic.window-yank"
 require "utils.prints"
+require "utils.testing_module"
 
 if vim.g.neovide then
   require "basic.neovide"
