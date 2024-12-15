@@ -18,6 +18,8 @@ return {
 			lsp_doc_border = true,
 		},
 	},
+	setup = function()
+	end,
 	dependencies = {
 		"MunifTanjim/nui.nvim",
 		"rcarriga/nvim-notify",

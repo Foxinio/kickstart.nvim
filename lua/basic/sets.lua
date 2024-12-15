@@ -2,6 +2,11 @@
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+-- Set spellcheck on
+vim.o.spellsuggest  = 'best'
+vim.o.spell         = true
+vim.o.spelllang     = 'en_us,pl'
+
 -- Set highlight on search
 vim.o.hlsearch      = true
 vim.o.incsearch     = true
@@ -31,6 +36,8 @@ vim.o.scrolloff     = 3
 vim.o.sidescrolloff = 3
 
 
+-- highlight 80 character column
+vim.o.colorcolumn    = "80"
 
 -- Enable mouse mode
 vim.o.mouse          = 'a'
@@ -74,24 +81,27 @@ vim.o.termguicolors  = true
 -- in case default is ever changed
 vim.o.backspace = 'indent,eol,start'
 
-vim.o.cinwords = ""
-vim.o.cink = ""
-vim.o.indk = ""
+vim.opt.swapfile = false
 
-
-
-vim.api.nvim_exec([[
+vim.api.nvim_exec2([[
 
 set rtp^="/home/foxinio/.opam/default/share/ocp-indent/vim
 
 ]], {})
 
+vim.o.indentkeys = ""
+
+vim.o.cinwords = ""
+vim.o.cink = ""
+vim.o.indk = ""
+
+
 -- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
 -- adding python support
 -- vim.cmd([[
--- 
+--
 -- let g:python_host_prog = '/usr/bin/python'
 -- let g:python3_host_prog = '/usr/bin/python3'
--- 
+--
 -- ]])

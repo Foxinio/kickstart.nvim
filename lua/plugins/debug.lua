@@ -8,6 +8,8 @@
 
 return {
 	-- NOTE: Yes, you can install new plugins here!
+	enabled = false,
+	enable = false,
 	'mfussenegger/nvim-dap',
 	-- NOTE: And you can specify dependencies as well
 	dependencies = {
@@ -20,7 +22,7 @@ return {
 		'jay-babu/mason-nvim-dap.nvim',
 
 		-- Add your own debuggers here
-		'leoluz/nvim-dap-go',
+		-- 'leoluz/nvim-dap-go',
 	},
 	config = function()
 		local dap = require 'dap'
@@ -40,11 +42,21 @@ return {
 			ensure_installed = {
 				-- Update this to ensure that you have the debuggers for the langs you want
 				'delve',
+				'earlybird'
 			},
 		}
 
 		-- Basic debugging keymaps, feel free to change to your liking!
-		vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+		vim.keymap.set('n', '<F5>', function()
+			local args = nil
+			vim.fn.input({
+				prompt = "Enter path to search executable from: ",
+				default = vim.fn.getcwd(),
+			}, function(input)
+				args = vim.split(input, " ")
+			end)
+			dap.continue({ args })
+		end, { desc = 'Debug: Start/Continue' })
 		vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'Debug: Step Over' })
 		vim.keymap.set('n', '<F11>', dap.step_into, { desc = 'Debug: Step Into' })
 		vim.keymap.set('n', '<F12>', dap.step_out, { desc = 'Debug: Step Out' })
@@ -68,7 +80,7 @@ return {
 
 		local function select_exec(path)
 			path = path or vim.fn.getcwd()
-			local find_res = io.popen("find "..path.." -name *.bc -executable -type f"):read("*a")
+			local find_res = io.popen("find " .. path .. " -name *.bc -executable -type f"):read("*a")
 			local selection = vim.split(find_res, "\n")
 			table.remove(selection, #selection)
 
@@ -110,11 +122,11 @@ return {
 				program = function()
 					local path = nil
 					vim.ui.input({
-						prompt="Enter path to search executable from: ",
+						prompt = "Enter path to search executable from: ",
 						default = vim.fn.getcwd(),
-						}, function(input)
-							path = input
-						end)
+					}, function(input)
+						path = input
+					end)
 					return select_exec(path)
 				end
 			},
@@ -153,6 +165,6 @@ return {
 		dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
 		-- Install golang specific config
-		require('dap-go').setup()
+		-- require('dap-go').setup()
 	end,
 }

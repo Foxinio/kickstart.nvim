@@ -1,5 +1,3 @@
-
-
 local stack = {
 	root = {
 		prev = nil
@@ -30,23 +28,22 @@ end
 local function go_back()
 	local prev_buffer = pop_stack()
 	if prev_buffer then
-
 		if vim.cmd("call bufexists(" .. prev_buffer .. ")") == 0 then
-			vim.api.nvim_echo({{"Yanked buffer doesn't exist anymore"}}, false, {})
+			vim.api.nvim_echo({ { "Yanked buffer doesn't exist anymore" } }, false, {})
 		end
 
 		vim.cmd("buffer " .. prev_buffer)
 	else
-		vim.api.nvim_echo({{"No stored buffers to go back to."}}, false , {})
+		vim.api.nvim_echo({ { "No stored buffers to go back to." } }, false, {})
 	end
 end
 
 local function register_visited()
 	local yanked_buffer = vim.api.nvim_get_current_buf()
-	vim.api.nvim_echo({{"Stored buffer: " .. yanked_buffer}}, false, {})
+	vim.api.nvim_echo({ { "Stored buffer: " .. yanked_buffer } }, false, {})
 
 	-- if yanked_buffer ~= check_top() then
-		push_stack(yanked_buffer)
+	push_stack(yanked_buffer)
 	-- end
 end
 

@@ -1,9 +1,9 @@
 return {
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+	'tpope/vim-fugitive',
+	'tpope/vim-rhubarb',
 
-  "ap/vim-css-color",
-  "lervag/vimtex",
+	"ap/vim-css-color",
+	"lervag/vimtex",
 
 	"norcalli/nvim_utils",
 
@@ -13,7 +13,7 @@ return {
 	"nvim-lua/plenary.nvim",
 	"bfredl/nvim-luadev",
 
---[[
+	--[[
 --- To download:
 https://github.com/monaqa/dial.nvim
 https://github.com/folke/todo-comments.nvim
@@ -25,9 +25,9 @@ https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 
 --]]
 
-  -- Jupyter handling (never used)
-  "jupyter-vim/jupyter-vim",
+	-- Jupyter handling (never used)
+	-- "jupyter-vim/jupyter-vim",
 
-  -- A Vim Plugin for Lively Previewing LaTeX PDF Output
-  "xuhdev/vim-latex-live-preview",
+	-- A Vim Plugin for Lively Previewing LaTeX PDF Output
+	"xuhdev/vim-latex-live-preview",
 }

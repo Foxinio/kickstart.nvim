@@ -1,7 +1,8 @@
 -- Adds git related signs to the gutter, as well as utilities for managing changes
 return {
-	enable = false,
 	'lewis6991/gitsigns.nvim',
+	-- enabled = false,
+	-- enable = false,
 	opts = {
 		-- See `:help gitsigns.txt`
 		signs = {
@@ -73,4 +74,3 @@ return {
 		end,
 	},
 }
-

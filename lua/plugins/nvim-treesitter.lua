@@ -5,7 +5,7 @@ return {
 		'nvim-treesitter/nvim-treesitter-textobjects',
 	},
 	build = ':TSUpdate',
-	config = function ()
+	config = function()
 		-- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 		vim.defer_fn(function()
 			require('nvim-treesitter.configs').setup {
@@ -18,7 +18,7 @@ return {
 				modules = {
 				},
 				sync_install = true,
-				ignore_install = { },
+				ignore_install = {},
 				highlight = { enable = true },
 				indent = { enable = true },
 				incremental_selection = {
@@ -78,4 +78,3 @@ return {
 		end, 0)
 	end
 }
-

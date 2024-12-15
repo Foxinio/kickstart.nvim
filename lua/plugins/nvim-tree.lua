@@ -3,7 +3,7 @@ return {
 	dependencies = {
 		'nvim-tree/nvim-web-devicons'
 	},
-	config = function ()
+	config = function()
 		require("nvim-tree").setup({
 			sort = {
 				sorter = "name",
@@ -21,19 +21,19 @@ return {
 
 		vim.api.nvim_create_autocmd("TabEnter", {
 			command = "NvimTreeOpen",
-			})
+		})
 
 		vim.api.nvim_create_autocmd("TabLeave", {
 			command = "NvimTreeClose",
-			})
+		})
 
 		vim.api.nvim_create_autocmd("TabNewEntered", {
-			command= "NvimTreeOpen",
+			command = "NvimTreeOpen",
 		})
 	end,
 	keys = {
-		{ '<leader>tt', ":NvimTreeToggle<CR>", { silent=true } },
-		{ '<leader>tf', ":NvimTreeFocus<CR>",  { silent=true } },
+		{ '<leader>tt', ":NvimTreeToggle<CR>", { silent = true } },
+		{ '<leader>tf', ":NvimTreeFocus<CR>",  { silent = true } },
 		{ '<leader>t/', ":NvimTreeFocus<CR>" },
 	},
 }

@@ -33,6 +33,7 @@ require "basic.sets"
 require "basic.autocommands"
 require "basic.abbreviations"
 require "basic.window-yank"
+require "basic.make-on-save"
 require "utils.prints"
 require "utils.testing_module"
 

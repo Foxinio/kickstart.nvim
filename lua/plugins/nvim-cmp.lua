@@ -1,5 +1,5 @@
 return {
--- Autocompletion
+	-- Autocompletion
 	'hrsh7th/nvim-cmp',
 	event = "BufReadPre",
 	dependencies = {
@@ -22,7 +22,7 @@ return {
 
 		-- Adds a number of user-friendly snippets
 		{
-			dir = '/media/foxinio/work/foxinio-work/To-Compile/friendly-snippets',
+			dir = '/media/foxinio/work/foxinio-work/ToCompile/friendly-snippets',
 		}
 		-- {
 		-- 	"zbirenbaum/copilot-cmp",
@@ -35,14 +35,12 @@ return {
 		-- },
 	},
 	opts = function()
-
 		local cmp = require 'cmp'
 		local luasnip = require 'luasnip'
 		require('luasnip.loaders.from_vscode').lazy_load()
 		luasnip.config.setup {}
 
 		local has_words_before = function()
-
 			local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 			return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 		end
@@ -86,13 +84,13 @@ return {
 					behavior = cmp.ConfirmBehavior.Replace,
 					select = false,
 				},
-				['<Right>'] = cmp.mapping(function (fallback)
+				['<Right>'] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.close()
 					end
 					fallback()
 				end, { 'i', 's' }),
-				['<Left>'] = cmp.mapping(function (fallback)
+				['<Left>'] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.close()
 					end
@@ -144,12 +142,12 @@ return {
 			},
 
 			window = {
-					completion = {
-							border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-					},
-					documentation = {
-							border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-					},
+				completion = {
+					border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+				},
+				documentation = {
+					border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+				},
 			},
 
 			experimental = {
@@ -181,4 +179,3 @@ return {
 		})
 	end,
 }
-

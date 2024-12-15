@@ -6,8 +6,8 @@ return {
 	init = function()
 		vim.g.mkdp_filetypes = { "markdown" }
 
-		 -- Markdown-preview.nvim config:
-		vim.g.mkdp_auto_start = 1
+		-- Markdown-preview.nvim config:
+		vim.g.mkdp_auto_start = 0
 		vim.g.mkdp_auto_close = 0
 		vim.g.mkdp_refresh_slow = 0
 		vim.g.mkdp_command_for_global = 0
@@ -39,6 +39,5 @@ return {
 		vim.g.mkdp_theme = 'dark'
 		vim.g.mkdp_combine_preview = 0
 		vim.g.mkdp_combine_preview_auto_refresh = 0
-
 	end,
 }

@@ -12,12 +12,15 @@ return {
 
 		-- Useful status updates for LSP
 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-		{ 'j-hui/fidget.nvim', opts = {} },
+		{
+			'j-hui/fidget.nvim',
+			opts = {}
+		},
 
 		-- Additional lua configuration, makes nvim stuff amazing!
 		'folke/neodev.nvim',
 	},
-  opts = {
+	opts = {
 		-- options for vim.diagnostic.config()
 		diagnostics = {
 			underline = true,
@@ -63,8 +66,8 @@ return {
 					-- gopls = {},
 					pyright = {},
 					rust_analyzer = {},
-					tsserver = {},
-					-- html = { filetypes = { 'html', 'twig', 'hbs'} },
+					-- tsserver = {},
+					html = { filetypes = { 'html', 'twig', 'hbs' } },
 
 					ocamllsp = {
 						single_file_support = true,
@@ -73,9 +76,8 @@ return {
 						Lua = {
 							workspace = { checkThirdParty = false },
 							telemetry = { enable = false },
-							-- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
 							diagnostics = {
-								-- disable = { 'missing-fields' },
+								disable = { 'missing-fields' },
 								globals = { "vim" },
 							},
 						},
@@ -84,8 +86,7 @@ return {
 			},
 		},
 	},
-	config = function ()
-
+	config = function()
 		local on_attach = function(client, bufnr)
 			local nmap = function(keys, func, desc)
 				if desc then
@@ -141,39 +142,46 @@ return {
 
 			if type(client.resolved_capabilities) == "table" then
 				if client.resolved_capabilities.code_lens then
-						local codelens = vim.api.nvim_create_augroup(
-								'LSPCodeLens',
-								{ clear = true }
-						)
-						vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'CursorHold' }, {
-								group = codelens,
-								callback = function()
-										vim.lsp.codelens.refresh()
-								end,
-								buffer = bufnr,
-						})
-			  end
+					local codelens = vim.api.nvim_create_augroup(
+						'LSPCodeLens',
+						{ clear = true }
+					)
+					vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'CursorHold' }, {
+						group = codelens,
+						callback = function()
+							vim.lsp.codelens.refresh()
+						end,
+						buffer = bufnr,
+					})
+				end
 			end
-
 		end
 
 		-- document existing key chains
-		require('which-key').register {
-			['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-			['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-			['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-			['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-			['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-			['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-			['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-			['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+		require('which-key').add {
+			{ "<leader>c",  group = "[C]ode" },
+			{ "<leader>c_", hidden = true },
+			{ "<leader>d",  group = "[D]ocument" },
+			{ "<leader>d_", hidden = true },
+			{ "<leader>g",  group = "[G]it" },
+			{ "<leader>g_", hidden = true },
+			{ "<leader>h",  group = "Git [H]unk" },
+			{ "<leader>h_", hidden = true },
+			{ "<leader>r",  group = "[R]ename" },
+			{ "<leader>r_", hidden = true },
+			{ "<leader>s",  group = "[S]earch" },
+			{ "<leader>s_", hidden = true },
+			{ "<leader>t",  group = "[T]oggle" },
+			{ "<leader>t_", hidden = true },
+			{ "<leader>w",  group = "[W]orkspace" },
+			{ "<leader>w_", hidden = true },
 		}
 		-- register which-key VISUAL mode
 		-- required for visual <leader>hs (hunk stage) to work
-		require('which-key').register({
-			['<leader>'] = { name = 'VISUAL <leader>' },
-			['<leader>h'] = { 'Git [H]unk' },
-		}, { mode = 'v' })
+		require('which-key').add {
+			{ "<leader>",  group = "VISUAL <leader>", mode = "v" },
+			{ "<leader>h", desc = "Git [H]unk",       mode = "v" },
+		}
 
 		require('mason').setup()
 		require('mason-lspconfig').setup()
@@ -183,10 +191,18 @@ return {
 			-- gopls = {},
 			pyright = {},
 			rust_analyzer = {},
-			tsserver = {},
-			html = { filetypes = { 'html', 'twig', 'hbs'} },
+			-- tsserver = {},
+			html = { filetypes = { 'html', 'twig', 'hbs' } },
 
-			ocamllsp = {},
+			ocamllsp = {
+				single_file_support = true,
+			},
+			-- ["haskell-language-server"] = {
+			--
+			-- },
+			-- hls = {
+			--
+			-- },
 			lua_ls = {
 				Lua = {
 					workspace = { checkThirdParty = false },
@@ -198,6 +214,8 @@ return {
 				},
 			},
 		}
+
+		require 'lspconfig'.hls.setup {}
 
 		-- Setup neovim lua configuration
 		require('neodev').setup()

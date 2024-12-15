@@ -30,8 +30,3 @@ vim.g.vimtex_view_general_options = '--unique file:@pdf\\#src:@line@tex'
 
 vim.g.livepreview_previewer = 'firefox'
 vim.g.livepreview_cursorhold_recompile = 0
-
-
-
-
-
