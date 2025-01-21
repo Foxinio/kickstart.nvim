@@ -1,12 +1,12 @@
 return {
 	"rmagatti/goto-preview",
-	-- dependencies = {
-	-- "rmagatti/session-lens",
-	-- 	dependencies = {
-	-- 		"nvim-telescope/telescope.nvim",
-	-- 		"rmagatti/auto-session"
-	-- 	}
-	-- },
+	dependencies = {
+	"rmagatti/session-lens",
+		dependencies = {
+			"nvim-telescope/telescope.nvim",
+			"rmagatti/auto-session"
+		}
+	},
 	config = function()
 		local goto = require('goto-preview')
 

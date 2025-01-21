@@ -1,90 +1,95 @@
-" Vim systax file
+" Vim syntax file
 " Language: fram
 
 if exists("b:current_syntax")
 	finish
 endif
 
-" fram is case sensitive
-syntax case match
+syn case match
 
-" keywords
-syntax keyword framEffect handle handler finally return
-highlight link framEffect Keyword
+syn keyword framTodo contained TODO FIXME XXX NOTE
 
-syntax keyword framDefinition import pub open data let rec in and effect extern method label implicit fn type of
-highlight link framDefinition Statement
+" Parentheses
 
-syntax keyword framConditional if then else match with end
-highlight link framConditional Conditional
+syn match framParenErr ")"
+syn match framBraceErr "}"
+syn match framBrackErr "\]"
 
-syntax keyword framTodo TODO Todo ToDo FIXME fixme FixMe XXX
-highlight link framTodo Todo
+syn region framParen transparent matchgroup=framParenGroup start="(" end=")" contains=ALLBUT,framParenErr
+syn region framBrace transparent matchgroup=framBraceGroup start="{" end="}" contains=ALLBUT,framBraceErr
+syn region framBrack transparent matchgroup=framBrackGroup start="\[" end="\]" contains=ALLBUT,framBrackErr
 
-setlocal iskeyword+=_
-setlocal iskeyword+=:
-setlocal iskeyword+=/
-setlocal iskeyword+==
-setlocal iskeyword+=>
-setlocal iskeyword+=-
-setlocal iskeyword+=\|
-setlocal iskeyword+=;
+" Keywords
 
-syntax keyword framOther _ : / => -> \| \= ;
-highlight link framOther Keyword
+syn keyword framKeyword as data effect else end extern finally fn handle handler if implicit in
+syn keyword framKeyword labela let match method module of open rec return then type with
+syn keyword framSpecialKw abstr import pub resume
 
-" comments
+" Identifiers
 
-syntax match framCommentErr "*)"
+syn match framOp "[<>&$?!@^+\-~*%;,=|:./]\+"
 
-syntax region  framComment start=/(\*/  end=/\*)/
-highlight link framComment Comment
+syn match framIllegalOp "[~?][<>&$?!@^+\-~*%;,=|:./]\@!"
+syn match framSpecialOp "\([-=]>\|[|:,.=]\|;;\|>.\)[<>&$?!@^+\-~*%;,=|:./]\@!"
 
-" delimiters
+syn match framVariable "\<[a-z_][0-9a-zA-Z_']*\>" contains=framKeyword,framSpecialKw
+syn match framImplicit "\~[a-z_][0-9a-zA-Z_']*"
+syn match framOptional "?[a-z_][0-9a-zA-Z_']*" contains=framKeyword,framSpecialKw
+syn match framType     "\<[A-Z][0-9a-zA-Z_']*\>"
 
-syntax region framParen   transparent matchgroup=framKeyword start="("  matchgroup=framKeyword  end=")"   contains=ALLBUT,framParenErr
-syntax region framBracket transparent matchgroup=framKeyword start="\[" matchgroup=framKeyword  end="\]"  contains=ALLBUT,framBracketErr
-syntax region framCurly   transparent matchgroup=framKeyword start="{"  matchgroup=framKeyword  end="}"   contains=ALLBUT,framCurlyErr
+" Numbers
 
-highlight def link framParen   Keyword
-highlight def link framBracket Keyword
-highlight def link framCurly   Keyword
-highlight def link framKeyword Keyword
+syn match framNumber "[0-9]\+L\?" contained
+syn match framNumber "0[bB][01]\+L\?" contained
+syn match framNumber "0[oO][0-7]\+L\?" contained
+syn match framNumber "0[xX][0-9a-fA-F]\+L\?" contained
 
-" data
+syn match framNumberLit "[0-9][0-9a-zA-Z_']*" contains=framNumber
 
-syntax match   framConstructor /\u\(\w\)*\>/
-highlight link framConstructor Constant
+" Characters and strings
 
-syntax match   framIdentifier /\<\l\(\w\)*\>/
-highlight link framIndentifier Identifier
+syn match framEscapeErr "\\\([^\\'\"\n0nbtrvafxX]\|[xX][^0-9a-fA-F]\|[xX][0-9a-fA-F][^0-9a-fA-F]\)" contained
 
-syntax match framDecimal     "\d\+"
-syntax match framBinary      "0\(b\|B\)\(0\|1\)+"
-syntax match framOctal       "0\(o\|O\)\(0\|1\|2\|3\|4\|5\|6\|7\)\+"
-syntax match framHexadecimal "0\(x\|X\)\(\d\|A\|B\|C\|D\|E\|F\|a\|b\|c\|d\|e\|f\)\+"
+syn match framCharLit "'\([^\\\n]\|\\\(['\"\\0nbtrvaf]\|[xX][0-9a-fA-F][0-9a-fA-F]\)\)'"
+syn match framStringLit "\"\([^\\\n\"]\|\\\(.\)\)*\(\"\|$\)" contains=@Spell,framEscapeErr
 
-highlight link framDecimal     Number
-highlight link framBinary      Number
-highlight link framOctal       Number
-highlight link framHexadecimal Number
+" Comments
 
-" how to you group these into a larger group?
+syn region framComment start="{#\z\([^\x00-\x20{}\x7f]*\)" end="\z1#}" contains=@Spell,framTodo
+syn match framCommentL "#.*$" contains=@Spell,framTodo
 
-highlight link framNumber Number
+syn match framCommentErr "#}"
 
-syntax match framUnit "(\ *)"
-highlight link framUnit Constant
+" =================================================================================================
 
-syntax region framString start=/"/ skip=/\\"/ end=/"/
-highlight link framString String
+let b:current_syntax = "fram"
 
-" errors
+syn sync minlines=50
+syn sync maxlines=500
 
-highlight def link framParenErr   Error
-highlight def link framBracketErr Error
-highlight def link framCurlyErr   Error
-highlight def link framCommentErr Error
+hi def link framTodo Todo
+hi def link framComment  Comment
+hi def link framCommentL Comment
 
-set nospell
+hi def link framParenGroup   Keyword
+hi def link framBraceGroup   Keyword
+hi def link framBrackGroup   Keyword
 
+hi def link framKeyword    Keyword
+hi def link framSpecialKw  Special
+hi def link framImplicit   Identifier
+hi def link framOptional   Identifier
+hi def link framType       Type
+hi def link framSpecialOp  Keyword
+
+hi def link framNumber     Number
+hi def link framCharLit    Character
+hi def link framStringLit  String
+
+hi def link framNumberLit  Error
+hi def link framCommentErr Error
+hi def link framParenErr   Error
+hi def link framBraceErr   Error
+hi def link framBrackErr   Error
+hi def link framIllegalOp  Error
+hi def link framEscapeErr  Error

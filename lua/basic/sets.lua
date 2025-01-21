@@ -81,11 +81,11 @@ vim.o.termguicolors  = true
 -- in case default is ever changed
 vim.o.backspace = 'indent,eol,start'
 
-vim.opt.swapfile = false
+-- vim.opt.swapfile = false
 
 vim.api.nvim_exec2([[
 
-set rtp^="/home/foxinio/.opam/default/share/ocp-indent/vim
+set rtp^="/home/foxinio/.opam/default/share/ocp-indent/vim"
 
 ]], {})
 

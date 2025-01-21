@@ -2,6 +2,7 @@
 return
 {
 	'lukas-reineke/indent-blankline.nvim',
+	enable = false,
 	-- Enable `lukas-reineke/indent-blankline.nvim`
 	-- See `:help ibl`
 	main = 'ibl',

@@ -13,12 +13,12 @@ return {
 		"hrsh7th/cmp-cmdline",
 		'hrsh7th/cmp-buffer',
 		'kdheepak/cmp-latex-symbols',
-		{
-			'Exafunction/codeium.nvim',
-			dependencies = {
-				"nvim-lua/plenary.nvim",
-			}
-		},
+		-- {
+		-- 	'Exafunction/codeium.nvim',
+		-- 	dependencies = {
+		-- 		"nvim-lua/plenary.nvim",
+		-- 	}
+		-- },
 
 		-- Adds a number of user-friendly snippets
 		{
