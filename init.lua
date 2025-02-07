@@ -18,27 +18,27 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup("plugins", {
-	install = { colorscheme = { "tokyonight" } },
-	ui = {
-		border = "rounded",
-	},
+  install = { colorscheme = { "tokyonight" } },
+  ui = {
+    border = "rounded",
+  },
   change_detection = { enabled = false },
-	checker = { enabled = true },
-	debug = false,
+  checker = { enabled = true },
+  debug = false,
 })
 
-require "basic.bindings"
-require "basic.plugins"
-require "basic.sets"
-require "basic.autocommands"
-require "basic.abbreviations"
-require "basic.window-yank"
-require "basic.make-on-save"
+require "core.bindings"
+require "core.plugins"
+require "core.sets"
+require "core.autocommands"
+require "core.abbreviations"
+require "core.window-yank"
+-- require "core.make-on-save"
 require "utils.prints"
 require "utils.testing_module"
 
 if vim.g.neovide then
-  require "basic.neovide"
+  require "core.neovide"
 end
 
 

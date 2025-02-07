@@ -23,11 +23,12 @@ vim.o.visualbell    = true
 vim.o.wrap          = false
 vim.o.sidescroll    = 2
 vim.o.formatoptions = 'tcqrn1'
-vim.o.tabstop       = 2
-vim.o.shiftwidth    = 2
-vim.o.softtabstop   = 2
 
 -- expand tab
+vim.opt.expandtab   = false
+vim.o.shiftwidth    = 2
+vim.o.tabstop       = 2
+vim.o.softtabstop   = 2
 vim.o.shiftround    = false
 vim.o.smartindent   = true
 

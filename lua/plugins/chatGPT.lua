@@ -2,6 +2,7 @@
 return {
 	"jackMort/ChatGPT.nvim",
 	-- enable = false,
+	enabled = false,
 	event = "VeryLazy",
 	config = function()
 		local home = vim.fn.expand("$HOME")
@@ -32,6 +33,7 @@ return {
 	dependencies = {
 		"MunifTanjim/nui.nvim",
 		"nvim-lua/plenary.nvim",
+		"folke/trouble.nvim",
 		"nvim-telescope/telescope.nvim"
 	},
 }

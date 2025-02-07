@@ -4,20 +4,21 @@
 return {
 	'neovim/nvim-lspconfig',
 	dependencies = {
-		-- Automatically install LSPs to stdpath for neovim
+		-- 'nvim-jdtls/nvim-metals',
+		'folke/neodev.nvim',
 		"hrsh7th/cmp-nvim-lsp",
-		{ "antosha417/nvim-lsp-file-operations", config = true },
 		'williamboman/mason.nvim',
 		'williamboman/mason-lspconfig.nvim',
 
-		-- Useful status updates for LSP
 		{
 			'j-hui/fidget.nvim',
-			opts = {}
+			opts = {},
 		},
 
-		-- Additional lua configuration, makes nvim stuff amazing!
-		'folke/neodev.nvim',
+		{
+			"antosha417/nvim-lsp-file-operations",
+			config = true,
+		},
 	},
 	opts = {
 		-- options for vim.diagnostic.config()
@@ -59,26 +60,88 @@ return {
 		},
 		-- LSP Server Settings
 		servers = {
-			lua_ls = {
-				settings = {
-					clangd = {},
-					-- gopls = {},
-					pyright = {},
-					rust_analyzer = {},
-					-- tsserver = {},
-					html = { filetypes = { 'html', 'twig', 'hbs' } },
-
-					ocamllsp = {
-						single_file_support = true,
+			clangd = {},
+			rust_analyzer = {},
+			ocamllsp = {
+				single_file_support = true,
+			},
+			pyright = {
+				openFilesOnly = false,
+				analysis = {
+					autoSearchPaths = true,
+					useLibraryCodeForTypes = true,
+					autoImportCompletions = true,
+					diagnosticMode = 'workspace',
+					inlayHints = {
+						variableTypes = true,
+						callArgumentNames = true,
+						functionReturnTypes = true,
+						genericTypes = true,
 					},
-					lua_ls = {
-						Lua = {
-							workspace = { checkThirdParty = false },
-							telemetry = { enable = false },
-							diagnostics = {
-								disable = { 'missing-fields' },
-								globals = { "vim" },
-							},
+					diagnosticSeverityOverrides = {
+						reportAny = false,
+						reportUnusedCallResult = false,
+						reportMissingTypeArgument = false,
+						reportMissingParameterType = false,
+						reportUnknownArgumentType = false,
+						reportUnknownLambdaType = false,
+						reportUnknownMemberType = false,
+						reportUnknownParameterType = false,
+						reportUnknownVariableType = false
+					}
+				},
+				typeCheckingMode = "off",
+			},
+			lua_ls = {
+				Lua = {
+					workspace = { checkThirdParty = false },
+					telemetry = { enable = false },
+					diagnostics = {
+						disable = { 'missing-fields' },
+						globals = { "vim" },
+					},
+				},
+			},
+			settings = {
+				clangd = {},
+				rust_analyzer = {},
+				ocamllsp = {
+					single_file_support = true,
+				},
+				pyright = {
+					openFilesOnly = false,
+					analysis = {
+						autoSearchPaths = true,
+						useLibraryCodeForTypes = true,
+						autoImportCompletions = true,
+						diagnosticMode = 'workspace',
+						inlayHints = {
+							variableTypes = true,
+							callArgumentNames = true,
+							functionReturnTypes = true,
+							genericTypes = true,
+						},
+						diagnosticSeverityOverrides = {
+							reportAny = false,
+							reportUnusedCallResult = false,
+							reportMissingTypeArgument = false,
+							reportMissingParameterType = false,
+							reportUnknownArgumentType = false,
+							reportUnknownLambdaType = false,
+							reportUnknownMemberType = false,
+							reportUnknownParameterType = false,
+							reportUnknownVariableType = false
+						}
+					},
+					typeCheckingMode = "off",
+				},
+				lua_ls = {
+					Lua = {
+						workspace = { checkThirdParty = false },
+						telemetry = { enable = false },
+						diagnostics = {
+							disable = { 'missing-fields' },
+							globals = { "vim" },
 						},
 					},
 				},
@@ -122,8 +185,6 @@ return {
 			nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
 			nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-			-- Lesser used LSP functionality
-			--
 			nmap('<leader>gD', function() vim.lsp.buf.declaration(opt()) end, '[G]oto [D]eclaration')
 			nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
 			nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
@@ -131,13 +192,12 @@ return {
 				print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 			end, '[W]orkspace [L]ist Folders')
 
-			-- Create a command `:Format` local to the LSP buffer
-			vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-				vim.lsp.buf.format()
-			end, { desc = 'Format current buffer with LSP' })
+			-- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+			-- 	vim.lsp.buf.format()
+			-- end, { desc = 'Format current buffer with LSP' })
 
-			nmap('<leader>f', vim.lsp.buf.format, 'format current buffer with lsp')
-			xmap('<leader>f', vim.lsp.buf.format, 'format current buffer with lsp')
+			-- nmap('<leader>f', vim.lsp.buf.format, 'format current buffer with lsp')
+			-- xmap('<leader>f', vim.lsp.buf.format, 'format current buffer with lsp')
 
 			if type(client.resolved_capabilities) == "table" then
 				if client.resolved_capabilities.code_lens then
@@ -156,7 +216,6 @@ return {
 			end
 		end
 
-		-- document existing key chains
 		require('which-key').add {
 			{ "<leader>c",  group = "[C]ode" },
 			{ "<leader>c_", hidden = true },
@@ -174,10 +233,6 @@ return {
 			{ "<leader>t_", hidden = true },
 			{ "<leader>w",  group = "[W]orkspace" },
 			{ "<leader>w_", hidden = true },
-		}
-		-- register which-key VISUAL mode
-		-- required for visual <leader>hs (hunk stage) to work
-		require('which-key').add {
 			{ "<leader>",  group = "VISUAL <leader>", mode = "v" },
 			{ "<leader>h", desc = "Git [H]unk",       mode = "v" },
 		}
@@ -186,12 +241,10 @@ return {
 		require('mason-lspconfig').setup()
 
 		local servers = {
+
 			clangd = {},
-			-- gopls = {},
-			pyright = {},
+
 			rust_analyzer = {},
-			-- tsserver = {},
-			html = { filetypes = { 'html', 'twig', 'hbs' } },
 
 			ocamllsp = {
 				single_file_support = true,
@@ -202,6 +255,34 @@ return {
 			-- hls = {
 			--
 			-- },
+			pyright = {
+				openFilesOnly = false,
+				analysis = {
+					autoSearchPaths = true,
+					useLibraryCodeForTypes = true,
+					autoImportCompletions = true,
+					diagnosticMode = 'workspace',
+					inlayHints = {
+						variableTypes = true,
+						callArgumentNames = true,
+						functionReturnTypes = true,
+						genericTypes = true,
+					},
+					diagnosticSeverityOverrides = {
+						reportAny = false,
+						reportUnusedCallResult = false,
+						reportMissingTypeArgument = false,
+						reportMissingParameterType = false,
+						reportUnknownArgumentType = false,
+						reportUnknownLambdaType = false,
+						reportUnknownMemberType = false,
+						reportUnknownParameterType = false,
+						reportUnknownVariableType = false
+					}
+				},
+				typeCheckingMode = "off",
+			},
+
 			lua_ls = {
 				Lua = {
 					workspace = { checkThirdParty = false },
@@ -213,6 +294,33 @@ return {
 				},
 			},
 		}
+
+		vim.diagnostic.config({
+			underline = true,
+			update_in_insert = false,
+			virtual_text = {
+				spacing = 4,
+				source = "if_many",
+				prefix = "●",
+			},
+			severity_sort = true,
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = require('utils.lsp_texts').lsp_signs.Error,
+					[vim.diagnostic.severity.WARN] = require('utils.lsp_texts').lsp_signs.Warn,
+					[vim.diagnostic.severity.HINT] = require('utils.lsp_texts').lsp_signs.Hint,
+					[vim.diagnostic.severity.INFO] = require('utils.lsp_texts').lsp_signs.Info,
+				},
+			},
+			float = {
+				focusable = true,
+				style = "minimal",
+				border = "rounded",
+				source = "always",
+				header = "",
+				prefix = "",
+			},
+		})
 
 		require 'lspconfig'.hls.setup {}
 

@@ -21,18 +21,7 @@ return {
 		-- },
 
 		-- Adds a number of user-friendly snippets
-		{
-			dir = '/media/foxinio/work/foxinio-work/ToCompile/friendly-snippets',
-		}
-		-- {
-		-- 	"zbirenbaum/copilot-cmp",
-		-- 	dependencies = "copilot.lua",
-		-- 	opts = {},
-		-- 	config = function(_, opts)
-		-- 		local copilot_cmp = require("copilot_cmp")
-		-- 		copilot_cmp.setup(opts)
-		-- 	end,
-		-- },
+		'Foxinio/friendly-snippets',
 	},
 	opts = function()
 		local cmp = require 'cmp'
@@ -41,6 +30,7 @@ return {
 		luasnip.config.setup {}
 
 		local has_words_before = function()
+			unpack = unpack or table.unpack
 			local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 			return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 		end

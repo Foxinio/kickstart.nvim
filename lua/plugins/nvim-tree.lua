@@ -19,17 +19,17 @@ return {
 			},
 		})
 
-		vim.api.nvim_create_autocmd("TabEnter", {
-			command = "NvimTreeOpen",
-		})
-
-		vim.api.nvim_create_autocmd("TabLeave", {
-			command = "NvimTreeClose",
-		})
-
-		vim.api.nvim_create_autocmd("TabNewEntered", {
-			command = "NvimTreeOpen",
-		})
+		-- vim.api.nvim_create_autocmd("TabEnter", {
+		-- 	command = "NvimTreeOpen",
+		-- })
+		--
+		-- vim.api.nvim_create_autocmd("TabLeave", {
+		-- 	command = "NvimTreeClose",
+		-- })
+		--
+		-- vim.api.nvim_create_autocmd("TabNewEntered", {
+		-- 	command = "NvimTreeOpen",
+		-- })
 	end,
 	keys = {
 		{ '<leader>tt', ":NvimTreeToggle<CR>", { silent = true } },
