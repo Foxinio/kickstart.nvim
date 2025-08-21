@@ -1,5 +1,6 @@
 return {
 	-- Autocompletion
+  enabled = false,
 	'hrsh7th/nvim-cmp',
 	event = "BufReadPre",
 	dependencies = {
@@ -28,12 +29,6 @@ return {
 		local luasnip = require 'luasnip'
 		require('luasnip.loaders.from_vscode').lazy_load()
 		luasnip.config.setup {}
-
-		local has_words_before = function()
-			unpack = unpack or table.unpack
-			local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-			return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-		end
 
 		local cmp_kinds = require('utils.lsp_texts').lsp_kinds
 
@@ -69,7 +64,24 @@ return {
 				['<C-p>'] = cmp.mapping.select_prev_item(),
 				['<C-b>'] = cmp.mapping.scroll_docs(-4),
 				['<C-f>'] = cmp.mapping.scroll_docs(4),
-				['<C-Space>'] = cmp.mapping.complete {},
+				["<C-y>"] = cmp.mapping(function(fallback)
+					if not cmp.visible() then
+						cmp.complete()                     -- Open completion menu
+					end
+					if cmp.get_selected_entry() == nil then
+						cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })  -- Select first item
+					end
+					cmp.confirm({ select = true })       -- Confirm the selected item
+				end, { "i", "s" }),
+				['<C-Space>'] = cmp.mapping(function(fallback)
+					if not cmp.visible() then
+						cmp.complete()                     -- Open completion menu
+					end
+					if cmp.get_selected_entry() == nil then
+						cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })  -- Select first item
+					end
+					cmp.confirm({ select = true })       -- Confirm the selected item
+				end, { 'i', 's' }),
 				['<CR>'] = cmp.mapping.confirm {
 					behavior = cmp.ConfirmBehavior.Replace,
 					select = false,

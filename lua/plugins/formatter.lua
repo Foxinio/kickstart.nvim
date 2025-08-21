@@ -11,7 +11,18 @@ return {
 			-- Filetype-specific configurations
 			filetype = {
 				lua = {
-					require("formatter.filetypes.lua").stylua,
+					function()
+						return {
+							exe = "stylua",
+							args = {
+								"--indent-type", "Tabs",
+								"--call-parentheses", "Always",
+								"--quote-style", "AutoPreferDouble",
+								"--space-after-function-names", "Never",
+								},
+							stdin = true,
+						}
+					end
 				},
 				python = {
 					function()
@@ -47,7 +58,8 @@ return {
 					function()
 						return {
 							exe = "ocamlformat",
-							args = { "--enable-outside-detected-project", "--impl", "-i" },
+							args = { "--enable-outside-detected-project", "--impl" },
+							stdin = true,
 						}
 					end,
 				},
@@ -55,7 +67,7 @@ return {
 					function()
 						return {
 							exe = "ormolu",
-							args = { "--mode", "inplace" },
+							args = { },
 							stdin = true,
 						}
 					end,
@@ -65,7 +77,7 @@ return {
 					function()
 						return {
 							exe = "sed",
-							args = { "-i", "'s/[ \t]*$//'" },
+							args = { "'s/[ \t]*$//'" },
 							stdin = false,
 						}
 					end,

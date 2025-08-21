@@ -20,6 +20,8 @@ return {
 	config = function()
 		require('telescope').setup {
 			defaults = {
+				layout_strategy = 'vertical',
+				layout_config = { height = 0.95 },
 				mappings = {
 					i = {
 						['<C-u>'] = false,
@@ -30,6 +32,9 @@ return {
 		}
 		-- Enable telescope fzf native, if installed
 		pcall(require('telescope').load_extension, 'fzf')
+
+-- ###########################################################################
+-- Local pickers, sorters, previewers definitions
 
 		-- Telescope live_grep in git root
 		-- Function to find the git root directory based on the current buffer's path
@@ -68,7 +73,13 @@ return {
 			end
 		end
 
+-- ###########################################################################
+-- User command declarations
+
 		vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
+
+-- ###########################################################################
+-- Keymap bindings declarations
 
 		-- See `:help telescope.builtin`
 		vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })

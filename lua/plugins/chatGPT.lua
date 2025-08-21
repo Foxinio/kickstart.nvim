@@ -1,7 +1,6 @@
 -- ChatGPT plugin
 return {
 	"jackMort/ChatGPT.nvim",
-	-- enable = false,
 	enabled = false,
 	event = "VeryLazy",
 	config = function()

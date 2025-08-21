@@ -33,23 +33,21 @@ vim.keymap.set('n', '<S-ScrollWheelDown>', '<ScrollWheelLeft>', { desc = "Scroll
 -- vim.keymap.set('', '<ScrollWheelLeft>', '<ScrollWheelRight>', { desc = "inverse side scroll" })
 -- vim.keymap.set('', '<ScrollWheelRight>', '<ScrollWheelLeft>', { desc = "inverse side scroll" })
 
+vim.keymap.set('i', '<C-Right>', '<C-o>e<C-o>l')
+-- vim.keymap.set('i', '<C-Left>', '<C-o>e<C-o>l')
+
 
 --  Make S-Y act same as S-D and S-C
 vim.keymap.set('n', '<S-Y>', 'v$hy', { desc = "Yank to end of line" })
 
 --  Searching
 vim.keymap.set('v', '/', 'y/\\<<C-R>"\\><CR>', { silent = true })
-vim.keymap.set('n', '<ESC>', ':let @/=""<cr>', { desc = "Clear search", silent = true })
+-- vim.keymap.set('n', '<ESC>', ':let @/=""<cr>', { desc = "Clear search", silent = true })
+vim.keymap.set('n', '<C-l>', "<Cmd>nohlsearch|diffupdate|normal! <C-L><CR>", { desc = "Clear search", silent = true })
 
 --  Remap help key.
 vim.keymap.set('i', '<F1>', '<ESC>:set invfullscreen<CR>a')
 vim.keymap.set({ 'n', 'v' }, '<F1>', ':set invfullscreen<CR>')
-
---  Uncomment this to enable by default:
-vim.o.list = true
---  Or use your leader key + l to toggle on/off
-vim.keymap.set('', '<leader>l', ':set list!<CR>', { desc = "Toggle tabs and EOL" })
-
 
 vim.api.nvim_create_user_command("Sdiff", "w !diff % -", {})
 vim.api.nvim_create_user_command("Vterm", function(opts)

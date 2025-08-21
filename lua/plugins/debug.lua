@@ -1,10 +1,4 @@
 -- debug.lua
---
--- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
 
 return {
 	-- NOTE: Yes, you can install new plugins here!
@@ -136,9 +130,6 @@ return {
 		-- Dap UI setup
 		-- For more information, see |:help nvim-dap-ui|
 		dapui.setup {
-			-- Set icons to characters that are more likely to work in every terminal.
-			--    Feel free to remove or use ones that you like more! :)
-			--    Don't feel like these are good choices.
 			icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
 			controls = {
 				icons = {
@@ -163,8 +154,5 @@ return {
 		dap.listeners.after.event_initialized['dapui_config'] = dapui.open
 		dap.listeners.before.event_terminated['dapui_config'] = dapui.close
 		dap.listeners.before.event_exited['dapui_config'] = dapui.close
-
-		-- Install golang specific config
-		-- require('dap-go').setup()
 	end,
 }

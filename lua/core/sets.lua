@@ -25,7 +25,7 @@ vim.o.sidescroll    = 2
 vim.o.formatoptions = 'tcqrn1'
 
 -- expand tab
-vim.opt.expandtab   = false
+vim.opt.expandtab   = true
 vim.o.shiftwidth    = 2
 vim.o.tabstop       = 2
 vim.o.softtabstop   = 2
@@ -84,18 +84,13 @@ vim.o.backspace = 'indent,eol,start'
 
 -- vim.opt.swapfile = false
 
-vim.api.nvim_exec2([[
-
-set rtp^="/home/foxinio/.opam/default/share/ocp-indent/vim"
-
-]], {})
-
 vim.o.indentkeys = ""
 
 vim.o.cinwords = ""
 vim.o.cink = ""
 vim.o.indk = ""
 
+vim.o.list = true
 
 -- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
