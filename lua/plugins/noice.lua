@@ -19,6 +19,7 @@ return {
 		},
 	},
 	setup = function()
+		vim.keymap.set('n', "<C-q>", "<CMD>Noice dismiss<CR>")
 	end,
 	dependencies = {
 		"MunifTanjim/nui.nvim",

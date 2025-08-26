@@ -1,5 +1,7 @@
 -- # LSP Configuration & Plugins
 
+local icons = require("utils.icons")
+
 -- Specific server configuration
 local servers = {
 	rust_analyzer = { },
@@ -48,7 +50,6 @@ local servers = {
 		log_level = vim.lsp.protocol.MessageType.Warning,
 	},
 }
-servers.settings = servers
 
 -- General options configuration
 local opts = {
@@ -63,10 +64,10 @@ local opts = {
 		severity_sort = true,
 		signs = {
 			text = {
-				[vim.diagnostic.severity.ERROR] = require('utils.lsp_texts').lsp_signs.Error,
-				[vim.diagnostic.severity.WARN] = require('utils.lsp_texts').lsp_signs.Warn,
-				[vim.diagnostic.severity.HINT] = require('utils.lsp_texts').lsp_signs.Hint,
-				[vim.diagnostic.severity.INFO] = require('utils.lsp_texts').lsp_signs.Info,
+				[vim.diagnostic.severity.ERROR] = icons.lsp_signs.Error,
+				[vim.diagnostic.severity.WARN] = icons.lsp_signs.Warn,
+				[vim.diagnostic.severity.HINT] = icons.lsp_signs.Hint,
+				[vim.diagnostic.severity.INFO] = icons.lsp_signs.Info,
 			},
 		},
 		float = {
@@ -90,6 +91,8 @@ local opts = {
 }
 
 local function on_attach(client, bufnr)
+	-- To get this working, consult this post:
+	-- https://github.com/mason-org/mason-lspconfig.nvim/issues/545
 	local function opt(jump_type)
 		return {
 			reuse_win = true,
@@ -97,6 +100,7 @@ local function on_attach(client, bufnr)
 		}
 	end
 	local telescope = require 'telescope.builtin'
+
 	require('which-key').add({
 		{ '<leader>rr', function() vim.api.nvim_echo({ { "WORKS" }, { "bufnr: "..bufnr } }, false, {}) end,
 			buffer = bufnr, desc = "bufnr: "..bufnr },
@@ -112,8 +116,8 @@ local function on_attach(client, bufnr)
 			buffer = bufnr, desc = 'LSP: [G]oto [I]mplementation' },
 		{ '<leader>D', require('telescope.builtin').lsp_type_definitions,
 			buffer = bufnr, desc = 'LSP: Type [D]efinition' },
-		{ '<leader>ds', require('telescope.builtin').lsp_document_symbols,
-			buffer = bufnr, desc = 'LSP: [D]ocument [S]ymbols' },
+		-- { '<leader>ds', require('telescope.builtin').lsp_document_symbols,
+		-- 	buffer = bufnr, desc = 'LSP: [D]ocument [S]ymbols' },
 		{ '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols,
 			buffer = bufnr, desc = 'LSP: [W]orkspace [S]ymbols' },
 		{ '<leader>wd', require('telescope.builtin').lsp_document_symbols,
@@ -138,27 +142,6 @@ end
 
 local config = function()
 	vim.diagnostic.config(opts.diagnostics)
-
-	require('which-key').add {
-		{ "<leader>c",  group = "[C]ode" },
-		{ "<leader>c_", hidden = true },
-		{ "<leader>d",  group = "[D]ocument" },
-		{ "<leader>d_", hidden = true },
-		{ "<leader>g",  group = "[G]it" },
-		{ "<leader>g_", hidden = true },
-		{ "<leader>h",  group = "Git [H]unk" },
-		{ "<leader>h_", hidden = true },
-		{ "<leader>r",  group = "[R]ename" },
-		{ "<leader>r_", hidden = true },
-		{ "<leader>s",  group = "[S]earch" },
-		{ "<leader>s_", hidden = true },
-		{ "<leader>t",  group = "[T]oggle" },
-		{ "<leader>t_", hidden = true },
-		{ "<leader>w",  group = "[W]orkspace" },
-		{ "<leader>w_", hidden = true },
-		{ "<leader>",  group = "VISUAL <leader>", mode = "v" },
-		{ "<leader>h", desc = "Git [H]unk",       mode = "v" },
-	}
 
 	require('lazydev').setup()
 
@@ -187,6 +170,7 @@ local config = function()
 		init_options = {
 			fallbackFlags = { '--std=c23' }
 		},
+		on_attach = on_attach,
 	}
 end
 

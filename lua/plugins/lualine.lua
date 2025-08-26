@@ -1,15 +1,15 @@
 -- Set lualine as statusline
 
-local function codeium()
-	local status_line = vim.api.nvim_call_function("codeium#GetStatusString", {})
-	if status_line == " ON" then
+local function windsurf()
+	local status = require('codeium.virtual_text').status_string()
+	if status == " ON" then
 		return " ✔ "
-	elseif status_line == "OFF" then
+	elseif status == "OFF" then
 		return " ❌"
-	elseif status_line == " * " then
+	elseif status == " * " then
 		return " ⏳"
 	else
-		return status_line
+		return status
 	end
 end
 
@@ -24,7 +24,7 @@ return {
 			section_separators = '',
 		},
 		sections = {
-			lualine_y = { codeium },
+			lualine_y = { windsurf },
 		},
 	},
 }

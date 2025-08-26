@@ -78,6 +78,8 @@ vim.o.completeopt    = 'menu,menuone,noselect,noinsert,preview'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors  = true
 
+-- Since im using a separate completion engine, builtin one is disabled
+require('cmp').setup({ enabled = false })
 
 -- in case default is ever changed
 vim.o.backspace = 'indent,eol,start'

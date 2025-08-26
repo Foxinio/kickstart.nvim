@@ -1,6 +1,15 @@
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = ' '
 
+vim.api.nvim_create_autocmd("User", {
+  pattern = "DebugConfigEvent",
+  callback = function() end,
+  })
+vim.api.nvim_create_user_command("TriggerDebugConfig",
+	function()
+		vim.api.nvim_exec_autocmds("User", { pattern = "DebugConfigEvent" })
+	end, {})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info

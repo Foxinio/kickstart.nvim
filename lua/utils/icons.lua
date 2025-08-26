@@ -1,5 +1,13 @@
 local M = {}
 
+M.git = {
+	Add = { text = '+' },
+	Change = { text = '~' },
+	Delete = { text = '_' },
+	Topdelete = { text = '‾' },
+	Changedelete = { text = '~' },
+}
+
 M.git_colors = {
     GitAdd = "#A1C281",
     GitChange = "#74ADEA",

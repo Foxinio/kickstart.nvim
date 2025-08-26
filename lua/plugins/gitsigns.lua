@@ -1,17 +1,16 @@
 -- Adds git related signs to the gutter, as well as utilities for managing changes
+local icons = require("utils.icons")
+
 return {
 	'lewis6991/gitsigns.nvim',
-	version = "0b04035",
-	-- enabled = false,
-	-- enable = false,
 	opts = {
 		-- See `:help gitsigns.txt`
 		signs = {
-			add = { text = '+' },
-			change = { text = '~' },
-			delete = { text = '_' },
-			topdelete = { text = '‾' },
-			changedelete = { text = '~' },
+			add = icons.git.Add,
+			change = icons.git.Change,
+			delete = icons.git.Delete,
+			topdelete = icons.git.Topdelete,
+			changedelete = icons.git.Changedelete,
 		},
 		on_attach = function(bufnr)
 			local gs = package.loaded.gitsigns
@@ -28,7 +27,7 @@ return {
 					return ']c'
 				end
 				vim.schedule(function()
-					gs.next_hunk()
+					gs.next_hunk({ target = 'all' })
 				end)
 				return '<Ignore>'
 			end, { expr = true, desc = 'Jump to next hunk' })
@@ -38,10 +37,30 @@ return {
 					return '[c'
 				end
 				vim.schedule(function()
-					gs.prev_hunk()
+					gs.prev_hunk({ target = 'all' })
 				end)
 				return '<Ignore>'
 			end, { expr = true, desc = 'Jump to previous hunk' })
+
+			map({ 'n', 'v' }, ']C', function()
+				if vim.wo.diff then
+					return ']C'
+				end
+				vim.schedule(function()
+					gs.nav_hunk('last', { target = 'all' })
+				end)
+				return '<Ignore>'
+			end, { expr = true, desc = 'Jump to last hunk' })
+
+			map({ 'n', 'v' }, '[C', function()
+				if vim.wo.diff then
+					return '[C'
+				end
+				vim.schedule(function()
+					gs.prev_hunk('first', { target = 'all' })
+				end)
+				return '<Ignore>'
+			end, { expr = true, desc = 'Jump to first hunk' })
 
 			-- Actions
 			-- visual mode

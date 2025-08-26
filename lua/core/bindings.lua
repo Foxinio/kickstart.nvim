@@ -3,12 +3,16 @@
 -- vim.keymap.set('n', '<CR>', "o<ESC>", { desc = "Insert line below" })
 -- vim.keymap.set('n', '<S-CR>', "O<ESC>", { desc = "Insert line above" })
 
+local whichKey = require("which-key")
+
 -- Make <space> act as <C-w>
 vim.keymap.set('n', '<space>', '<c-w>', { desc = "+window" })
 
 -- delete text with 'x' without changing the internal register
-vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
-vim.keymap.set({ 'n', 'x' }, 's', '"_s')
+whichKey.add({
+	mode = { 'n', 'x' },
+	{ 'x', '"_x', { hidden = true }},
+	{ 's', '"_s', { hidden = true }}}, {})
 
 -- tabs manipulation
 vim.keymap.set('n', '<c-tab>', function() vim.cmd('tabnext') end, { desc = "Next tab" })
@@ -33,7 +37,7 @@ vim.keymap.set('n', '<S-ScrollWheelDown>', '<ScrollWheelLeft>', { desc = "Scroll
 -- vim.keymap.set('', '<ScrollWheelLeft>', '<ScrollWheelRight>', { desc = "inverse side scroll" })
 -- vim.keymap.set('', '<ScrollWheelRight>', '<ScrollWheelLeft>', { desc = "inverse side scroll" })
 
-vim.keymap.set('i', '<C-Right>', '<C-o>e<C-o>l')
+vim.keymap.set('i', '<C-Right>', '<C-o>e<Right>')
 -- vim.keymap.set('i', '<C-Left>', '<C-o>e<C-o>l')
 
 
@@ -89,12 +93,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- vim.keymap.set('n', '<M-Down>', '<CMD>move +1<CR>', { desc = 'Swap line with one below', silent = true })
 -- vim.keymap.set('n', '<M-Up>',   '<CMD>move -2<CR>', { desc = 'Swap line with one above', silent = true })
 
-vim.keymap.set('n', '<leader>rm', function()
-	local pos = vim.api.nvim_win_get_cursor(0)
-	vim.api.nvim_feedkeys("%x", 'n', true)
-	vim.api.nvim_win_set_cursor(0, pos)
-	vim.api.nvim_feedkeys("x", 'n', true)
-end, { desc = 'remove matching (bracket, parenteses, etc.)' })
+-- vim.keymap.set('n', '<leader>rm', function()
+-- 	local pos = vim.api.nvim_win_get_cursor(0)
+-- 	vim.api.nvim_feedkeys("%x", 'n', true)
+-- 	vim.api.nvim_win_set_cursor(0, pos)
+-- 	vim.api.nvim_feedkeys("x", 'n', true)
+-- end, { desc = 'remove matching (bracket, parenteses, etc.)' })
 
 
-vim.keymap.set('n', "<C-q>", "<CMD>Noice dismiss<CR>")
