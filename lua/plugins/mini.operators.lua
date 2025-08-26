@@ -18,7 +18,7 @@ return {
 			prefix = "<leader>r",
 		},
 		sort = {
-			prefix = "<leader>ss",
+			prefix = "<leader>sl",
 		},
 	},
 }

@@ -36,18 +36,17 @@ require('lazy').setup("plugins", {
   debug = false,
 })
 
-require "core.bindings"
-require "core.plugins"
-require "core.sets"
-require "core.autocommands"
-require "core.abbreviations"
-require "core.window-yank"
--- require "core.make-on-save"
+require "config.bindings"
+require "config.plugins"
+require "config.sets"
+require "config.autocommands"
+require "config.abbreviations"
+require "config.window-yank"
 require "utils.prints"
 require "utils.testing_module"
 
 if vim.g.neovide then
-  require "core.neovide"
+  require "config.neovide"
 end
 
 

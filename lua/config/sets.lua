@@ -97,8 +97,9 @@ vim.o.list = true
 
 
 -- Automatically setup folds
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.o.foldmethod = "expr"
+-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+-- Currently handled by nvim-origami
 
 -- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
