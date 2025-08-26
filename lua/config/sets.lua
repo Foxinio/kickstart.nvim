@@ -94,6 +94,12 @@ vim.o.indk = ""
 
 vim.o.list = true
 
+
+
+-- Automatically setup folds
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+
 -- vim.api.nvim_call_function("codeium#GetStatusString", {})
 
 -- adding python support
