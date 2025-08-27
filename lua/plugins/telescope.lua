@@ -109,5 +109,6 @@ return {
 		vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 		vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 		vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc = "[S]how [J]ump list" })
+		vim.keymap.set('n', '<leader>sq', require('telescope.builtin').quickfix, { desc = "[S]how [Q]uickfix history" })
 	end
 }

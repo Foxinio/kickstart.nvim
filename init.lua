@@ -36,7 +36,7 @@ require('lazy').setup("plugins", {
   debug = false,
 })
 
-require "config.bindings"
+require "config.keymaps"
 require "config.plugins"
 require "config.sets"
 require "config.autocommands"

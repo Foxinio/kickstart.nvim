@@ -3,7 +3,6 @@ return {
 	'tpope/vim-rhubarb',
 
 	"ap/vim-css-color",
-	"lervag/vimtex",
 
 	"norcalli/nvim_utils",
 

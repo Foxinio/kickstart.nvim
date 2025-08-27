@@ -90,6 +90,7 @@ local M = {
 	list_keys = list_keys,
 	getAllData = getAllData,
 	printObj = printObj,
+	printTable = printTable,
 }
 
 return M

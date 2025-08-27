@@ -18,9 +18,10 @@ return {
 			lsp_doc_border = true,
 		},
 	},
-	setup = function()
-		vim.keymap.set('n', "<C-q>", "<CMD>Noice dismiss<CR>")
-	end,
+	keys = {
+    { "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Noice Dismiss" },
+    { "<leader>nh", function() require("noice").cmd("telescope") end, desc = "Noice History" },
+  },
 	dependencies = {
 		"MunifTanjim/nui.nvim",
 		"rcarriga/nvim-notify",

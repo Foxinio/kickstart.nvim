@@ -38,14 +38,22 @@ return {
 		fuzzy = { implementation = "prefer_rust_with_warning" },
 		keymap = {
 			preset = "default",
-			['<C-space>'] = { 'select_and_accept', 'show_documentation', 'hide_documentation' },
+			['<C-space>'] = {
+				function(cmp)
+					if has_words_before() or cmp.is_visible() then
+						return cmp.select_and_accept()
+					else
+						return cmp.show()
+					end
+				end, "fallback"
+			},
 			["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
 			["<Tab>"] = {
 				function(cmp)
 					if cmp.is_visible() then
 						return cmp.select_next()
 					elseif cmp.snippet_active() then
-						return cmp.accept()
+						return cmp.snippet_forward()
 					elseif has_words_before() then
 						return cmp.show()
 					end

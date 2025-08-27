@@ -36,7 +36,6 @@ local servers = {
 		},
 		typeCheckingMode = "off",
 	},
-
 	lua_ls = {
 		Lua = {
 			workspace = { checkThirdParty = false },
@@ -172,6 +171,7 @@ local config = function()
 		},
 		on_attach = on_attach,
 	}
+	lspconfig.texlab.setup({})
 end
 
 return {
