@@ -1,6 +1,12 @@
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = ' '
 
+vim.opt.spell = false
+vim.cmd([[
+  syntax on
+  syntax spell toplevel
+]])
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "DebugConfigEvent",
   callback = function() end,

@@ -2,13 +2,42 @@
 
 local icons = require("utils.icons")
 
+--[[ Plugin for managing LSP conguration ]]
+local M = {
+	'neovim/nvim-lspconfig',
+}
+
+M.dependencies = {
+	'folke/lazydev.nvim',
+	"hrsh7th/cmp-nvim-lsp",
+	'williamboman/mason.nvim',
+	'williamboman/mason-lspconfig.nvim',
+
+	{
+		'j-hui/fidget.nvim',
+		opts = {},
+	},
+
+	{
+		"antosha417/nvim-lsp-file-operations",
+		config = true,
+	},
+}
+
 -- Specific server configuration
 local servers = {
 	rust_analyzer = { },
+	csharp_ls = { },
 	ocamllsp = {
 		single_file_support = true,
 	},
+  clangd = {
+    init_options = {
+      fallbackFlags = { '--std=c++23' }
+    },
+  },
 	hls = { },
+	coq_lsp = { },
 	pyright = {
 		openFilesOnly = false,
 		analysis = {
@@ -51,7 +80,7 @@ local servers = {
 }
 
 -- General options configuration
-local opts = {
+M.opts = {
 	diagnostics = {
 		underline = true,
 		update_in_insert = false,
@@ -139,13 +168,13 @@ local function on_attach(client, bufnr)
 	})
 end
 
-local config = function()
-	vim.diagnostic.config(opts.diagnostics)
+M.config = function()
+	vim.diagnostic.config(M.opts.diagnostics)
 
 	require('lazydev').setup()
 
 	vim.lsp.config("*", {
-		capabilities = opts.capabilities,
+		capabilities = M.opts.capabilities,
 		on_attach = on_attach,
 	})
 
@@ -158,40 +187,33 @@ local config = function()
 
 	for server_name, _ in pairs(servers) do
 		require('lspconfig')[server_name].setup {
-			capabilities = opts.capabilities,
+			init_options = servers[server_name].init_options or {},
+			capabilities = M.opts.capabilities,
 			settings = servers[server_name] or {},
 			on_attach = on_attach,
 		}
 	end
 
 	-- Special-attention servers
-	lspconfig.clangd.setup {
-		init_options = {
-			fallbackFlags = { '--std=c23' }
-		},
-		on_attach = on_attach,
-	}
+	vim.api.nvim_create_user_command("LspSetupC", function()
+		lspconfig.clangd.setup {
+			init_options = {
+				fallbackFlags = { '--std=c23' }
+			},
+			on_attach = on_attach,
+		}
+    vim.cmd("LspStart clangd")
+	end, {})
+	vim.api.nvim_create_user_command("LspSetupCpp", function()
+		lspconfig.clangd.setup {
+			init_options = {
+				fallbackFlags = { '--std=c++23' }
+			},
+			on_attach = on_attach,
+		}
+    vim.cmd("LspStart clangd")
+	end, {})
 	lspconfig.texlab.setup({})
 end
 
-return {
-	'neovim/nvim-lspconfig',
-	dependencies = {
-		'folke/lazydev.nvim',
-		"hrsh7th/cmp-nvim-lsp",
-		'williamboman/mason.nvim',
-		'williamboman/mason-lspconfig.nvim',
-
-		{
-			'j-hui/fidget.nvim',
-			opts = {},
-		},
-
-		{
-			"antosha417/nvim-lsp-file-operations",
-			config = true,
-		},
-	},
-	opts = opts,
-	config = config
-}
+return M

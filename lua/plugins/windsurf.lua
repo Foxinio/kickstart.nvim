@@ -1,6 +1,7 @@
 return {
 	"Exafunction/windsurf.nvim",
-	enabled = true,
+	lazy = true,
+	cmd = "WindsurfLoad",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"hrsh7th/nvim-cmp",
@@ -20,6 +21,11 @@ return {
 	},
 	config = function()
 		require("codeium").setup()
+		require("codeium").disable()
+
+    vim.api.nvim_create_user_command("CodeiumEnable", function()
+      require("codeium").enable()
+    end, {})
 	end,
 }
 

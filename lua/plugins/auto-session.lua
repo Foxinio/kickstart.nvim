@@ -1,3 +1,4 @@
+-- TODO : Try alternative: https://github.com/coffebar/neovim-project
 return {
   'rmagatti/auto-session',
   lazy = false,
