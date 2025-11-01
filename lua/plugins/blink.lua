@@ -7,14 +7,33 @@ M.build = 'cargo build --release'
 M.dependencies = {
 	-- Providers
 	"folke/lazydev.nvim",
-	{ 'saghen/blink.compat', version = '2.*', },
-	'kdheepak/cmp-latex-symbols',
+	{
+		'saghen/blink.compat',
+		-- dependencies = { "hrsh7th/nvim-cmp" },
+		version = '2.*',
+		opts = {
+			debug = true,
+			impersonate_nvim_cmp = true,
+		}
+	},
+	{
+		'kdheepak/cmp-latex-symbols',
+		dependencies = { 'saghen/blink.compat' },
+	},
+	'erooke/blink-cmp-latex',
 	'Exafunction/windsurf.nvim',
-	-- "GustavEikaas/easy-dotnet.nvim",
+	{ "GustavEikaas/easy-dotnet.nvim", enabled = false, },
 
 	-- Snippet Engine & its associated nvim-cmp source
 	'L3MON4D3/LuaSnip',
 }
+
+M.appearance = {
+	use_nvim_cmp_as_default = false,
+	nerd_font_variant = "mono",
+}
+
+-- TODO:  Configure command line completion
 
 M.opts = {}
 M.opts.completion = {
@@ -25,7 +44,7 @@ M.opts.completion = {
 	},
 	documentation = { auto_show = true },
 	list = {
-		selection = { preselect = false, auto_insert = false },
+		selection = { preselect = true, auto_insert = false },
 	},
 	accept = {
 		auto_brackets = { enabled = false },
@@ -54,7 +73,7 @@ M.opts.keymap = {
 	["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
 	["<Tab>"] = {
 		function(cmp)
-			if cmp.is_visible() then
+			if cmp.is_menu_visible() then
 				return cmp.select_next()
 			elseif cmp.snippet_active() then
 				return cmp.snippet_forward()
@@ -63,7 +82,13 @@ M.opts.keymap = {
 			end
 		end, "fallback"
 	},
-	["<CR>"] = { "accept", "fallback" },
+	["<CR>"] = {
+		-- to prevent accepting anytime there is a ghost_text, this is a function
+		function (cmp)
+			if cmp.is_menu_visible() then
+				return cmp.accept()
+			end
+		end, "fallback" },
 	["<Esc>"] = { function(cmp) cmp.hide() end, "fallback" },
 	["<PageUp>"] = { "scroll_documentation_up", "fallback" },
 	["<PageDown>"] = { "scroll_documentation_down", "fallback" },
@@ -83,10 +108,10 @@ M.opts.keymap = {
 M.opts.sources = {
 	-- add lazydev to your completion providers
 	default = {
-		"lazydev",
-		"lsp",
 		-- "latex",
 		"latex_symbols",
+		"lazydev",
+		"lsp",
 		"path",
 		"snippets",
 		"buffer",
@@ -98,13 +123,13 @@ M.opts.sources = {
 			module = 'codeium.blink',
 			async = true
 		},
-		["easy-dotnet"] = {
-			name = "easy-dotnet",
-			enabled = true,
-			module = "easy-dotnet.completion.blink",
-			score_offset = 10000,
-			async = true,
-		},
+		-- ["easy-dotnet"] = {
+		-- 	name = "easy-dotnet",
+		-- 	enabled = true,
+		-- 	module = "easy-dotnet.completion.blink",
+		-- 	score_offset = 10000,
+		-- 	async = true,
+		-- },
 		lazydev = {
 			name = "LazyDev",
 			module = "lazydev.integrations.blink",

@@ -1,5 +1,6 @@
 local M = {
-	"GustavEikaas/easy-dotnet.nvim"
+	"GustavEikaas/easy-dotnet.nvim",
+	enabled = false,
 }
 
 M.dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', }

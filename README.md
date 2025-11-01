@@ -2,6 +2,32 @@
 
 https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
 
+## My README
+
+### Setup
+#### Requirements
+- python, pip, venv
+```bash
+sudo apt install python3 python3-venv python3-pip
+# Do other things to create venv in `~/.local/share/pyvenv/...`
+~/.local/share/nvim/pyvenv/bin/pip install pynvim
+```
+- npm
+```bash
+sudo apt install npm
+```
+
+- cargo - for blink
+
+- other utilities:
+```
+
+
+### plugins to consider adding
+- something about better bookmarks
+
+## Previous README
+
 ### Introduction
 
 A starting point for Neovim that is:

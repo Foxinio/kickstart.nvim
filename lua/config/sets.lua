@@ -79,7 +79,7 @@ vim.o.completeopt    = 'menu,menuone,noselect,noinsert,preview'
 vim.o.termguicolors  = true
 
 -- Since im using a separate completion engine, builtin one is disabled
-require('cmp').setup({ enabled = false })
+-- require('cmp').setup({ enabled = false })
 
 -- in case default is ever changed
 vim.o.backspace = 'indent,eol,start'
@@ -94,6 +94,8 @@ vim.o.indk = ""
 
 vim.o.list = true
 
+-- vim.g.python_host_prog = '/usr/bin/python'
+-- vim.g.python3_host_prog = '/home/foxinio/.local/share/nvim/pyvenv/bin/python'
 
 
 -- Automatically setup folds

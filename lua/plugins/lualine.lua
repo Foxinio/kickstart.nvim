@@ -25,7 +25,7 @@ return {
 		},
 		sections = {
 			lualine_y = { windsurf },
-			lualine_a = { "mode", { require("easy-dotnet.ui-modules.jobs").lualine } },
+			-- lualine_a = { "mode", { require("easy-dotnet.ui-modules.jobs").lualine } },
 		},
 	},
 }

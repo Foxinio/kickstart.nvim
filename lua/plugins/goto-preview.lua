@@ -4,7 +4,8 @@ return {
 	"rmagatti/session-lens",
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
-			"rmagatti/auto-session"
+			"rmagatti/auto-session",
+			'rmagatti/logger.nvim',
 		}
 	},
 	config = function()

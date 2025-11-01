@@ -5,7 +5,7 @@ return {
 		'nvim-telescope/telescope.nvim'
 	},
 
-	ft = "coq",
+	-- ft = "coq",
   build = function()
     vim.cmd("!pip install --user -r requirements.txt")
   end,

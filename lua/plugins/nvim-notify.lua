@@ -2,8 +2,6 @@ return {
 	"rcarriga/nvim-notify",
 	config = function()
 		local notify = require "notify"
-		notify.setup({
-			stages = "static",
-		})
+		notify.setup()
 	end
 }

@@ -15,11 +15,13 @@ M.dependencies = {
 
 	{
 		'j-hui/fidget.nvim',
-		opts = {},
+		opts = {
+			notification = { window = { avoid = { "NvimTree" }, }, },
+		}
 	},
 
 	{
-		"antosha417/nvim-lsp-file-operations",
+		"igorlfs/nvim-lsp-file-operations",
 		config = true,
 	},
 }
@@ -27,7 +29,7 @@ M.dependencies = {
 -- Specific server configuration
 local servers = {
 	rust_analyzer = { },
-	csharp_ls = { },
+	-- csharp_ls = { },
 	ocamllsp = {
 		single_file_support = true,
 	},
@@ -36,7 +38,7 @@ local servers = {
       fallbackFlags = { '--std=c++23' }
     },
   },
-	hls = { },
+	-- hls = { },
 	coq_lsp = { },
 	pyright = {
 		openFilesOnly = false,
@@ -180,13 +182,14 @@ M.config = function()
 
 	require("mason").setup()
 	require("mason-lspconfig").setup {
-		automatic_enable = false,
+		-- automatic_enable = false,
 		ensure_installed = vim.tbl_keys(servers),
 	}
 	local lspconfig = require 'lspconfig'
 
 	for server_name, _ in pairs(servers) do
 		require('lspconfig')[server_name].setup {
+		-- vim.lsp.config[server_name].setup {
 			init_options = servers[server_name].init_options or {},
 			capabilities = M.opts.capabilities,
 			settings = servers[server_name] or {},

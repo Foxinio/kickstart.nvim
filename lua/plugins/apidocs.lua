@@ -3,7 +3,6 @@ return {
 	branch = 'dev',
 	-- dir = '/home/foxinio/Work/nvim-plugins/apidocs.nvim',
   dependencies = {
-    'folke/snacks.nvim',
     'nvim-treesitter/nvim-treesitter',
   },
   -- cmd = { 'ApidocsSearch', 'ApidocsInstall', 'ApidocsOpen', 'ApidocsSelect', 'ApidocsUninstall' },
