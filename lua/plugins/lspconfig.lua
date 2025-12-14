@@ -26,6 +26,14 @@ M.dependencies = {
 	},
 }
 
+local required_servers = {
+	"rust_analyzer",
+	"clangd",
+	"pyright",
+	"lua_ls",
+	"texlab",
+}
+
 -- Specific server configuration
 local servers = {
 	rust_analyzer = { },
@@ -38,8 +46,9 @@ local servers = {
       fallbackFlags = { '--std=c++23' }
     },
   },
-	-- hls = { },
+	hls = { },
 	coq_lsp = { },
+	texlab = { },
 	pyright = {
 		openFilesOnly = false,
 		analysis = {
@@ -175,48 +184,43 @@ M.config = function()
 
 	require('lazydev').setup()
 
-	vim.lsp.config("*", {
-		capabilities = M.opts.capabilities,
-		on_attach = on_attach,
-	})
+	-- vim.lsp.config("*", {
+	-- 	capabilities = M.opts.capabilities,
+	-- 	on_attach = on_attach,
+	-- })
 
 	require("mason").setup()
 	require("mason-lspconfig").setup {
-		-- automatic_enable = false,
-		ensure_installed = vim.tbl_keys(servers),
+		automatic_enable = true,
+		ensure_installed = required_servers,
 	}
-	local lspconfig = require 'lspconfig'
 
-	for server_name, _ in pairs(servers) do
-		require('lspconfig')[server_name].setup {
-		-- vim.lsp.config[server_name].setup {
-			init_options = servers[server_name].init_options or {},
+	for server_name, settings in pairs(servers) do
+		vim.lsp.config(server_name, {
+			-- init_options = settings.init_options or {},
 			capabilities = M.opts.capabilities,
-			settings = servers[server_name] or {},
+			settings = settings or {},
 			on_attach = on_attach,
-		}
+		})
+		vim.lsp.enable(server_name)
 	end
 
 	-- Special-attention servers
 	vim.api.nvim_create_user_command("LspSetupC", function()
-		lspconfig.clangd.setup {
-			init_options = {
-				fallbackFlags = { '--std=c23' }
-			},
-			on_attach = on_attach,
+		vim.lsp.config.clangd.init_options = {
+			fallbackFlags = { '--std=c23' }
 		}
+		vim.lsp.enable("clangd")
     vim.cmd("LspStart clangd")
 	end, {})
 	vim.api.nvim_create_user_command("LspSetupCpp", function()
-		lspconfig.clangd.setup {
-			init_options = {
-				fallbackFlags = { '--std=c++23' }
-			},
-			on_attach = on_attach,
+		vim.lsp.config.clangd.init_optiosn = {
+			fallbackFlags = { '--std=c++23' }
 		}
+		vim.lsp.enable("clangd")
     vim.cmd("LspStart clangd")
 	end, {})
-	lspconfig.texlab.setup({})
+
 end
 
 return M

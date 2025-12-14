@@ -1,6 +1,6 @@
 return {
 	"Exafunction/windsurf.nvim",
-	lazy = true,
+	-- enabled = false,
 	cmd = "WindsurfLoad",
 	dependencies = {
 		"nvim-lua/plenary.nvim",

@@ -2,6 +2,29 @@ return {
 	"folke/noice.nvim",
 	lazy = false,
 	opts = {
+		routes = {
+			{
+				filter = { event = "msg_show", find = "lines yanked" },
+				opts = { skip = true },
+			},
+			-- Hide write messages
+			{
+				filter = { event = "msg_show", find = "written" },
+				opts = { skip = true },
+			},
+			-- Hide search count
+			{
+				filter = { event = "msg_show", kind = "search_count" },
+				opts = { skip = true },
+			},
+			-- {
+			-- 	filter = {
+			-- 		event = "msg_show",
+			-- 		kind = "",
+			-- 	},
+			-- 	view = "cmdline_output",
+			-- },
+		},
 		lsp = {
 			override = {
 				-- override the default lsp markdown formatter with Noice

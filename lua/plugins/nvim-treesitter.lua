@@ -20,7 +20,10 @@ return {
 				sync_install = true,
 				ignore_install = {},
 				highlight = { enable = true, additional_vim_regex_highlighting = false },
-				indent = { enable = false },
+				indent = {
+					enable = true,
+					-- disable = { "coq" },
+				},
 				incremental_selection = {
 					-- enable = false,
 					keymaps = {

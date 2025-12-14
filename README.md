@@ -20,11 +20,12 @@ sudo apt install npm
 - cargo - for blink
 
 - other utilities:
-```
 
 
 ### plugins to consider adding
 - something about better bookmarks
+
+https://github.com/Julian/lean.nvim
 
 ## Previous README
 

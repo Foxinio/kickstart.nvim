@@ -11,6 +11,10 @@ return {
   end,
 
 	init = function()
+		vim.g.coqtail_noindent = 1
+		vim.g.coqtail_noindent_comments = 1
+		vim.g.coqtail_auto_set_proof_diffs = 'on'
+
 		vim.keymap.set('n', '<M-down>', '<Plug>CoqNext', { noremap = true })
 		vim.keymap.set('n', '<M-up>', '<Plug>CoqUndo', { noremap = true })
 
