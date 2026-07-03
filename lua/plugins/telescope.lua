@@ -1,7 +1,9 @@
 -- Fuzzy Finder (files, lsp, etc)
 return {
 	'nvim-telescope/telescope.nvim',
-	branch = '0.1.x',
+	--[[ branch = '0.1.x', ]]
+	-- tag = 'v0.10.0',
+	version = '*',
 	dependencies = {
 		'nvim-lua/plenary.nvim',
 		-- Fuzzy Finder Algorithm which requires local dependencies to be built.
@@ -17,9 +19,17 @@ return {
 			end,
 		},
 		'nvim-telescope/telescope-ui-select.nvim',
+		{
+				"nvim-telescope/telescope-live-grep-args.nvim" ,
+				-- This will not install any breaking changes.
+				-- For major updates, this must be adjusted manually.
+				version = "^1.0.0",
+		},
 	},
 	config = function()
-		require('telescope').setup {
+		local telescope = require('telescope')
+
+		telescope.setup {
 			defaults = {
 				layout_strategy = 'vertical',
 				layout_config = { height = 0.95 },
@@ -32,8 +42,10 @@ return {
 			},
 		}
 		-- Enable telescope fzf native, if installed
-		pcall(require('telescope').load_extension, 'fzf')
-		pcall(require('telescope').load_extension, 'ui-select')
+		telescope.load_extension('fzf')
+		telescope.load_extension('ui-select')
+		telescope.load_extension('live_grep_args')
+
 
 -- ###########################################################################
 -- Local pickers, sorters, previewers definitions
@@ -107,7 +119,8 @@ return {
 		vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 		vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 		vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-		vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
+		vim.keymap.set('n', '<leader>sG', require('telescope').extensions.live_grep_args.live_grep_args,
+			{ desc = '[S]earch by [G]rep with custom args' })
 		vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 		vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 		vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc = "[S]how [J]ump list" })

@@ -6,6 +6,7 @@
 
 return {
 	"echasnovski/mini.operators",
+	enabled = false,
 -- TODO : Configure this
 	opts = {
 		exchange = {

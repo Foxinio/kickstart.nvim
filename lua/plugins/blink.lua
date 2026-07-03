@@ -3,33 +3,20 @@ local M = {
 	"saghen/blink.cmp",
 }
 
+M.version = "1.*"
 M.build = 'cargo build --release'
 M.dependencies = {
 	-- Providers
 	"folke/lazydev.nvim",
-	{
-		'saghen/blink.compat',
-		-- dependencies = { "hrsh7th/nvim-cmp" },
-		version = '2.*',
-		opts = {
-			debug = true,
-			impersonate_nvim_cmp = true,
-		}
-	},
-	{
-		'kdheepak/cmp-latex-symbols',
-		dependencies = { 'saghen/blink.compat' },
-	},
-	'erooke/blink-cmp-latex',
-	'Exafunction/windsurf.nvim',
-	{ "GustavEikaas/easy-dotnet.nvim", enabled = false, },
 
 	-- Snippet Engine & its associated nvim-cmp source
 	'L3MON4D3/LuaSnip',
+
+	'hrsh7th/nvim-cmp',
 }
 
 M.appearance = {
-	use_nvim_cmp_as_default = false,
+	-- use_nvim_cmp_as_default = false,
 	nerd_font_variant = "mono",
 }
 
@@ -105,51 +92,84 @@ M.opts.keymap = {
 	-- ['<C-y>'] = same as <C-space>
 }
 
+M.opts.cmdline = {
+	keymap = {
+		-- This tells blink to use your custom logic instead of the 'cmdline' preset
+		preset = 'super-tab',
+
+		-- Custom Tab logic to handle ghost text acceptance
+	['<C-space>'] = {
+		function(cmp)
+			if has_words_before() or cmp.is_visible() then
+				return cmp.select_and_accept()
+			else
+				return cmp.show()
+			end
+		end, "fallback"
+	},
+	["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+	["<Tab>"] = {
+		function(cmp)
+			if cmp.is_menu_visible() then
+				return cmp.select_next()
+			end
+			return cmp.show()
+		end, "fallback"
+	},
+	["<CR>"] = {
+		-- to prevent accepting anytime there is a ghost_text, this is a function
+		function (cmp)
+			if cmp.is_menu_visible() then
+				return cmp.accept()
+			end
+		end, "fallback" },
+	["<PageUp>"] = { "scroll_documentation_up", "fallback" },
+	["<PageDown>"] = { "scroll_documentation_down", "fallback" },
+	['<Up>'] = { 'select_prev', 'fallback' },
+	['<Down>'] = { 'select_next', 'fallback' },
+	['<Left>'] = { function(cmp) cmp.hide() end, "fallback" },
+	['<Right>'] = { function(cmp) cmp.hide() end, "fallback" },
+
+	},
+	completion = {
+		menu = { auto_show = false }, -- Set to false if you only want it on Tab
+		ghost_text = { enabled = true },
+		trigger = {
+			show_on_blocked_trigger_characters = { ' ', '\n', '\t' },
+		},
+		list = {
+			selection = { preselect = true, auto_insert = true },
+		},
+	}
+}
+
 M.opts.sources = {
 	-- add lazydev to your completion providers
 	default = {
-		-- "latex",
-		"latex_symbols",
 		"lazydev",
 		"lsp",
 		"path",
 		"snippets",
 		"buffer",
-		"codeium",
+		-- "codeium",
 	},
 	providers = {
-		codeium = {
-			name = 'Codeium',
-			module = 'codeium.blink',
-			async = true
-		},
-		-- ["easy-dotnet"] = {
-		-- 	name = "easy-dotnet",
-		-- 	enabled = true,
-		-- 	module = "easy-dotnet.completion.blink",
-		-- 	score_offset = 10000,
-		-- 	async = true,
+		-- codeium = {
+		-- 	name = 'Codeium',
+		-- 	module = 'codeium.blink',
+		-- 	async = true
 		-- },
 		lazydev = {
 			name = "LazyDev",
 			module = "lazydev.integrations.blink",
 			score_offset = 100,
 		},
-		latex = {
-			name = "Latex",
-			module = "blink-cmp-latex",
-			opts = {
-				insert_command = false
-			},
-		},
-		latex_symbols = {
-			name = "latex_symbols",
-			module = 'blink.compat.source',
-			opts = {
-				strategy = 0,
-			},
-		},
 	},
+	transform_items = function(_, items)
+		return vim.tbl_filter(function(item)
+			return item.kind ~= require('blink.cmp.types').CompletionItemKind.Snippet
+		end, items)
+	end,
 }
 
 M.opts.snippets = { preset = 'luasnip' }

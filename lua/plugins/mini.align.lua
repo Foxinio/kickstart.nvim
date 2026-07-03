@@ -6,6 +6,7 @@
 
 return {
 	"echasnovski/mini.align",
+	enabled = false,
 -- TODO : Configure this
 	opts = {
 		mappings = {

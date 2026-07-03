@@ -7,6 +7,7 @@
 local M = {
 	"echasnovski/mini.ai",
 	event = "BufRead",
+	enabled = false,
 }
 -- TODO : Configure this
 
