@@ -8,6 +8,7 @@ M.build = 'cargo build --release'
 M.dependencies = {
 	-- Providers
 	"folke/lazydev.nvim",
+	"Exafunction/windsurf.nvim",
 
 	-- Snippet Engine & its associated nvim-cmp source
 	'L3MON4D3/LuaSnip',
@@ -16,7 +17,7 @@ M.dependencies = {
 }
 
 M.appearance = {
-	-- use_nvim_cmp_as_default = false,
+	use_nvim_cmp_as_default = false,
 	nerd_font_variant = "mono",
 }
 
@@ -151,14 +152,14 @@ M.opts.sources = {
 		"path",
 		"snippets",
 		"buffer",
-		-- "codeium",
+		"codeium",
 	},
 	providers = {
-		-- codeium = {
-		-- 	name = 'Codeium',
-		-- 	module = 'codeium.blink',
-		-- 	async = true
-		-- },
+		codeium = {
+			name = 'Codeium',
+			module = 'codeium.blink',
+			async = true
+		},
 		lazydev = {
 			name = "LazyDev",
 			module = "lazydev.integrations.blink",
