@@ -1,7 +1,14 @@
 local M = {
 	'nvim-tree/nvim-tree.lua',
 	dependencies = {
-		'nvim-tree/nvim-web-devicons'
+		'nvim-tree/nvim-web-devicons',
+		{
+			'b0o/nvim-tree-preview.lua',
+			dependencies = {
+				'nvim-lua/plenary.nvim',
+				'3rd/image.nvim',
+			},
+		},
 	}
 }
 
@@ -47,8 +54,12 @@ M.keys = {
 					return true
 				end,
 			}))
-	end,
-	desc = "Search for file in nvim-tree" },
+		end,
+		desc = "Search for file in nvim-tree" },
+	{ 'P', function() return require('nvim-tree-preview').watch() end, desc = "Preview file"},
+	{ '<Esc>', function() return require('nvim-tree-preview').unwatch() end, desc = "Preview file"},
+	{ '<C-f>', function() return require('nvim-tree-preview').scroll(4) end, desc = 'Scroll Down' },
+	{ '<C-b>', function() return require('nvim-tree-preview').scroll(-4) end, desc = 'Scroll Up' },
 }
 
 M.opts = {
@@ -86,8 +97,13 @@ M.opts = {
 	},
 }
 
-M.config = function ()
-	require("nvim-tree").setup(M.opts)
-end
+-- M.opts.on_attach = function(bufnr)
+-- 	require('nvim-tree').config = { view = { side = 'left', }, }
+-- 	require('nvim-tree.api').map.on_attach.default(bufnr)
+-- end
+
+-- M.config = function ()
+-- 	require("nvim-tree").setup(M.opts)
+-- end
 
 return M

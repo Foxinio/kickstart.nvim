@@ -33,7 +33,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup("plugins", {
-  install = { colorscheme = { "tokyonight" } },
+  install = {
+    -- colorscheme = { "tokyonight" }
+  },
   ui = {
     border = "rounded",
   },

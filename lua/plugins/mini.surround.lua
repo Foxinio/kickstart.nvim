@@ -7,6 +7,7 @@
 local M = {
 	"echasnovski/mini.surround",
 }
+M.enabled = false
 
 M.opts = {
 	mappings = {
