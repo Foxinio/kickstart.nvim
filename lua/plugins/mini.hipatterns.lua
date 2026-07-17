@@ -43,4 +43,5 @@ return {
 	end,
 
 	event = "BufRead",
+	enabled = false,
 }

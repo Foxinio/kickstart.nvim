@@ -5,6 +5,7 @@ local icons = require("utils.icons")
 --[[ Plugin for managing LSP conguration ]]
 local M = {
 	'neovim/nvim-lspconfig',
+	version = '2.9.*',
 }
 
 M.dependencies = {
@@ -27,66 +28,60 @@ M.dependencies = {
 }
 
 local required_servers = {
-	"rust_analyzer",
 	"clangd",
 	"pyright",
 	"lua_ls",
-	"texlab",
 }
 
 -- Specific server configuration
 local servers = {
-	rust_analyzer = { },
-	-- csharp_ls = { },
-	ocamllsp = {
-		single_file_support = true,
-	},
-  clangd = {
-    init_options = {
-      fallbackFlags = { '--std=c++23' }
-    },
-  },
-	hls = { },
-	coq_lsp = { },
-	texlab = { },
+	clangd = {},
 	pyright = {
-		openFilesOnly = false,
-		analysis = {
-			autoSearchPaths = true,
-			useLibraryCodeForTypes = true,
-			autoImportCompletions = true,
-			diagnosticMode = 'workspace',
-			inlayHints = {
-				variableTypes = true,
-				callArgumentNames = true,
-				functionReturnTypes = true,
-				genericTypes = true,
+		settings = {
+			openFilesOnly = false,
+			analysis = {
+				autoSearchPaths = true,
+				useLibraryCodeForTypes = true,
+				autoImportCompletions = true,
+				diagnosticMode = 'workspace',
+				inlayHints = {
+					variableTypes = true,
+					callArgumentNames = true,
+					functionReturnTypes = true,
+					genericTypes = true,
+				},
+				diagnosticSeverityOverrides = {
+					reportAny = false,
+					reportUnusedCallResult = false,
+					reportMissingTypeArgument = false,
+					reportMissingParameterType = false,
+					reportUnknownArgumentType = false,
+					reportUnknownLambdaType = false,
+					reportUnknownMemberType = false,
+					reportUnknownParameterType = false,
+					reportUnknownVariableType = false
+				}
 			},
-			diagnosticSeverityOverrides = {
-				reportAny = false,
-				reportUnusedCallResult = false,
-				reportMissingTypeArgument = false,
-				reportMissingParameterType = false,
-				reportUnknownArgumentType = false,
-				reportUnknownLambdaType = false,
-				reportUnknownMemberType = false,
-				reportUnknownParameterType = false,
-				reportUnknownVariableType = false
-			}
+			typeCheckingMode = "off",
 		},
-		typeCheckingMode = "off",
 	},
 	lua_ls = {
-		Lua = {
-			workspace = { checkThirdParty = false },
-			telemetry = { enable = false },
-			diagnostics = {
-				disable = { 'missing-fields' },
-				globals = { "vim" },
+		settings = {
+			Lua = {
+				completion = {
+					callSnippet = 'Disable',
+					keywordSnippet = 'Disable',
+				},
+				workspace = { checkThirdParty = false },
+				telemetry = { enable = false },
+				diagnostics = {
+					disable = { 'missing-fields' },
+					globals = { "vim" },
+				},
 			},
+			single_file_support = true,
+			log_level = vim.lsp.protocol.MessageType.Warning,
 		},
-		single_file_support = true,
-		log_level = vim.lsp.protocol.MessageType.Warning,
 	},
 }
 
@@ -149,7 +144,7 @@ local function on_attach(client, bufnr)
 			buffer = bufnr, desc = 'LSP: [C]ode [A]ction' },
 		{ '<leader>gd', function() telescope.lsp_definitions(opt("vsplit")) end,
 			buffer = bufnr, desc = 'LSP: [G]oto [D]efinition' },
-		{ '<leader>gr', function() telescope.lsp_references(opt("tab")) end,
+		{ '<leader>gr', telescope.lsp_references,
 			buffer = bufnr, desc = 'LSP: [G]oto [R]eferences' },
 		{ '<leader>gI', function() telescope.lsp_implementations(opt('tab')) end,
 			buffer = bufnr, desc = 'LSP: [G]oto [I]mplementation' },
@@ -179,6 +174,50 @@ local function on_attach(client, bufnr)
 	})
 end
 
+-- local function opt(jump_type)
+-- 	return {
+-- 		reuse_win = true,
+-- 		jump_type,
+-- 	}
+-- end
+-- local telescope = require 'telescope.builtin'
+-- M.keys = {
+-- 	{ '<leader>rn', vim.lsp.buf.rename,
+-- 		desc = 'LSP: [R]e[n]ame' },
+-- 	{ '<leader>ca', vim.lsp.buf.code_action,
+-- 		desc = 'LSP: [C]ode [A]ction' },
+-- 	{ '<leader>gd', function() telescope.lsp_definitions(opt("vsplit")) end,
+-- 		desc = 'LSP: [G]oto [D]efinition' },
+-- 	{ '<leader>gr', telescope.lsp_references,
+-- 		desc = 'LSP: [G]oto [R]eferences' },
+-- 	{ '<leader>gI', function() telescope.lsp_implementations(opt('tab')) end,
+-- 		desc = 'LSP: [G]oto [I]mplementation' },
+-- 	{ '<leader>D', require('telescope.builtin').lsp_type_definitions,
+-- 		desc = 'LSP: Type [D]efinition' },
+-- 	{ '<leader>ds', require('telescope.builtin').lsp_document_symbols,
+-- 		desc = 'LSP: [D]ocument [S]ymbols' },
+-- 	{ '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols,
+-- 		desc = 'LSP: [W]orkspace [S]ymbols' },
+-- 	{ '<leader>wd', require('telescope.builtin').lsp_document_symbols,
+-- 		desc = 'LSP: [W]orkspace [D]ocument Symbols' },
+-- 	{ '<leader>gt', function() telescope.lsp_type_definitions(opt("tab")) end,
+-- 		desc = 'LSP: [G]o to type definitions' },
+-- 	{ 'K', vim.lsp.buf.hover,
+-- 		desc = 'LSP: Hover Documentation' },
+-- 	{ '<C-k>', vim.lsp.buf.signature_help,
+-- 		desc = 'LSP: Signature Documentation' },
+-- 	{ '<leader>gD', function() vim.lsp.buf.declaration(opt()) end,
+-- 		desc = 'LSP: [G]oto [D]eclaration' },
+-- 	{ '<leader>wa', vim.lsp.buf.add_workspace_folder,
+-- 		desc = 'LSP: [W]orkspace [A]dd Folder' },
+-- 	{ '<leader>wr', vim.lsp.buf.remove_workspace_folder,
+-- 		desc = 'LSP: [W]orkspace [R]emove Folder' },
+-- 	{ '<leader>wl',
+-- 		function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+-- 		desc = 'LSP: [W]orkspace [L]ist Folders' }
+-- }
+
+
 M.config = function()
 	vim.diagnostic.config(M.opts.diagnostics)
 
@@ -195,11 +234,15 @@ M.config = function()
 		ensure_installed = required_servers,
 	}
 
+	capabilities = require('blink.cmp').get_lsp_capabilities({
+		textDocument = { completion = { completionItem = { snippetSupport = false }, }, },
+	})
+
 	for server_name, settings in pairs(servers) do
 		vim.lsp.config(server_name, {
 			-- init_options = settings.init_options or {},
-			capabilities = M.opts.capabilities,
-			settings = settings or {},
+			capabilities = capabilities,
+			-- settings = settings or {},
 			on_attach = on_attach,
 		})
 		vim.lsp.enable(server_name)

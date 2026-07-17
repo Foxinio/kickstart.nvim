@@ -34,7 +34,7 @@ return {
 		vim.g.mkdp_highlight_css = ''
 		vim.g.mkdp_port = ''
 		vim.g.mkdp_page_title = '「${name}」'
-		vim.g.mkdp_images_path = '/media/foxinio/work/foxinio-work/.markdown-cache/markdown_images'
+		vim.g.mkdp_images_path = '/home/sjedras/.markdown-cache/markdown_images'
 		vim.g.mkdp_filetypes = { 'markdown' }
 		vim.g.mkdp_theme = 'dark'
 		vim.g.mkdp_combine_preview = 0
