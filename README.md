@@ -27,6 +27,14 @@ sudo apt install npm
 
 https://github.com/Julian/lean.nvim
 
+
+https://github.com/nanozuki/tabby.nvim
+https://github.com/suliatis/Jumppack.nvim
+https://github.com/akinsho/toggleterm.nvim
+https://github.com/jake-stewart/multicursor.nvim
+https://github.com/civitasv/cmake-tools.nvim
+https://github.com/stevearc/overseer.nvim
+
 ## Previous README
 
 ### Introduction

@@ -56,10 +56,6 @@ M.keys = {
 			}))
 		end,
 		desc = "Search for file in nvim-tree" },
-	{ 'P', function() return require('nvim-tree-preview').watch() end, desc = "Preview file"},
-	{ '<Esc>', function() return require('nvim-tree-preview').unwatch() end, desc = "Preview file"},
-	{ '<C-f>', function() return require('nvim-tree-preview').scroll(4) end, desc = 'Scroll Down' },
-	{ '<C-b>', function() return require('nvim-tree-preview').scroll(-4) end, desc = 'Scroll Up' },
 }
 
 M.opts = {
@@ -97,10 +93,18 @@ M.opts = {
 	},
 }
 
--- M.opts.on_attach = function(bufnr)
--- 	require('nvim-tree').config = { view = { side = 'left', }, }
--- 	require('nvim-tree.api').map.on_attach.default(bufnr)
--- end
+M.opts.on_attach = function(bufnr)
+	require('nvim-tree').config = { view = { side = 'left', }, }
+	require('nvim-tree.api').map.on_attach.default(bufnr)
+	local preview = require('nvim-tree-preview')
+
+	require('which-key').add({
+		{ 'P', preview.watch, desc = "Preview file", buffer = bufnr, },
+		{ '<Esc>', preview.unwatch(), desc = "Preview file", buffer = bufnr, },
+		{ '<C-f>', function() return preview.scroll(4) end, desc = "Scroll Down", buffer = bufnr,  },
+		{ '<C-b>', function() return preview.scroll(-4) end, desc = "Scroll Up", buffer = bufnr,  },
+	})
+end
 
 -- M.config = function ()
 -- 	require("nvim-tree").setup(M.opts)
