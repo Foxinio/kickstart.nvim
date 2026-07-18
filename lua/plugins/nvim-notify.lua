@@ -1,7 +1,7 @@
-return {
+local M = {
 	"rcarriga/nvim-notify",
-	config = function()
-		local notify = require "notify"
-		notify.setup()
-	end
 }
+
+M.opts = {}
+
+return M

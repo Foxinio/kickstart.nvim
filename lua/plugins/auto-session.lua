@@ -1,15 +1,18 @@
 -- TODO : Try alternative: https://github.com/coffebar/neovim-project
-return {
+local M = {
   'rmagatti/auto-session',
-  lazy = false,
-
-  ---enables autocomplete for opts
-  ---@module "auto-session"
-  ---@type AutoSession.Config
-  opts = {
-    suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
-    -- log_level = 'debug',
-		auto_restore = false,
-		auto_create = false
-  }
 }
+
+M.lazy = false
+
+---enables autocomplete for opts
+---@module "auto-session"
+---@type AutoSession.Config
+M.opts = {
+  suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+  -- log_level = 'debug',
+	auto_restore = false,
+	auto_create = false
+}
+
+return M

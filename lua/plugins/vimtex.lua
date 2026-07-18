@@ -1,9 +1,12 @@
-	return {
+local M = {
 	"lervag/vimtex",
-	lazy = false,     -- we don't want to lazy load VimTeX
 	-- tag = "v2.15", -- uncomment to pin to a specific release
-	filetype = "latex",
-	keys = {
+}
+
+M.lazy = false     -- we don't want to lazy load VimTeX
+M.filetype = "latex"
+
+M.keys = {
 		{ "<leader>li", "<plug>(vimtex-info)",
 			mode = "n", desc = "Vimtex info" },
 		{ "<leader>lI", "<plug>(vimtex-info-full)",
@@ -48,18 +51,20 @@
 			mode = "n", desc = "Vimtex toggle main" },
 		{ "<leader>la", "<plug>(vimtex-context-menu)",
 			mode = "n", desc = "Vimtex context menu" },
-	},
-	init = function()
-		-- VimTeX configuration goes here, e.g.
-		vim.g.vimtex_view_general_viewer = 'okular'
-		vim.g.vimtex_view_general_options = '--unique file:@pdf\\#src:@line@tex'
-		vim.g.vimtex_quickfix_mode = 0
-		vim.g.vimtex_quickfix_open_on_warning = 0
-		vim.g.vimtex_quickfix_ignore_filters = {
-			'Package .* Warning:',
-			'LaTeX Warning: Empty .* environment',
-			'I found no \\citation commands',
-		}
-		vim.g.vimtex_quickfix_autoclose_after_keystrokes = 0
-	end
 }
+
+M.init = function()
+	-- VimTeX configuration goes here, e.g.
+	vim.g.vimtex_view_general_viewer = 'okular'
+	vim.g.vimtex_view_general_options = '--unique file:@pdf\\#src:@line@tex'
+	vim.g.vimtex_quickfix_mode = 0
+	vim.g.vimtex_quickfix_open_on_warning = 0
+	vim.g.vimtex_quickfix_ignore_filters = {
+		'Package .* Warning:',
+		'LaTeX Warning: Empty .* environment',
+		'I found no \\citation commands',
+	}
+	vim.g.vimtex_quickfix_autoclose_after_keystrokes = 0
+end
+
+return M

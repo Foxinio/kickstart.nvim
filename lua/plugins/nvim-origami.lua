@@ -1,20 +1,19 @@
+local M = {
+	"chrisgrieser/nvim-origami",
+}
 
-local opts = {
+M.event = "VeryLazy"
+
+M.opts = {
 	foldKeymaps = {
 		setup = false,
 	},
 }
 
-return {
-	"chrisgrieser/nvim-origami",
-	event = "VeryLazy",
-	opts = opts,
+-- recommended: disable vim's auto-folding
+M.init = function()
+	vim.opt.foldlevel = 99
+	vim.opt.foldlevelstart = 99
+end
 
-	-- recommended: disable vim's auto-folding
-	init = function()
-		vim.opt.foldlevel = 99
-		vim.opt.foldlevelstart = 99
-
-		require("origami").setup(opts)
-	end,
-}
+return M

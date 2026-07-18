@@ -7,9 +7,10 @@
 -- TODO : Configure this
 local M = {
 	"echasnovski/mini.diff",
-	enabled = false,
-	event = "BufRead",
 }
+
+M.enabled = false
+M.event = "BufRead"
 
 local icons = require("utils.icons")
 M.opts = {

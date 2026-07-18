@@ -1,9 +1,18 @@
-return {
+local M = {
   'Brychlikov/fram.nvim',
-  name = 'vimplugin-fram.nvim',
-  dependencies = { 'nvim-treesitter/nvim-treesitter' },
-  config = function()
-    require('fram').setup()
-    vim.lsp.enable('framls')
-  end,
 }
+
+M.name = 'vimplugin-fram.nvim'
+
+M.dependencies = {
+  'nvim-treesitter/nvim-treesitter',
+}
+
+M.opts = {}
+
+M.config = function(_, opts)
+  require('fram').setup(opts)
+  vim.lsp.enable('framls')
+end
+
+return M

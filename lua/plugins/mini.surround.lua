@@ -24,20 +24,24 @@ M.opts = {
 	respect_selection_type = true,
 }
 
-M.config = function()
-	require('mini.surround').setup(M.opts)
+M.keys = {
+	{
+		M.opts.mappings.add,
+		[[:<C-u>lua MiniSurround.add('visual')<CR>]],
+		mode = { 'v', 'x' },
+		desc = 'Add surrounding to selection',
+	},
+}
+
+M.config = function(_, opts)
+	require('mini.surround').setup(opts)
 	vim.g.minisurround_disable = false
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "NvimTree",
 		callback = function()
 			vim.b.minisurround_disable = true
-		end,
+	end,
 	})
-	-- TODO : throw out mappings as they are supposed to be done (via opts.mappings)
-	-- and do them using `require('which-key').add({ ... })
-	vim.keymap.set({'v', 'x'}, M.opts.mappings.add,
-			[[:<C-u>lua MiniSurround.add('visual')<CR>]],
-			{ desc = 'Add surrounding to selection' })
 end
 
 return M

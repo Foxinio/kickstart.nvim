@@ -1,10 +1,14 @@
-local M = { "folke/noice.nvim", }
+local M = {
+	"folke/noice.nvim",
+}
+
 M.dependencies = {
 	"MunifTanjim/nui.nvim",
 	"rcarriga/nvim-notify",
 }
 
 M.lazy = false
+
 M.opts = {
 	routes = {
 		{
@@ -57,13 +61,10 @@ M.opts = {
 		lsp_doc_border = true,
 	},
 }
+
 M.keys = {
 	{ "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Noice Dismiss" },
 	{ "<leader>nh", function() require("noice").cmd("telescope") end, desc = "Noice History" },
 }
-
-M.config = function()
-	require("noice").setup(M.opts)
-end
 
 return M

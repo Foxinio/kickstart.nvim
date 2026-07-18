@@ -1,9 +1,13 @@
 -- Theme inspired by Atom
-return {
+local M = {
 	'navarasu/onedark.nvim',
 	-- enabled = false,
-	priority = 1000,
-	config = function()
-		vim.cmd.colorscheme 'onedark'
-	end,
 }
+
+M.priority = 1000
+
+M.config = function()
+	vim.cmd.colorscheme 'onedark'
+end
+
+return M

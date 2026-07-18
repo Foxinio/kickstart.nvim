@@ -6,11 +6,12 @@
 
 local M = {
 	"echasnovski/mini.ai",
-	event = "BufRead",
-	enabled = false,
 }
--- TODO : Configure this
 
+M.enabled = false
+M.event = "BufRead"
+
+-- TODO : Configure this
 M.opts = function()
 	local ai = require("mini.ai")
 

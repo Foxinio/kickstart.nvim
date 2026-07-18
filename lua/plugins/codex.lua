@@ -1,16 +1,17 @@
-return {
+local M = {
   'kkrampis/codex.nvim',
-  lazy = true,
-  cmd = { 'Codex', 'CodexToggle' }, -- Optional: Load only on command execution
-  keys = {
-    {
-      '<leader>cc', -- Change this to your preferred keybinding
-      function() require('codex').toggle() end,
-      desc = 'Toggle Codex popup or side-panel',
-      mode = { 'n', 't' }
-    },
-  },
-  opts = {
+}
+M.lazy = true
+M.cmd = { 'Codex', 'CodexToggle' } -- Optional: Load only on command execution
+M.keys = {
+	{
+		'<leader>cc', -- Change this to your preferred keybinding
+		function() require('codex').toggle() end,
+		desc = 'Toggle Codex popup or side-panel',
+		mode = { 'n', 't' }
+	},
+}
+M.opts = {
     keymaps     = {
       toggle = nil, -- Keybind to toggle Codex window (Disabled by default, watch out for conflicts)
       quit = '<C-q>', -- Keybind to close the Codex window (default: Ctrl + q)
@@ -22,8 +23,9 @@ return {
     autoinstall = true,       -- Automatically install the Codex CLI if not found
     panel       = false,      -- Open Codex in a side-panel (vertical split) instead of floating window
     use_buffer  = false,      -- Capture Codex stdout into a normal buffer instead of a terminal buffer
-  },
-}
+  }
+
+return M
 
 -- ### Usage:
 -- - Call `:Codex` (or `:CodexToggle`) to open or close the Codex popup or side-panel.

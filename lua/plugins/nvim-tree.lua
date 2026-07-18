@@ -1,15 +1,16 @@
 local M = {
 	'nvim-tree/nvim-tree.lua',
-	dependencies = {
-		'nvim-tree/nvim-web-devicons',
-		{
-			'b0o/nvim-tree-preview.lua',
-			dependencies = {
-				'nvim-lua/plenary.nvim',
-				'3rd/image.nvim',
-			},
+}
+
+M.dependencies = {
+	'nvim-tree/nvim-web-devicons',
+	{
+		'b0o/nvim-tree-preview.lua',
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'3rd/image.nvim',
 		},
-	}
+	},
 }
 
 M.keys = {

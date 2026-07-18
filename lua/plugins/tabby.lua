@@ -1,4 +1,6 @@
-local M = { "nanozuki/tabby.nvim" }
+local M = {
+	"nanozuki/tabby.nvim",
+}
 
 -- @type TabbyConfig
 M.opts = {
