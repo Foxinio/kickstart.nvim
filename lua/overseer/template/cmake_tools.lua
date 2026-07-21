@@ -2,35 +2,26 @@ local M = {
 	name = "cmake-tools",
 }
 
-function M.result_ok(result)
+local function save_require(name)
+	local ok, mod = pcall(require, name)
+	if ok then
+		return mod
+	else
+		return {}
+	end
+end
+
+local function result_ok(result)
 	return result and (result.code == 0 or (type(result.is_ok) == "function" and result:is_ok()))
 end
 
-function M.append_all(target, source)
+local function append_all(target, source)
 	for _, value in ipairs(source or {}) do
 		table.insert(target, value)
 	end
 end
 
-function M.cmake_command()
-	local ok, const = pcall(require, "cmake-tools.const")
-	if ok then
-		return const.cmake_command
-	end
-
-	return "cmake"
-end
-
-function M.ctest_command()
-	local ok, const = pcall(require, "cmake-tools.const")
-	if ok then
-		return const.ctest_command
-	end
-
-	return "ctest"
-end
-
-function M.get_config(cmake)
+local function get_config(cmake)
 	local config = cmake.get_config()
 	if type(config.update_build_directory) == "function" then
 		config:update_build_directory()
@@ -40,7 +31,7 @@ function M.get_config(cmake)
 end
 
 function M.build_args(cmake, target)
-	local config = M.get_config(cmake)
+	local config = get_config(cmake)
 	local args
 
 	if config.build_preset then
@@ -49,18 +40,18 @@ function M.build_args(cmake, target)
 		args = { "--build", config:build_directory_path() }
 	end
 
-	M.append_all(args, { "--target", target })
+	append_all(args, { "--target", target })
 
 	if config.build_type then
-		M.append_all(args, { "--config", config.build_type })
+		append_all(args, { "--config", config.build_type })
 	end
 
-	M.append_all(args, cmake.get_build_options())
+	append_all(args, cmake.get_build_options())
 	return args
 end
 
 function M.test_args(cmake)
-	local config = M.get_config(cmake)
+	local config = get_config(cmake)
 	local args
 
 	if config.test_preset then
@@ -74,7 +65,7 @@ function M.test_args(cmake)
 end
 
 function M.run_info(cmake, target)
-	local config = M.get_config(cmake)
+	local config = get_config(cmake)
 	local model_info = cmake.get_model_info()
 	if not model_info or model_info.code then
 		return nil
@@ -86,7 +77,7 @@ function M.run_info(cmake, target)
 	end
 
 	local launch_target = config:get_launch_target_from_info(target_info)
-	if not M.result_ok(launch_target) then
+	if not result_ok(launch_target) then
 		return nil
 	end
 
@@ -100,11 +91,12 @@ function M.run_info(cmake, target)
 end
 
 function M.build_task(cmake, target)
-	local config = M.get_config(cmake)
+	local cmd = save_require("cmake-tools.const").cmake_command or "cmake"
+	local config = get_config(cmake)
 
 	return {
 		name = "CMake: build " .. target,
-		cmd = M.cmake_command(),
+		cmd = cmd,
 		args = M.build_args(cmake, target),
 		cwd = config.cwd,
 		env = cmake.get_build_environment(),
@@ -112,11 +104,12 @@ function M.build_task(cmake, target)
 end
 
 function M.test_task(cmake)
-	local config = M.get_config(cmake)
+	local cmd = save_require("cmake-tools.const").ctest_command or "ctest"
+	local config = get_config(cmake)
 
 	return {
 		name = "CMake: test all",
-		cmd = M.ctest_command(),
+		cmd = cmd,
 		args = M.test_args(cmake),
 		cwd = config.cwd,
 		env = cmake.get_build_environment(),
@@ -128,7 +121,8 @@ function M.run_task(cmake, target)
 	if not info then
 		return {
 			name = "CMake: run " .. target,
-			cmd = "false",
+			cmd = "sh",
+			args = { "-c", "echo 'CMake target is not built; run the matching build task first.' >&2; exit 1" },
 		}
 	end
 
@@ -139,17 +133,18 @@ end
 
 function M.build_templates(cmake, templates)
 	local build_targets = cmake.get_build_targets()
-	if not M.result_ok(build_targets) then
+	if not result_ok(build_targets) then
 		return build_targets and build_targets.message or "Unable to get CMake build targets"
 	end
 
 	for index, target in ipairs(build_targets.data.targets or {}) do
+		local target_name = target
 		local display_target = build_targets.data.display_targets[index] or target
 		table.insert(templates, {
-			name = "CMake: build " .. target,
+			name = "CMake: build " .. target_name,
 			desc = display_target,
 			builder = function()
-				return M.build_task(cmake, target)
+				return M.build_task(cmake, target_name)
 			end,
 		})
 	end
@@ -157,17 +152,18 @@ end
 
 function M.run_templates(cmake, templates)
 	local launch_targets = cmake.get_launch_targets()
-	if not M.result_ok(launch_targets) then
+	if not result_ok(launch_targets) then
 		return
 	end
 
 	for index, target in ipairs(launch_targets.data.targets or {}) do
+		local target_name = target
 		local display_target = launch_targets.data.display_targets[index] or target
 		table.insert(templates, {
-			name = "CMake: run " .. target,
+			name = "CMake: run " .. target_name,
 			desc = display_target,
 			builder = function()
-				return M.run_task(cmake, target)
+				return M.run_task(cmake, target_name)
 			end,
 		})
 	end
@@ -197,4 +193,5 @@ function M.generator()
 	return templates
 end
 
-return M
+-- this is very noisy in a project with many targets
+return {}

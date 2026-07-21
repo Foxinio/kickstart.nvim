@@ -11,9 +11,23 @@ local overseer_opts = {
 			"jobstart",
 			use_terminal = false,
 		},
+		components = {
+			{
+				"on_output_quickfix",
+				errorformat = vim.o.errorformat,
+				open = false,
+				open_on_match = false,
+				open_on_exit = "never",
+				open_height = 10,
+				items_only = true,
+				tail = true,
+			},
+			"on_exit_set_status",
+			{ "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
+		},
 	},
 	on_new_task = function()
-		require("overseer").open({ enter = false, direction = "left" })
+		require("overseer").open({ enter = false })
 	end,
 }
 
