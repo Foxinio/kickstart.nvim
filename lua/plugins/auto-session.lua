@@ -9,7 +9,7 @@ return {
   opts = {
     suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
     -- log_level = 'debug',
-		auto_restore = false,
-		auto_create = false
+		auto_restore = true,
+		auto_create = true
   }
 }

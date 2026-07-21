@@ -40,6 +40,9 @@ vim.keymap.set('n', '<S-ScrollWheelDown>', '<ScrollWheelLeft>', { desc = "Scroll
 vim.keymap.set('i', '<C-Right>', '<C-o>e<Right>')
 -- vim.keymap.set('i', '<C-Left>', '<C-o>e<C-o>l')
 
+-- Go back and go fourth in history
+vim.keymap.set('n', '<M-Left>', '<Cmd>normal! <C-o><CR>', { desc = "Go back in history", silent = true })
+vim.keymap.set('n', '<M-Right>', '<Cmd>normal! <C-i><CR>', { desc = "Go fourth in history", silent = true })
 
 --  Make S-Y act same as S-D and S-C
 vim.keymap.set('n', '<S-Y>', 'v$hy', { desc = "Yank to end of line" })
