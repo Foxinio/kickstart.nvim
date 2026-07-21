@@ -1,7 +1,9 @@
 local M = {
 	"oskarrrrrrr/symbols.nvim",
-	enabled = false,
 }
+
+M.enabled = false
+
 M.opts = {
 	sidebar = {
 		preview = {
@@ -15,15 +17,18 @@ M.opts = {
 	},
 }
 
-M.config = function()
+M.keys = {
+	{ ",s", "<cmd>Symbols<CR>" },
+	{ ",S", "<cmd>SymbolsClose<CR>" },
+}
+
+M.config = function(_, opts)
 	local r = require("symbols.recipes")
 	require("symbols").setup(
 		r.DefaultFilters,
 		r.AsciiSymbols,
-		M.opts
+		opts
 	)
-	vim.keymap.set("n", ",s", "<cmd>Symbols<CR>")
-	vim.keymap.set("n", ",S", "<cmd>SymbolsClose<CR>")
 
 	vim.api.nvim_create_autocmd({"FileType", "BufWinEnter", }, {
 		pattern = { "SymbolsSidebar", "symbols" },

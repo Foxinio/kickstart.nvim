@@ -1,4 +1,4 @@
-return {
+local M = {
 	'tpope/vim-fugitive',
 	'tpope/vim-rhubarb',
 
@@ -33,3 +33,5 @@ https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 	-- A Vim Plugin for Lively Previewing LaTeX PDF Output
 	-- "xuhdev/vim-latex-live-preview",
 }
+
+return M

@@ -4,22 +4,28 @@
 -- Config taken from
 -- https://github.com/ruicsh/nvim-config/blob/main/lua/plugins/mini.operators.lua
 
-return {
+local M = {
 	"echasnovski/mini.operators",
+<<<<<<< HEAD
 	enabled = false,
+=======
+}
+
+>>>>>>> master
 -- TODO : Configure this
-	opts = {
-		exchange = {
-			prefix = "<leader>x",
-		},
-		multiply = {
-			prefix = "<leader>m",
-		},
-		replace = {
-			prefix = "<leader>r",
-		},
-		sort = {
-			prefix = "<leader>sl",
-		},
+M.opts = {
+	exchange = {
+		prefix = "<leader>x",
+	},
+	multiply = {
+		prefix = "<leader>m",
+	},
+	replace = {
+		prefix = "<leader>r",
+	},
+	sort = {
+		prefix = "<leader>sl",
 	},
 }
+
+return M

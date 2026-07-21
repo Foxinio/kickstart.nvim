@@ -4,13 +4,16 @@
 -- Config taken from
 -- https://github.com/ruicsh/nvim-config/blob/main/lua/plugins/mini.align.lua
 
-return {
+local M = {
 	"echasnovski/mini.align",
+}
+
 -- TODO : Configure this
-	opts = {
-		mappings = {
-			start = "ga",
-			start_with_preview = "gA",
-		},
+M.opts = {
+	mappings = {
+		start = "ga",
+		start_with_preview = "gA",
 	},
 }
+
+return M

@@ -1,9 +1,13 @@
-return {
+local M = {
 	"catppuccin/nvim",
 	-- enabled = false,
-	name = "catppuccin",
-	priority = 1000,
-	opts = {
-		flavour = "latte",
-	},
 }
+
+M.name = "catppuccin"
+M.priority = 1000
+
+M.opts = {
+	flavour = "latte",
+}
+
+return M

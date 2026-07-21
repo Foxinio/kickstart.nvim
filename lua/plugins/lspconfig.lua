@@ -134,11 +134,15 @@ M.opts = {
 		formatting_options = nil,
 		timeout_ms = nil,
 	},
+	mason_lspconfig = {
+		automatic_enable = true,
+		ensure_installed = required_servers,
+	},
 	servers = servers,
 }
 
-M.config = function()
-	vim.diagnostic.config(M.opts.diagnostics)
+M.config = function(_, opts)
+	vim.diagnostic.config(opts.diagnostics)
 
 	require('lazydev').setup()
 
@@ -148,10 +152,7 @@ M.config = function()
 	-- })
 
 	require("mason").setup()
-	require("mason-lspconfig").setup {
-		automatic_enable = true,
-		ensure_installed = required_servers,
-	}
+	require("mason-lspconfig").setup(opts.mason_lspconfig)
 
 	capabilities = require('blink.cmp').get_lsp_capabilities({
 		textDocument = { completion = { completionItem = { snippetSupport = false }, }, },
@@ -160,7 +161,7 @@ M.config = function()
 	for server_name, settings in pairs(servers) do
 		vim.lsp.config(server_name, {
 			-- init_options = settings.init_options or {},
-			capabilities = M.opts.capabilities,
+			capabilities = opts.capabilities,
 			settings = settings or {},
 			on_attach = require("utils.lsp-on-attach").on_attach,
 		})

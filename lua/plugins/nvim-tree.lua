@@ -1,13 +1,14 @@
 local M = {
 	'nvim-tree/nvim-tree.lua',
-	dependencies = {
-		'nvim-tree/nvim-web-devicons',
-		{
-			'b0o/nvim-tree-preview.lua',
-			dependencies = {
-				'nvim-lua/plenary.nvim',
-				'3rd/image.nvim',
-			},
+}
+
+M.dependencies = {
+	'nvim-tree/nvim-web-devicons',
+	{
+		'b0o/nvim-tree-preview.lua',
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'3rd/image.nvim',
 		},
 	},
 }
@@ -30,31 +31,8 @@ M.keys = {
 	desc = "Refresh nvim-tree", { silent = true } },
 
 	{ '<leader>t/', function()
-		require("telescope.builtin").find_files(
-			require("telescope.themes").get_dropdown({
-				winblend = 10,
-				previewer = false,
-				prompt_title = "Select File",
-				cwd = require("nvim-tree.core").get_cwd(),
-				attach_mappings = function(prompt_bufnr, map)
-					local function select_file()
-						require('telescope.actions').close(prompt_bufnr)
-
-						local entry = require('telescope.actions.state').get_selected_entry()
-						local path = entry and (entry.path or entry[1])
-						if not path or path == "" then return end
-
-						require("nvim-tree.api").tree.find_file({
-							open = true, focus = true,
-							buf = path
-						})
-					end
-					map('i', '<CR>', select_file)
-					map('n', '<CR>', select_file)
-					return true
-				end,
-			}))
-		end,
+		require('utils.telescope').find_file_in_nvim_tree()
+	end,
 		desc = "Search for file in nvim-tree" },
 }
 

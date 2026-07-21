@@ -1,5 +1,5 @@
 local M = {
-	'kkrampis/codex.nvim'
+  'kkrampis/codex.nvim',
 }
 M.lazy = true
 M.cmd = { 'Codex', 'CodexToggle' } -- Optional: Load only on command execution

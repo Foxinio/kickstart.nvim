@@ -14,18 +14,21 @@ local function windsurf()
 end
 
 
-return {
+local M = {
 	'nvim-lualine/lualine.nvim',
-	opts = {
-		options = {
-			icons_enabled = true,
-			theme = 'onedark',
-			component_separators = '|',
-			section_separators = '',
-		},
-		sections = {
-			lualine_y = { windsurf },
-			-- lualine_a = { "mode", { require("easy-dotnet.ui-modules.jobs").lualine } },
-		},
+}
+
+M.opts = {
+	options = {
+		icons_enabled = true,
+		theme = 'onedark',
+		component_separators = '|',
+		section_separators = '',
+	},
+	sections = {
+		lualine_y = { windsurf },
+		-- lualine_a = { "mode", { require("easy-dotnet.ui-modules.jobs").lualine } },
 	},
 }
+
+return M
