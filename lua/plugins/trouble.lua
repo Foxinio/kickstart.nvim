@@ -1,26 +1,31 @@
 local M =  { "folke/trouble.nvim" }
 
-
 M.cmd = { "Trouble", "Trouble" }
 M.opts = {
 	use_diagnostic_signs = true,
 	modes = {
-		mysymbols = {
+		symbols = {
 			desc = "LSP Symbols",
 			mode = "lsp_document_symbols",
-			focus = true,
-			win = { position = "right", width = 30 },
-      preview = {
-        type = "float",
-        relative = "editor",
-        border = "rounded",
-        anchor = "NE",
-        title = "Preview",
-        title_pos = "center",
-        position = { 0, -2 },
-        size = { width = 0.3, height = 0.1 },
-        -- zindex = 200,
-      },
+			focus = false,
+			pinned = true,
+			auto_jump = false,
+			follow = true,
+			multiline = false,
+			win = {
+				position = "right",
+				width = 32,
+			},
+			preview = {
+				type = "float",
+				relative = "editor",
+				border = "rounded",
+				anchor = "NW",
+				title = "Preview",
+				title_pos = "center",
+				position = { 2, 2 },
+				size = { width = 0.38, height = 0.25 },
+			},
 			keys = {
 				["<TAB>"] = "fold_open",
 				["<BS>"]  = "fold_close",

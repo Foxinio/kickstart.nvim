@@ -8,6 +8,7 @@
 
 return {
 	"echasnovski/mini.hipatterns",
+	enabled = false,
 -- TODO : Configure this
 	opts = function()
 		local hi = require("mini.hipatterns")

@@ -34,6 +34,7 @@ https://github.com/akinsho/toggleterm.nvim
 https://github.com/jake-stewart/multicursor.nvim
 https://github.com/civitasv/cmake-tools.nvim
 https://github.com/stevearc/overseer.nvim
+https://github.com/olimorris/codecompanion.nvim
 
 ## Previous README
 

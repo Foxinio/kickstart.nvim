@@ -1,5 +1,6 @@
 local M = {
 	"oskarrrrrrr/symbols.nvim",
+	enabled = false,
 }
 M.opts = {
 	sidebar = {

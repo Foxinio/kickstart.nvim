@@ -54,8 +54,8 @@ M.keys = {
 					return true
 				end,
 			}))
-	end,
-	desc = "Search for file in nvim-tree" },
+		end,
+		desc = "Search for file in nvim-tree" },
 }
 
 M.opts = {
@@ -98,33 +98,14 @@ M.opts.on_attach = function(bufnr)
 	require('nvim-tree').config = { view = { side = 'left', }, }
 	require('nvim-tree.api').map.on_attach.default(bufnr)
 
-
-	local function opts(desc)
-		return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-	end
-
 	local preview = require('nvim-tree-preview')
 
-	vim.keymap.set('n', 'P', preview.watch, opts 'Preview (Watch)')
-	vim.keymap.set('n', '<Esc>', preview.unwatch, opts 'Close Preview/Unwatch')
-	vim.keymap.set('n', '<C-f>', function() return preview.scroll(4) end, opts 'Scroll Down')
-	vim.keymap.set('n', '<C-b>', function() return preview.scroll(-4) end, opts 'Scroll Up')
-
-	-- Option A: Smart tab behavior: Only preview files, expand/collapse directories (recommended)
-	-- vim.keymap.set('n', '<Tab>', function()
-	-- 	local ok, node = pcall(api.tree.get_node_under_cursor)
-	-- 	if ok and node then
-	-- 		if node.type == 'directory' then
-	-- 			api.node.open.edit()
-	-- 		else
-	-- 			preview.node(node, { toggle_focus = true })
-	-- 		end
-	-- 	end
-	-- end, opts 'Preview')
-end
-
-M.config = function ()
-	require("nvim-tree").setup(M.opts)
+	require('which-key').add({
+		{ 'P', preview.watch, desc = "Preview file", buffer = bufnr, },
+		{ '<Esc>', preview.unwatch(), desc = "Preview file", buffer = bufnr, },
+		{ '<C-f>', function() return preview.scroll(4) end, desc = "Scroll Down", buffer = bufnr,  },
+		{ '<C-b>', function() return preview.scroll(-4) end, desc = "Scroll Up", buffer = bufnr,  },
+	})
 end
 
 return M

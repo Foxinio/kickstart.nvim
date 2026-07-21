@@ -4,8 +4,15 @@
 -- Config taken from
 -- https://github.com/ruicsh/nvim-config/blob/main/lua/plugins/mini.diff.lua
 
+-- TODO : Configure this
+local M = {
+	"echasnovski/mini.diff",
+	enabled = false,
+	event = "BufRead",
+}
+
 local icons = require("utils.icons")
-local opts = {
+M.opts = {
 	view = {
 		style = "sign",
 		signs = {
@@ -25,18 +32,9 @@ local opts = {
 	},
 }
 
-return {
-	"echasnovski/mini.diff",
--- TODO : Configure this
-	enabled = false,
-	config = function()
-		local diff = require("mini.diff")
+M.keys = {
+	{ "<leader>hd", function() require('mini.diff').toggle_overlay() end, desc = "Toggle diff overlay" },
 
-		diff.setup(opts)
-		require('which-key').add({
-			{ "<leader>hd", diff.toggle_overlay, desc = "Toggle diff overlay" },
-		})
-	end,
-	opts = opts,
-	event = "BufRead",
 }
+
+return M

@@ -1,8 +1,6 @@
 -- Fuzzy Finder (files, lsp, etc)
 return {
 	'nvim-telescope/telescope.nvim',
-	--[[ branch = '0.1.x', ]]
-	-- tag = 'v0.10.0',
 	version = '*',
 	dependencies = {
 		'nvim-lua/plenary.nvim',
