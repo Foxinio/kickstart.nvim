@@ -30,7 +30,7 @@ M.dependencies = {
 }
 
 M.keys = {
-	{ '<leader>sq', function() require('telescope.builtin').quickfix() end, { desc = '[S]earch [/] in Open Files' },
+	{ '<leader>sq', function() require('telescope.builtin').quickfix() end, desc = '[S]earch [/] in Open Files' },
 	{ '<leader>?', function() require('telescope.builtin').oldfiles() end, desc = '[?] Find recently opened files' },
 	{ '<leader><space>', function() require('telescope.builtin').buffers() end, desc = '[ ] Find existing buffers' },
 	{ '<leader>/', function() require('utils.telescope').current_buffer_fuzzy_find() end, desc = '[/] Fuzzily search in current buffer' },

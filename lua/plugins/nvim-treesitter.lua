@@ -1,6 +1,10 @@
 -- Highlight, edit, and navigate code
 local M = {
 	'nvim-treesitter/nvim-treesitter',
+}
+
+M.branch 'master'
+
 M.main = 'nvim-treesitter.configs'
 
 M.dependencies = {
@@ -81,7 +85,7 @@ M.opts = {
 M.config = function(_, opts)
 	-- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 	vim.defer_fn(function()
-		require('nvim-treesitter.configs').setup(opts)
+		require('nvim-treesitter.config').setup(opts)
 	end, 0)
 end
 

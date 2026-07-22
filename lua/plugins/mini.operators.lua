@@ -6,12 +6,10 @@
 
 local M = {
 	"echasnovski/mini.operators",
-<<<<<<< HEAD
-	enabled = false,
-=======
 }
 
->>>>>>> master
+M.enabled = false
+
 -- TODO : Configure this
 M.opts = {
 	exchange = {
