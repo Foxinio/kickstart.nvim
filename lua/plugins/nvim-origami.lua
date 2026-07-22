@@ -12,13 +12,11 @@ M.opts = {
 
 M.event = "VeryLazy"
 
-M.config = function(_, opts)
+M.init = function()
 	-- Keep files open on entry; folds are still available manually.
 	vim.opt.foldenable = false
 	vim.opt.foldlevel = 99
 	vim.opt.foldlevelstart = 99
-
-	require("origami").setup(opts)
 end
 
 return M

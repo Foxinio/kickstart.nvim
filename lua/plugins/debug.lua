@@ -5,9 +5,6 @@ local M = {
 	'mfussenegger/nvim-dap',
 }
 
-M.enabled = false
-M.enable = false
-
 -- NOTE: And you can specify dependencies as well
 M.dependencies = {
 	-- Creates a beautiful debugger UI

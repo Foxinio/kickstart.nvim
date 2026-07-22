@@ -3,7 +3,7 @@ local M = {
 	'nvim-treesitter/nvim-treesitter',
 }
 
-M.branch 'master'
+M.branch = 'master'
 
 M.main = 'nvim-treesitter.configs'
 
