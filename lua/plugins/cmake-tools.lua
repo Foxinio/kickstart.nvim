@@ -23,6 +23,11 @@ local overseer_opts = {
 				tail = true,
 			},
 			"on_exit_set_status",
+			{
+				"on_complete_notify",
+				statuses = { "SUCCESS", "FAILURE" },
+				system = "never",
+			},
 			{ "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
 		},
 	},
@@ -37,6 +42,11 @@ M.opts = {
 	cmake_notifications = {
 		runner = { enabled = false },
 		executor = { enabled = false },
+	},
+	cmake_dap_configuration = {
+		type = "codelldb",
+		request = "launch",
+		stopOnEntry = false,
 	},
 	cmake_virtual_text_support = false,
 	cmake_executor = {
@@ -56,6 +66,7 @@ M.opts = {
 
 M.config = function(_, opts)
 	local cmake_tools = require("cmake-tools")
+	local cmake_utils = require("plugin-utils.cmake-tools")
 
 	cmake_tools.setup(opts)
 
@@ -65,6 +76,29 @@ M.config = function(_, opts)
 	end, {
 		nargs = "*",
 		desc = "CMake run test",
+	})
+
+	vim.api.nvim_create_user_command("CMakeRunTestRegex", function(command_opts)
+		cmake_utils.select_test_regex(cmake_tools, command_opts.args)
+	end, {
+		nargs = "*",
+		desc = "CMake run tests matching the Telescope prompt as a regex",
+	})
+
+	vim.api.nvim_create_user_command("CMakeRun", function(command_opts)
+		cmake_utils.run(cmake_tools, command_opts)
+	end, {
+		nargs = "*",
+		desc = "CMake run",
+		force = true,
+	})
+
+	vim.api.nvim_create_user_command("CMakeRunCurrentFile", function(command_opts)
+		cmake_utils.run_current_file(cmake_tools, command_opts)
+	end, {
+		nargs = "*",
+		desc = "CMake run current file",
+		force = true,
 	})
 end
 

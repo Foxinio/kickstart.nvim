@@ -50,6 +50,12 @@ M.opts = {
 M.config = function(_, opts)
 	require("overseer").setup(opts)
 
+	vim.api.nvim_create_user_command("OverseerDisposeAll", function()
+		require("plugin-utils.overseer").clear_list()
+	end, {
+		desc = "Dispose all Overseer tasks",
+	})
+
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "OverseerOutput",
 		callback = function(args)
