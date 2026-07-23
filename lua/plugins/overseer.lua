@@ -58,11 +58,14 @@ M.config = function(_, opts)
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "OverseerOutput",
 		callback = function(args)
+			local overseer_utils = require("plugin-utils.overseer")
 			local close_float = function()
 				if vim.api.nvim_win_get_config(0).relative ~= "" then
 					vim.cmd.close()
 				end
 			end
+
+			overseer_utils.setup_output_highlights(args.buf)
 
 			vim.keymap.set("n", "q", close_float, {
 				buffer = args.buf,
