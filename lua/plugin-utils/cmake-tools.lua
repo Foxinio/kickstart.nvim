@@ -150,6 +150,17 @@ function M.select_test_regex(cmake_tools, initial_regex)
 	end)
 end
 
+function M.build_single_target(cmake_tools, opts)
+	if not cmake_tools.is_cmake_project() then
+		vim.notify("Not a CMake project", vim.log.levels.WARN, { title = "CMakeTools" })
+		return
+	end
+
+	opts = opts or {}
+	opts.fargs = opts.fargs or {}
+	cmake_tools.quick_build(opts)
+end
+
 function M.run(cmake_tools, opts)
 	run_with_codemodel_retry(cmake_tools, cmake_tools.run, opts)
 end

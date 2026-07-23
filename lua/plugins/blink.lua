@@ -201,7 +201,7 @@ M.opts.sources = {
 		"lazydev",
 		"lsp",
 		"path",
-		"snippets",
+		-- "snippets",
 		"buffer",
 		"codeium",
 	},

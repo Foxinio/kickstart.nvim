@@ -4,6 +4,7 @@ local M = {
 	-- NOTE: Yes, you can install new plugins here!
 	'mfussenegger/nvim-dap',
 }
+M.enabled = false
 
 -- NOTE: And you can specify dependencies as well
 M.dependencies = {
