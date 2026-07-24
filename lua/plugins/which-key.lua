@@ -13,7 +13,7 @@ M.opts = {
 }
 
 M.keys = {
-	{ "<leader>wk", "<cmd>WhichKey<CR>", mode = { "n", "x", "s", "v", "t", "c" }, silent = true },
+	{ "<leader>wk", "<cmd>WhichKey<CR>", mode = { "n", "x", "s", "v", "t" }, silent = true },
 }
 
 M.config = function(_, opts)
