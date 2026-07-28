@@ -28,7 +28,11 @@ local overseer_opts = {
 				statuses = { "SUCCESS", "FAILURE" },
 				system = "never",
 			},
-			{ "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
+			{
+				"on_complete_dispose",
+				timeout = 900,
+				require_view = { "SUCCESS", "FAILURE" },
+			},
 		},
 	},
 	on_new_task = function()
@@ -90,6 +94,13 @@ M.config = function(_, opts)
 	end, {
 		nargs = "?",
 		desc = "CMake build a single target",
+	})
+
+	vim.api.nvim_create_user_command("CMakeRunSingleTarget", function(command_opts)
+		cmake_utils.run_single_target(cmake_tools, command_opts)
+	end, {
+		nargs = "*",
+		desc = "CMake run a single target",
 	})
 
 	vim.api.nvim_create_user_command("CMakeRun", function(command_opts)
