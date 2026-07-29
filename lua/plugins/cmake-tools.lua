@@ -5,6 +5,16 @@ M.dependencies = {
 	"stevearc/overseer.nvim",
 }
 
+local cmake_test_errorformat = table.concat({
+	-- CTest prefixes test output with "<test-number>: ". If this is not
+	-- consumed first, it can be parsed as part of the filename.
+	[[%*\d:%\s%#%t%*\d %*\d:%*\d:%*\d.%*\d%\s%#%*\d%\s%#%f:%l]%\s%#%m]],
+	[[%t%*\d %*\d:%*\d:%*\d.%*\d%\s%#%*\d%\s%#%f:%l]%\s%#%m]],
+	[[%*\d:%\s%#%f:%l:%c:%m]],
+	[[%f:%l:%c:%m]],
+	vim.o.errorformat,
+}, ",")
+
 local overseer_opts = {
 	new_task_opts = {
 		strategy = {
@@ -14,7 +24,7 @@ local overseer_opts = {
 		components = {
 			{
 				"on_output_quickfix",
-				errorformat = vim.o.errorformat,
+				errorformat = cmake_test_errorformat,
 				open = false,
 				open_on_match = false,
 				open_on_exit = "never",
