@@ -53,6 +53,7 @@ local overseer_opts = {
 M.opts = {
 	cmake_build_directory = "build",
 	cmake_build_options = { "-j" },
+	cmake_regenerate_on_save = false,
 	cmake_notifications = {
 		runner = { enabled = false },
 		executor = { enabled = false },

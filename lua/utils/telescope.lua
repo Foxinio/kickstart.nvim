@@ -98,7 +98,7 @@ function M.editable_root_picker(opts)
 		local picker_attach_mappings = picker_opts.attach_mappings
 
 		picker_opts.attach_mappings = function(prompt_bufnr, map)
-			map('i', opts.cmd_args_key or '<C-f>', function()
+			map('i', opts.cmd_args_key or '<C-a>', function()
 				local picker = action_state.get_current_picker(prompt_bufnr)
 				local prompt = picker:_get_prompt()
 				actions.close(prompt_bufnr)
@@ -120,7 +120,7 @@ function M.editable_root_picker(opts)
 				end)
 			end)
 
-			map('i', opts.root_key or '<C-r>', function()
+			map('i', opts.root_key or '<C-f>', function()
 				local picker = action_state.get_current_picker(prompt_bufnr)
 				local prompt = picker:_get_prompt()
 				actions.close(prompt_bufnr)
@@ -186,7 +186,7 @@ function M.live_grep_with_editable_args()
 		parse_cmd_args = parse_args,
 		prompt_title = function(state)
 			local root = M.root_label(state.cwd)
-			return 'Live Grep (' .. root .. ') [' .. table.concat(state.cmd_args, ' ') .. ')'
+			return 'Live Grep (' .. root .. ') [' .. table.concat(state.cmd_args, ' ') .. ']'
 		end,
 		open = function(state, picker_opts)
 			picker_opts.entry_maker = make_entry.gen_from_vimgrep {}

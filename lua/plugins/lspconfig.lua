@@ -154,14 +154,14 @@ M.config = function(_, opts)
 	require("mason").setup()
 	require("mason-lspconfig").setup(opts.mason_lspconfig)
 
-	capabilities = require('blink.cmp').get_lsp_capabilities({
+	opts.capabilities = require('blink.cmp').get_lsp_capabilities({
 		textDocument = { completion = { completionItem = { snippetSupport = false }, }, },
 	})
 
 	for server_name, settings in pairs(servers) do
 		vim.lsp.config(server_name, {
 			-- init_options = settings.init_options or {},
-			capabilities = opts.capabilities,
+			capabilities = opts.capabilities or {},
 			settings = settings or {},
 			on_attach = require("utils.lsp-on-attach").on_attach,
 		})

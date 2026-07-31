@@ -15,8 +15,16 @@ end
 M.opts = {
 	suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
 	-- log_level = 'debug',
-	auto_restore = false,
-	auto_create = false,
+	auto_restore = true,
+	auto_create = true,
+	close_filetypes_on_save = {
+		"checkhealth",
+		"NvimTree",
+		"NvimTreeFilter",
+		"OverseerList",
+		"OverseerOutput",
+		"OverseerForm",
+	},
 	close_unsupported_windows = false,
 }
 

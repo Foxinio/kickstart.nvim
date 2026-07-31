@@ -109,13 +109,17 @@ M.opts.keymap = {
 			end
 		end, "fallback"
 	},
-	["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+	["<S-Tab>"] = {
+		"select_prev",
+		-- "snippet_backward",
+		"fallback"
+		},
 	["<Tab>"] = {
 		function(cmp)
 			if cmp.is_menu_visible() then
 				return cmp.select_next()
-			elseif cmp.snippet_active() then
-				return cmp.snippet_forward()
+			-- elseif cmp.snippet_active() then
+			-- 	return cmp.snippet_forward()
 			elseif has_words_before() then
 				return cmp.show()
 			end
@@ -159,7 +163,7 @@ M.opts.cmdline = {
 			end
 		end, "fallback"
 	},
-	["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+	["<S-Tab>"] = { "select_prev", "fallback" },
 	["<Tab>"] = {
 		function(cmp)
 			if cmp.is_menu_visible() then
@@ -224,6 +228,6 @@ M.opts.sources = {
 	end,
 }
 
-M.opts.snippets = { preset = 'luasnip' }
+-- M.opts.snippets = { preset = 'luasnip' }
 
 return M

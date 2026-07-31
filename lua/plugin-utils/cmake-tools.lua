@@ -14,7 +14,9 @@ local function get_config(cmake_tools)
 end
 
 local function is_cmake_file_api_json_error(err)
-	return type(err) == "string" and err:find("cmake%-tools/config%.lua") and err:find("invalid token")
+	return type(err) == "string"
+		and err:find("%.cmake/api/v1/reply")
+		and (err:find("invalid token") or err:find("ENOENT"))
 end
 
 local function clear_cmake_file_api_reply(config)
@@ -158,7 +160,7 @@ function M.build_single_target(cmake_tools, opts)
 
 	opts = opts or {}
 	opts.fargs = opts.fargs or {}
-	cmake_tools.quick_build(opts)
+	run_with_codemodel_retry(cmake_tools, cmake_tools.quick_build, opts)
 end
 
 local function get_launch_targets(cmake_tools, callback, retried)
