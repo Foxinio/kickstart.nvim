@@ -6,7 +6,7 @@ M.dependencies = {
 	'nvim-telescope/telescope.nvim',
 }
 
--- M.ft = "coq"
+M.ft = "coq"
 
 M.keys = {
 	{ '<M-down>', '<Plug>CoqNext', noremap = true },
@@ -18,8 +18,14 @@ M.build = function()
 end
 
 M.init = function()
+	vim.g.filetype_v = "coq"
+	vim.filetype.add({
+		extension = {
+			v = "coq",
+		},
+	})
 	vim.g.coqtail_noindent = 1
-	vim.g.coqtail_noindent_comments = 1
+	vim.g.coqtail_noindent_comment = 1
 	vim.g.coqtail_auto_set_proof_diffs = 'on'
 
 	vim.api.nvim_create_autocmd('FileType', {
