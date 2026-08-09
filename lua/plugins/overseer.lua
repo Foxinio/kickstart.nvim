@@ -1,5 +1,10 @@
 local M = { "stevearc/overseer.nvim" }
 
+M.dependencies = {
+	"franco-ruggeri/overseer-extra.nvim",
+	"Foxinio/term-color-parser.nvim",
+}
+
 M.keys = {
 	{ "<leader>oo", "<cmd>OverseerToggle<cr>", desc = "Toggle Overseer" },
 	{ "<leader>or", "<cmd>OverseerRun<cr>", desc = "Run Overseer task" },
@@ -8,6 +13,18 @@ M.keys = {
 }
 
 M.opts = {
+	output = {
+		use_terminal = false,
+	},
+	component_aliases = {
+		default = {
+			"force_color",
+			{ "ansi_colorize", mode = "conceal", on = "output" },
+			"on_exit_set_status",
+			"on_complete_notify",
+			{ "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
+		},
+	},
 	form = {
 		border = "rounded",
 		height = 0.5,
@@ -44,6 +61,7 @@ M.opts = {
 			winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
 		},
 	},
+	templates = { "builtin", "extra", },
 }
 
 M.config = function(_, opts)

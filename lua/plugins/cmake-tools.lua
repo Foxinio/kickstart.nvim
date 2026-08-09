@@ -22,6 +22,8 @@ local overseer_opts = {
 			use_terminal = false,
 		},
 		components = {
+			"force_color",
+			{ "ansi_colorize", mode = "conceal", on = "output" },
 			{
 				"on_output_quickfix",
 				errorformat = cmake_test_errorformat,
