@@ -8,3 +8,5 @@ vim.keymap.set('n', '<C-{>', function()
 end, { desc = 'Decrease font scale' })
 
 vim.g.neovide_scale_factor = 0.75
+
+vim.defer_fn(function() vim.cmd.NeovideFocus() end, 500)
