@@ -3,6 +3,7 @@ local M = { "civitasv/cmake-tools.nvim" }
 M.dependencies = {
 	"nvim-lua/plenary.nvim",
 	"stevearc/overseer.nvim",
+	"Foxinio/term-color-parser.nvim",
 }
 
 local cmake_test_errorformat = table.concat({
@@ -14,6 +15,14 @@ local cmake_test_errorformat = table.concat({
 	[[%f:%l:%c:%m]],
 	vim.o.errorformat,
 }, ",")
+
+local function build_jobs()
+	local uv = vim.uv or vim.loop
+	local ok, jobs = pcall(function()
+		return uv.available_parallelism and uv.available_parallelism() or #uv.cpu_info()
+	end)
+	return tostring(ok and jobs and jobs > 0 and jobs or 4)
+end
 
 local overseer_opts = {
 	new_task_opts = {
@@ -54,7 +63,13 @@ local overseer_opts = {
 
 M.opts = {
 	cmake_build_directory = "build",
-	cmake_build_options = { "-j" },
+	cmake_generate_options = {
+		"-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+		"-DCMAKE_COLOR_DIAGNOSTICS=ON",
+		"-DCMAKE_C_FLAGS_INIT=-fdiagnostics-color=always",
+		"-DCMAKE_CXX_FLAGS_INIT=-fdiagnostics-color=always",
+	},
+	cmake_build_options = { "--parallel", build_jobs() },
 	cmake_regenerate_on_save = false,
 	cmake_notifications = {
 		runner = { enabled = false },
