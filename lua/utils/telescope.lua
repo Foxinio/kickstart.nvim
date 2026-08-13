@@ -189,7 +189,7 @@ function M.live_grep_with_editable_args()
 			return 'Live Grep (' .. root .. ') [' .. table.concat(state.cmd_args, ' ') .. ']'
 		end,
 		open = function(state, picker_opts)
-			picker_opts.entry_maker = make_entry.gen_from_vimgrep {}
+			picker_opts.entry_maker = make_entry.gen_from_vimgrep(picker_opts)
 
 			local base_args = {}
 			M.append_all(base_args, conf.vimgrep_arguments)
