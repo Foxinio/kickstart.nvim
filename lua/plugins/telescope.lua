@@ -30,7 +30,7 @@ M.dependencies = {
 }
 
 M.keys = {
-	{ '<leader>sq', function() require('telescope.builtin').quickfix() end, desc = '[S]earch [/] in Open Files' },
+	{ '<leader>sq', function() require('telescope.builtin').quickfix() end, desc = '[S]earch [Q]uickfix' },
 	{ '<leader>?', function() require('telescope.builtin').oldfiles() end, desc = '[?] Find recently opened files' },
 	{ '<leader><space>', function() require('telescope.builtin').buffers() end, desc = '[ ] Find existing buffers' },
 	{ '<leader>/', function() require('utils.telescope').current_buffer_fuzzy_find() end, desc = '[/] Fuzzily search in current buffer' },
@@ -55,7 +55,7 @@ M.keys = {
 	{ '<leader>sw', function() require('telescope.builtin').grep_string() end, desc = '[S]earch current [W]ord' },
 	{ '<leader>sg', function() require('utils.telescope').live_grep_with_editable_args() end, desc = '[S]earch with editable rg flags' },
 	{ '<leader>sd', function() require('telescope.builtin').diagnostics() end, desc = '[S]earch [D]iagnostics' },
-	{ '<leader>sr', function() require('telescope.builtin').resume() end, desc = '[S]earch [R]esume' },
+	{ '<leader>sr', function() require('plugin-utils.float-command').resume() end, desc = '[S]earch [R]esume' },
 	{ '<leader>sj', function() require('telescope.builtin').jumplist() end, desc = "[S]how [J]ump list" },
 }
 
