@@ -18,17 +18,8 @@ M.opts = {
 	-- log_level = 'debug',
 	auto_restore = true,
 	auto_create = true,
-	close_filetypes_on_save = {
-		"checkhealth",
-		"NvimTree",
-		"NvimTreeFilter",
-		"OverseerList",
-		"OverseerOutput",
-		"OverseerForm",
-		"fugitive",
-		"fugitiveblame",
-	},
-	close_unsupported_windows = false,
+	close_filetypes_on_save = {},
+	close_unsupported_windows = true,
 	pre_save_cmds = {
 		function()
 			return require("plugin-utils.auto-session").clean_session_buffers()
