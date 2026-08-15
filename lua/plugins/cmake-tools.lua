@@ -1,5 +1,7 @@
 local M = { "civitasv/cmake-tools.nvim" }
 
+M.event = "VeryLazy"
+
 M.dependencies = {
 	"nvim-lua/plenary.nvim",
 	"stevearc/overseer.nvim",
@@ -134,4 +136,3 @@ M.config = function(_, opts)
 end
 
 return M
-

@@ -28,7 +28,7 @@ https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 	-- "jupyter-vim/jupyter-vim",
 
 	-- A Vim Plugin for Lively Previewing LaTeX PDF Output
-	"xuhdev/vim-latex-live-preview",
+	
 }
 
 return M

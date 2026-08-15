@@ -28,4 +28,3 @@ function M.setup_output_highlights(bufnr)
 end
 
 return M
-

@@ -246,4 +246,3 @@ function M.run_current_file(cmake_tools, opts)
 end
 
 return M
-

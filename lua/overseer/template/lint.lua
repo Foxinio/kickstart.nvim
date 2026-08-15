@@ -33,7 +33,7 @@ M.generator = function()
 			end,
 		},
 	}
-end,
+end
 
 return {}
 

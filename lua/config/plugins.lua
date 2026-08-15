@@ -4,5 +4,3 @@
 
 --  Vim-latex-live-preview config:
 
-vim.g.livepreview_previewer = 'firefox'
-vim.g.livepreview_cursorhold_recompile = 0

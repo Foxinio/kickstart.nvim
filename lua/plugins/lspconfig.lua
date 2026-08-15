@@ -7,6 +7,8 @@ local M = {
 	'neovim/nvim-lspconfig',
 }
 
+M.event = "VeryLazy"
+
 M.dependencies = {
 	'folke/lazydev.nvim',
 	"hrsh7th/cmp-nvim-lsp",

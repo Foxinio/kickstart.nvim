@@ -2,6 +2,8 @@ local M = {
   'Brychlikov/fram.nvim',
 }
 
+M.event = "VeryLazy"
+
 M.name = 'vimplugin-fram.nvim'
 
 M.dependencies = {
