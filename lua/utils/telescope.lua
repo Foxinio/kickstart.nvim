@@ -120,7 +120,7 @@ function M.editable_root_picker(opts)
 				end)
 			end)
 
-			map('i', opts.root_key or '<C-f>', function()
+			map('i', opts.root_key or '<C-s>', function()
 				local picker = action_state.get_current_picker(prompt_bufnr)
 				local prompt = picker:_get_prompt()
 				actions.close(prompt_bufnr)

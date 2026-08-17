@@ -67,6 +67,10 @@ M.opts = {
 			i = {
 				['<C-u>'] = false,
 				['<C-d>'] = false,
+				['<C-f>'] = require('plugin-utils.float-command').open_telescope_selection,
+			},
+			n = {
+				['<C-f>'] = require('plugin-utils.float-command').open_telescope_selection,
 			},
 		},
 	},

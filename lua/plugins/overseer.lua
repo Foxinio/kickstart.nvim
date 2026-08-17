@@ -65,6 +65,10 @@ M.opts = {
 }
 
 M.config = function(_, opts)
+	require("overseer.util").clean_job_line = function(str)
+		return str:gsub("\r$", "")
+	end
+
 	require("overseer").setup(opts)
 
 	vim.api.nvim_create_user_command("OverseerDisposeAll", function()
