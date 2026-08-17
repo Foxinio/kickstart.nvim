@@ -27,7 +27,11 @@ M.dependencies = {
 	{ "GustavEikaas/easy-dotnet.nvim", enabled = false, },
 
 	-- Snippet Engine & its associated nvim-cmp source
-	'L3MON4D3/LuaSnip',
+	{
+		'L3MON4D3/LuaSnip',
+		version = "v2.5",
+		build = "make install_jsregexp"
+	},
 
 	'hrsh7th/nvim-cmp',
 }
@@ -37,7 +41,12 @@ M.appearance = {
 	nerd_font_variant = "mono",
 }
 
--- TODO:  Configure command line completion
+local has_words_before = function()
+	unpack = unpack or table.unpack
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 M.opts = {}
 M.opts.cmdline = {
 	keymap = {
@@ -108,11 +117,6 @@ M.opts.completion = {
 }
 M.opts.fuzzy = { implementation = "prefer_rust_with_warning" }
 
-local has_words_before = function()
-	unpack = unpack or table.unpack
-	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
 M.opts.keymap = {
 	preset = "default",
 	['<C-space>'] = {
@@ -124,13 +128,15 @@ M.opts.keymap = {
 			end
 		end, "fallback"
 	},
-	["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+	["<S-Tab>"] = {
+		"select_prev",
+		-- "snippet_backward",
+		"fallback"
+		},
 	["<Tab>"] = {
 		function(cmp)
 			if cmp.is_menu_visible() then
 				return cmp.select_next()
-			elseif cmp.snippet_active() then
-				return cmp.snippet_forward()
 			elseif has_words_before() then
 				return cmp.show()
 			end
@@ -140,7 +146,11 @@ M.opts.keymap = {
 		-- to prevent accepting anytime there is a ghost_text, this is a function
 		function (cmp)
 			if cmp.is_menu_visible() then
-				return cmp.accept()
+				local res = cmp.accept()
+				if cmp.snippet_active() then
+					res = cmp.snippet_forward() or res
+				end
+				return res
 			end
 		end, "fallback" },
 	["<Esc>"] = { function(cmp) cmp.hide() end, "fallback" },

@@ -23,6 +23,7 @@ vim.o.visualbell    = true
 vim.o.wrap          = false
 vim.o.sidescroll    = 2
 vim.o.formatoptions = 'tcqrn1'
+vim.opt.foldenable = false
 
 -- expand tab
 vim.opt.expandtab   = true

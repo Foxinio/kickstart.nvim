@@ -41,6 +41,17 @@ vim.keymap.set('i', '<C-Right>', '<C-o>e<Right>')
 -- vim.keymap.set('i', '<C-Left>', '<C-o>e<C-o>l')
 
 
+vim.keymap.set('c', '<M-BS>', '<C-W>', { desc = "Delete previous word" })
+
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+	callback = function()
+		vim.keymap.set('i', '<M-BS>', '<C-W>', { buffer = true, desc = "Delete previous word" })
+	end,
+})
+
+-- Go back and go fourth in history
+vim.keymap.set('n', '<M-Left>', '<Cmd>normal! <C-o><CR>', { desc = "Go back in history", silent = true })
+vim.keymap.set('n', '<M-Right>', '<Cmd>normal! <C-i><CR>', { desc = "Go fourth in history", silent = true })
 --  Make S-Y act same as S-D and S-C
 vim.keymap.set('n', '<S-Y>', 'v$hy', { desc = "Yank to end of line" })
 
@@ -57,6 +68,9 @@ vim.api.nvim_create_user_command("Sdiff", "w !diff % -", {})
 vim.api.nvim_create_user_command("Vterm", function(opts)
 	vim.cmd(":vert term " .. opts)
 end, { nargs = 1 })
+vim.api.nvim_create_user_command("Float", function(opts)
+	require("plugin-utils.float-command").open(opts.args)
+end, { nargs = "+", complete = "command" })
 vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config"), {})
 
 

@@ -2,7 +2,7 @@ local M = {
   'Brychlikov/fram.nvim',
 }
 
-M.event = "VeryLazy"
+M.ft = { "fram" }
 
 M.name = 'vimplugin-fram.nvim'
 

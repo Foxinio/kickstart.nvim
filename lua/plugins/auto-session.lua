@@ -5,14 +5,36 @@ local M = {
 
 M.lazy = false
 
+M.init = function()
+	vim.opt.sessionoptions:append({ "tabpages", "globals" })
+	vim.opt.sessionoptions:remove("buffers")
+end
+
 ---enables autocomplete for opts
 ---@module "auto-session"
 ---@type AutoSession.Config
 M.opts = {
-  suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
-  -- log_level = 'debug',
-	auto_restore = false,
-	auto_create = false
+	suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+	-- log_level = 'debug',
+	auto_restore = true,
+	auto_create = true,
+	close_filetypes_on_save = {},
+	close_unsupported_windows = true,
+	pre_save_cmds = {
+		function()
+			return require("plugin-utils.auto-session").clean_session_buffers()
+		end,
+	},
+	post_restore_cmds = {
+		function()
+			vim.schedule(require("plugin-utils.auto-session").open_git_tab)
+		end,
+	},
+	no_restore_cmds = {
+		function()
+			vim.schedule(require("plugin-utils.auto-session").open_git_tab)
+		end,
+	},
 }
 
 return M

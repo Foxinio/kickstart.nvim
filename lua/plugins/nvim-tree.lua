@@ -31,7 +31,7 @@ M.keys = {
 	desc = "Refresh nvim-tree", { silent = true } },
 
 	{ '<leader>t/', function()
-		require('utils.telescope').find_file_in_nvim_tree()
+		require('plugin-utils.telescope').find_file_in_nvim_tree()
 	end,
 		desc = "Search for file in nvim-tree" },
 }
@@ -83,9 +83,5 @@ M.opts.on_attach = function(bufnr)
 		{ '<C-b>', function() return preview.scroll(-4) end, desc = "Scroll Up", buffer = bufnr,  },
 	})
 end
-
--- M.config = function ()
--- 	require("nvim-tree").setup(M.opts)
--- end
 
 return M

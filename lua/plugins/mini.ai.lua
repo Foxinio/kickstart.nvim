@@ -8,6 +8,8 @@ local M = {
 	"echasnovski/mini.ai",
 }
 
+M.dependencies = { "nvim-treesitter/nvim-treesitter" }
+
 M.enabled = false
 M.event = "BufRead"
 
