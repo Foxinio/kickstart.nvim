@@ -69,7 +69,7 @@ vim.api.nvim_create_user_command("Vterm", function(opts)
 	vim.cmd(":vert term " .. opts)
 end, { nargs = 1 })
 vim.api.nvim_create_user_command("Float", function(opts)
-	require("plugin-utils.float-command").open(opts.args)
+	require("utils.float-command").open(opts.args)
 end, { nargs = "+", complete = "command" })
 vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config"), {})
 

@@ -163,7 +163,7 @@ M.config = function(_, opts)
 			-- init_options = settings.init_options or {},
 			capabilities = opts.capabilities or {},
 			settings = settings or {},
-			on_attach = require("utils.lsp-on-attach").on_attach,
+			on_attach = require("plugin-utils.lspconfig").on_attach,
 		})
 		vim.lsp.enable(server_name)
 	end

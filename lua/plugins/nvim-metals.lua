@@ -6,7 +6,7 @@ M.ft = { "scala", "sbt", "java" }
 
 M.opts = function()
   local metals_config = require("metals").bare_config()
-  metals_config.on_attach = require("utils.lsp-on-attach").on_attach
+  metals_config.on_attach = require("plugin-utils.lspconfig").on_attach
 
   return metals_config
 end
