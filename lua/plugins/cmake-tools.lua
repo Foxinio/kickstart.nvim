@@ -1,5 +1,47 @@
 local M = { "civitasv/cmake-tools.nvim" }
 
+M.module = false
+
+M.cmd = {
+	"CMakeBuild",
+	"CMakeBuildCurrentFile",
+	"CMakeBuildSingleTarget",
+	"CMakeClean",
+	"CMakeCloseExecutor",
+	"CMakeCloseRunner",
+	"CMakeDebug",
+	"CMakeDebugCurrentFile",
+	"CMakeGenerate",
+	"CMakeInstall",
+	"CMakeLaunchArgs",
+	"CMakeOpenCache",
+	"CMakeOpenExecutor",
+	"CMakeOpenRunner",
+	"CMakeQuickBuild",
+	"CMakeQuickDebug",
+	"CMakeQuickRun",
+	"CMakeQuickStart",
+	"CMakeRun",
+	"CMakeRunCurrentFile",
+	"CMakeRunSingleTarget",
+	"CMakeRunTest",
+	"CMakeRunTestRegex",
+	"CMakeSelectBuildDir",
+	"CMakeSelectBuildPreset",
+	"CMakeSelectBuildTarget",
+	"CMakeSelectBuildType",
+	"CMakeSelectConfigurePreset",
+	"CMakeSelectCwd",
+	"CMakeSelectKit",
+	"CMakeSelectLaunchTarget",
+	"CMakeSelectTestPreset",
+	"CMakeSettings",
+	"CMakeShowTargetFiles",
+	"CMakeStopExecutor",
+	"CMakeStopRunner",
+	"CMakeTargetSettings",
+}
+
 M.dependencies = {
 	"nvim-lua/plenary.nvim",
 	"stevearc/overseer.nvim",

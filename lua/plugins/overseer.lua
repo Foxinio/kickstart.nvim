@@ -65,8 +65,21 @@ M.opts = {
 }
 
 M.config = function(_, opts)
-	require("overseer.util").clean_job_line = function(str)
+	local overseer_util = require("overseer.util")
+	overseer_util.clean_job_line = function(str)
 		return str:gsub("\r$", "")
+	end
+
+	local overseer_render = require("overseer.render")
+	local output_lines = overseer_render.output_lines
+	overseer_render.output_lines = function(task, render_opts)
+		local lines = output_lines(task, render_opts)
+		for _, line in ipairs(lines) do
+			for _, chunk in ipairs(line) do
+				chunk[1] = overseer_util.remove_ansi(chunk[1])
+			end
+		end
+		return lines
 	end
 
 	require("overseer").setup(opts)

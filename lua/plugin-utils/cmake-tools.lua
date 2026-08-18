@@ -152,6 +152,48 @@ function M.select_test_regex(cmake_tools, initial_regex)
 	end)
 end
 
+local function get_build_targets(cmake_tools, callback, retried)
+	local config = get_config(cmake_tools)
+	if not config:has_build_directory() then
+		cmake_tools.generate({ bang = false, fargs = {} }, function(result)
+			if result_ok(result) then
+				get_build_targets(cmake_tools, callback, retried)
+			else
+				callback(result)
+			end
+		end)
+		return
+	end
+
+	local ok, result = pcall(cmake_tools.get_build_targets)
+	if ok and result_ok(result) and result.data then
+		callback(result)
+		return
+	end
+
+	if not ok then
+		if retried or not is_cmake_file_api_json_error(result) then
+			vim.notify(result, vim.log.levels.ERROR, { title = "CMakeTools" })
+			return
+		end
+	else
+		if retried then
+			callback(result)
+			return
+		end
+	end
+
+	clear_cmake_file_api_reply(config)
+	vim.notify("CMake file-api reply was invalid; regenerating project.", vim.log.levels.WARN)
+	cmake_tools.generate({ bang = false, fargs = {} }, function(generate_result)
+		if result_ok(generate_result) then
+			get_build_targets(cmake_tools, callback, true)
+		else
+			callback(generate_result)
+		end
+	end)
+end
+
 function M.build_single_target(cmake_tools, opts)
 	if not cmake_tools.is_cmake_project() then
 		vim.notify("Not a CMake project", vim.log.levels.WARN, { title = "CMakeTools" })
@@ -159,8 +201,35 @@ function M.build_single_target(cmake_tools, opts)
 	end
 
 	opts = opts or {}
-	opts.fargs = opts.fargs or {}
-	run_with_codemodel_retry(cmake_tools, cmake_tools.quick_build, opts)
+	local fargs = vim.deepcopy(opts.fargs or {})
+
+	if fargs[1] ~= nil then
+		local target = table.remove(fargs, 1)
+		run_with_codemodel_retry(cmake_tools, cmake_tools.build, { target = target, fargs = fargs })
+		return
+	end
+
+	get_build_targets(cmake_tools, function(result)
+		if not result_ok(result) or not result.data then
+			vim.notify(result and result.message or "Unable to get CMake build targets", vim.log.levels.ERROR, {
+				title = "CMakeTools",
+			})
+			return
+		end
+
+		local targets = result.data.targets or {}
+		local display_targets = result.data.display_targets or targets
+		if #targets == 0 then
+			vim.notify("No CMake build targets found", vim.log.levels.WARN, { title = "CMakeTools" })
+			return
+		end
+
+		vim.ui.select(display_targets, { prompt = "Select target to build" }, function(_, idx)
+			if idx then
+				run_with_codemodel_retry(cmake_tools, cmake_tools.build, { target = targets[idx], fargs = {} })
+			end
+		end)
+	end)
 end
 
 local function get_launch_targets(cmake_tools, callback, retried)
