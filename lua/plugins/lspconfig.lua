@@ -8,6 +8,8 @@ local M = {
 	-- version = '2.9.*',
 }
 
+M.event = "VeryLazy"
+
 M.dependencies = {
 	'folke/lazydev.nvim',
 	"hrsh7th/cmp-nvim-lsp",

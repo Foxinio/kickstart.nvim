@@ -2,12 +2,12 @@ local M = {
 	"folke/noice.nvim",
 }
 
+M.lazy = false
+
 M.dependencies = {
 	"MunifTanjim/nui.nvim",
 	"rcarriga/nvim-notify",
 }
-
-M.lazy = false
 
 M.opts = {
 	routes = {
@@ -45,6 +45,9 @@ M.opts = {
 		enabled = true,
 		view_history = "messages",
 	},
+	notify = {
+		enabled = true,
+	},
 	lsp = {
 		override = {
 			-- override the default lsp markdown formatter with Noice
@@ -60,10 +63,20 @@ M.opts = {
 		long_message_to_split = true,
 		lsp_doc_border = true,
 	},
+	commands = {
+		history = {
+			view = "split",
+			opts = {
+				enter = true,
+				format = "details",
+			},
+			filter = {},
+		},
+	},
 }
 
 M.keys = {
-	{ "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Noice Dismiss" },
+	{ "<leader>nd", function() require("noice").cmd("dismiss") end,   desc = "Noice Dismiss" },
 	{ "<leader>nh", function() require("noice").cmd("telescope") end, desc = "Noice History" },
 }
 

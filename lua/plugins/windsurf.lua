@@ -3,7 +3,7 @@ local M = {
 }
 
 -- M.enabled = false
-M.cmd = "WindsurfLoad"
+M.event = "VeryLazy"
 
 M.dependencies = {
 	"nvim-lua/plenary.nvim",

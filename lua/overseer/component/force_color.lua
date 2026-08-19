@@ -4,7 +4,8 @@ return {
 		return {
 			on_init = function(_, task)
 				task.env = vim.tbl_extend("keep", task.env or {}, {
-					CLICOLOR_FORCE = "1",
+					CLICOLOR = "YES",
+					CLICOLOR_FORCE = "YES",
 					CMAKE_COLOR_DIAGNOSTICS = "ON",
 					FORCE_COLOR = "1",
 					GTEST_COLOR = "1",

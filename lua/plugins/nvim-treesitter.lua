@@ -3,6 +3,8 @@ local M = {
 	'nvim-treesitter/nvim-treesitter',
 }
 
+M.build = ':TSUpdate'
+
 M.branch = 'master'
 
 M.main = 'nvim-treesitter.configs'

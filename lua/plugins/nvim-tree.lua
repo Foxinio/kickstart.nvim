@@ -2,6 +2,8 @@ local M = {
 	'nvim-tree/nvim-tree.lua',
 }
 
+M.lazy = false
+
 M.dependencies = {
 	'nvim-tree/nvim-web-devicons',
 	{
