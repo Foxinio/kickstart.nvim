@@ -22,11 +22,12 @@ M.dependencies = {
 	},
 	'nvim-telescope/telescope-ui-select.nvim',
 	{
-			"nvim-telescope/telescope-live-grep-args.nvim" ,
+		"nvim-telescope/telescope-live-grep-args.nvim",
 			-- This will not install any breaking changes.
 			-- For major updates, this must be adjusted manually.
-			version = "^1.0.0",
+		version = "^1.0.0",
 	},
+	"Foxinio/editable-telescope.nvim",
 }
 
 M.keys = {
@@ -75,10 +76,11 @@ M.config = function(_, opts)
 	local telescope = require('telescope')
 
 	telescope.setup(opts)
-	-- Enable telescope fzf native, if installed
+
 	telescope.load_extension('fzf')
 	telescope.load_extension('ui-select')
 	telescope.load_extension('live_grep_args')
+	telescope.load_extension('editable')
 end
 
 return M
