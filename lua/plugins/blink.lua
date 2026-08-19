@@ -23,8 +23,7 @@ M.dependencies = {
 		dependencies = { 'saghen/blink.compat' },
 	},
 	'erooke/blink-cmp-latex',
-	'Exafunction/windsurf.nvim',
-	{ "GustavEikaas/easy-dotnet.nvim", enabled = false, },
+	"Exafunction/windsurf.nvim",
 
 	-- Snippet Engine & its associated nvim-cmp source
 	{
@@ -172,8 +171,6 @@ M.opts.keymap = {
 M.opts.sources = {
 	-- add lazydev to your completion providers
 	default = {
-		-- "latex",
-		"latex_symbols",
 		"lazydev",
 		"lsp",
 		"path",
@@ -187,13 +184,6 @@ M.opts.sources = {
 			module = 'codeium.blink',
 			async = true
 		},
-		-- ["easy-dotnet"] = {
-		-- 	name = "easy-dotnet",
-		-- 	enabled = true,
-		-- 	module = "easy-dotnet.completion.blink",
-		-- 	score_offset = 10000,
-		-- 	async = true,
-		-- },
 		lazydev = {
 			name = "LazyDev",
 			module = "lazydev.integrations.blink",

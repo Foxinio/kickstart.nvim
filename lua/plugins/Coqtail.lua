@@ -7,6 +7,7 @@ M.dependencies = {
 }
 
 M.ft = "coq"
+M.module = false
 
 M.keys = {
 	{ '<M-down>', '<Plug>CoqNext', noremap = true },

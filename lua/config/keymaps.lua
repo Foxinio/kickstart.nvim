@@ -40,6 +40,17 @@ vim.keymap.set('n', '<S-ScrollWheelDown>', '<ScrollWheelLeft>', { desc = "Scroll
 vim.keymap.set('i', '<C-Right>', '<C-o>e<Right>')
 -- vim.keymap.set('i', '<C-Left>', '<C-o>e<C-o>l')
 
+vim.keymap.set('c', '<M-BS>', '<C-W>', { desc = "Delete previous word" })
+
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+	callback = function()
+		vim.keymap.set('i', '<M-BS>', '<C-W>', { buffer = true, desc = "Delete previous word" })
+	end,
+})
+
+-- Go back and go fourth in history
+vim.keymap.set('n', '<M-Left>', '<Cmd>normal! <C-o><CR>', { desc = "Go back in history", silent = true })
+vim.keymap.set('n', '<M-Right>', '<Cmd>normal! <C-i><CR>', { desc = "Go fourth in history", silent = true })
 
 vim.keymap.set('c', '<M-BS>', '<C-W>', { desc = "Delete previous word" })
 
@@ -113,5 +124,3 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- 	vim.api.nvim_win_set_cursor(0, pos)
 -- 	vim.api.nvim_feedkeys("x", 'n', true)
 -- end, { desc = 'remove matching (bracket, parenteses, etc.)' })
-
-

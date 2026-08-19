@@ -1,6 +1,6 @@
 -- TODO : Try alternative: https://github.com/coffebar/neovim-project
 local M = {
-  'rmagatti/auto-session',
+	'rmagatti/auto-session',
 }
 
 M.lazy = false
@@ -17,6 +17,7 @@ M.opts = {
 	suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
 	-- log_level = 'debug',
 	auto_restore = true,
+	auto_create = false,
 	auto_save = true,
 	close_filetypes_on_save = {},
 	close_unsupported_windows = true,

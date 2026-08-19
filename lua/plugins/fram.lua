@@ -3,6 +3,7 @@ local M = {
 }
 
 M.ft = { "fram" }
+M.module = false
 
 M.name = 'vimplugin-fram.nvim'
 

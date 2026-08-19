@@ -12,6 +12,9 @@ local M = {
 	"nvim-lua/plenary.nvim",
 	"bfredl/nvim-luadev",
 
+	-- Custom syntax highlighting plugins
+	"tarikgraba/vim-liberty",
+	"calincru/flex-bison-syntax",
 	--[[
 --- To download:
 https://github.com/monaqa/dial.nvim
@@ -28,7 +31,6 @@ https://github.com/nanotee/nvim-lua-guide/blob/master/README.md
 	-- "jupyter-vim/jupyter-vim",
 
 	-- A Vim Plugin for Lively Previewing LaTeX PDF Output
-	
 }
 
 return M

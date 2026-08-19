@@ -5,6 +5,7 @@ local icons = require("utils.icons")
 --[[ Plugin for managing LSP conguration ]]
 local M = {
 	'neovim/nvim-lspconfig',
+	-- version = '2.9.*',
 }
 
 M.event = "VeryLazy"
@@ -29,15 +30,14 @@ M.dependencies = {
 }
 
 local required_servers = {
-	"rust_analyzer",
 	"clangd",
 	"pyright",
 	"lua_ls",
-	"texlab",
 }
 
 -- Specific server configuration
 local servers = {
+	clangd = {},
 	rust_analyzer = { },
 	-- csharp_ls = { },
 	ocamllsp = {
@@ -83,6 +83,10 @@ local servers = {
 	lua_ls = {
 		settings = {
 			Lua = {
+				completion = {
+					callSnippet = 'Disable',
+					keywordSnippet = 'Disable',
+				},
 				workspace = { checkThirdParty = false },
 				telemetry = { enable = false },
 				diagnostics = {
@@ -152,10 +156,14 @@ M.config = function(_, opts)
 	require("mason").setup()
 	require("mason-lspconfig").setup(opts.mason_lspconfig)
 
+	opts.capabilities = require('blink.cmp').get_lsp_capabilities({
+		textDocument = { completion = { completionItem = { snippetSupport = false }, }, },
+	})
+
 	for server_name, settings in pairs(servers) do
 		vim.lsp.config(server_name, {
 			-- init_options = settings.init_options or {},
-			capabilities = opts.capabilities,
+			capabilities = opts.capabilities or {},
 			settings = settings or {},
 			on_attach = require("plugin-utils.lspconfig").on_attach,
 		})

@@ -74,8 +74,10 @@ M.opts = {
 }
 
 M.opts.on_attach = function(bufnr)
+	-- local api = require('nvim-tree.api')
 	require('nvim-tree').config = { view = { side = 'left', }, }
 	require('nvim-tree.api').map.on_attach.default(bufnr)
+
 	local preview = require('nvim-tree-preview')
 
 	require('which-key').add({

@@ -8,6 +8,8 @@ local M = {
 	"echasnovski/mini.operators",
 }
 
+M.enabled = false
+
 -- TODO : Configure this
 M.opts = {
 	exchange = {
