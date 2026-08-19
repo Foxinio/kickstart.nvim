@@ -13,19 +13,11 @@ local function get_config(cmake_tools)
 	return config
 end
 
-local function is_cmake_file_api_json_error(err)
-	return type(err) == "string"
-		and err:find("%.cmake/api/v1/reply")
-		and (err:find("invalid token") or err:find("ENOENT"))
-end
-
-local function clear_cmake_file_api_reply(config)
-	local reply_directory = tostring(config.reply_directory or "")
-	if reply_directory == "" or not reply_directory:find("%.cmake/api/v1/reply", 1, false) then
-		return
-	end
-
-	vim.fn.delete(reply_directory, "rf")
+local function is_cmake_file_api_error(err)
+	return type(err) == "string" and (
+		(err:find("%.cmake/api/v1/reply") and (err:find("invalid token") or err:find("ENOENT")))
+		or (err:find("bad argument #1 to 'ipairs'", 1, true) and err:find("got nil", 1, true))
+	)
 end
 
 local function run_with_codemodel_retry(cmake_tools, action, opts)
@@ -34,12 +26,10 @@ local function run_with_codemodel_retry(cmake_tools, action, opts)
 		return
 	end
 
-	if not is_cmake_file_api_json_error(err) then
+	if not is_cmake_file_api_error(err) then
 		error(err)
 	end
 
-	local config = get_config(cmake_tools)
-	clear_cmake_file_api_reply(config)
 	vim.notify("CMake file-api reply was invalid; regenerating project.", vim.log.levels.WARN)
 
 	cmake_tools.generate({ bang = false, fargs = {} }, function(result)
@@ -52,6 +42,10 @@ local function run_with_codemodel_retry(cmake_tools, action, opts)
 			vim.notify(retry_err, vim.log.levels.ERROR, { title = "CMakeTools" })
 		end
 	end)
+end
+
+function M.build(cmake_tools, opts)
+	run_with_codemodel_retry(cmake_tools, cmake_tools.build, opts)
 end
 
 local function list_tests(cmake_tools, callback)
@@ -172,7 +166,7 @@ local function get_build_targets(cmake_tools, callback, retried)
 	end
 
 	if not ok then
-		if retried or not is_cmake_file_api_json_error(result) then
+		if retried or not is_cmake_file_api_error(result) then
 			vim.notify(result, vim.log.levels.ERROR, { title = "CMakeTools" })
 			return
 		end
@@ -183,7 +177,6 @@ local function get_build_targets(cmake_tools, callback, retried)
 		end
 	end
 
-	clear_cmake_file_api_reply(config)
 	vim.notify("CMake file-api reply was invalid; regenerating project.", vim.log.levels.WARN)
 	cmake_tools.generate({ bang = false, fargs = {} }, function(generate_result)
 		if result_ok(generate_result) then
@@ -251,12 +244,11 @@ local function get_launch_targets(cmake_tools, callback, retried)
 		return
 	end
 
-	if retried or not is_cmake_file_api_json_error(result) then
+	if retried or not is_cmake_file_api_error(result) then
 		vim.notify(result, vim.log.levels.ERROR, { title = "CMakeTools" })
 		return
 	end
 
-	clear_cmake_file_api_reply(config)
 	vim.notify("CMake file-api reply was invalid; regenerating project.", vim.log.levels.WARN)
 	cmake_tools.generate({ bang = false, fargs = {} }, function(generate_result)
 		if result_ok(generate_result) then

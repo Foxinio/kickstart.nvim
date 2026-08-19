@@ -5,6 +5,9 @@ local M = {
 M.event = "VeryLazy"
 
 M.opts = {
+	autoFold = {
+		enabled = false,
+	},
 	foldKeymaps = {
 		setup = false,
 	},

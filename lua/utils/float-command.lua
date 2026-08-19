@@ -9,7 +9,12 @@ function M.open(command)
 	local original_win = vim.api.nvim_get_current_win()
 	open_float(buf)
 
-	local ok, err = pcall(vim.cmd, command)
+	local ok, err
+	if type(command) == "function" then
+		ok, err = pcall(command)
+	else
+		ok, err = pcall(vim.cmd, command)
+	end
 	if not ok then
 		if vim.api.nvim_win_is_valid(original_win) then
 			vim.api.nvim_set_current_win(original_win)
@@ -17,6 +22,16 @@ function M.open(command)
 		vim.notify(err, vim.log.levels.ERROR)
 		return
 	end
+end
+
+function M.open_file(path)
+	if type(path) == "string" and path ~= "" then
+		M.open(function() vim.cmd.edit(vim.fn.fnameescape(path)) end)
+	end
+end
+
+function M.open_lsp(action)
+	M.open(action)
 end
 
 function M.open_telescope_selection(prompt_bufnr)
@@ -48,6 +63,18 @@ function M.open_telescope_selection(prompt_bufnr)
 	if row then
 		pcall(vim.api.nvim_win_set_cursor, 0, { row, math.max((entry.col or 1) - 1, 0) })
 	end
+end
+
+function M.open_telescope(picker)
+	picker({
+		jump_type = "never",
+		attach_mappings = function(prompt_bufnr)
+			require("telescope.actions").select_default:replace(function()
+				M.open_telescope_selection(prompt_bufnr)
+			end)
+			return true
+		end,
+	})
 end
 
 function M.resume()

@@ -159,6 +159,15 @@ M.config = function(_, opts)
 		desc = "CMake run tests matching the Telescope prompt as a regex",
 	})
 
+	vim.api.nvim_create_user_command("CMakeBuild", function(command_opts)
+		cmake_utils.build(cmake_tools, command_opts)
+	end, {
+		nargs = "*",
+		bang = true,
+		desc = "CMake build",
+		force = true,
+	})
+
 	vim.api.nvim_create_user_command("CMakeBuildSingleTarget", function(command_opts)
 		cmake_utils.build_single_target(cmake_tools, command_opts)
 	end, {
