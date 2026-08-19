@@ -1,5 +1,5 @@
 local M = { "Foxinio/term-color-parser.nvim" }
 
-M.opts = {}
+M.opts = { overseer = true }
 
 return M

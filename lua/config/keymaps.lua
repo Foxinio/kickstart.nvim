@@ -52,8 +52,6 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
 vim.keymap.set('n', '<M-Left>', '<Cmd>normal! <C-o><CR>', { desc = "Go back in history", silent = true })
 vim.keymap.set('n', '<M-Right>', '<Cmd>normal! <C-i><CR>', { desc = "Go fourth in history", silent = true })
 
-vim.keymap.set('c', '<M-BS>', '<C-W>', { desc = "Delete previous word" })
-
 vim.api.nvim_create_autocmd("CmdwinEnter", {
 	callback = function()
 		vim.keymap.set('i', '<M-BS>', '<C-W>', { buffer = true, desc = "Delete previous word" })
@@ -80,7 +78,7 @@ vim.api.nvim_create_user_command("Vterm", function(opts)
 	vim.cmd(":vert term " .. opts)
 end, { nargs = 1 })
 vim.api.nvim_create_user_command("Float", function(opts)
-	require("plugin-utils.float-command").open(opts.args)
+	require("utils.float-command").open(opts.args)
 end, { nargs = "+", complete = "command" })
 vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config"), {})
 

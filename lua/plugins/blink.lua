@@ -171,6 +171,7 @@ M.opts.keymap = {
 M.opts.sources = {
 	-- add lazydev to your completion providers
 	default = {
+		"latex_symbols",
 		"lazydev",
 		"lsp",
 		"path",
