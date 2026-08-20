@@ -11,6 +11,12 @@ M.on_attach = function(client, bufnr)
 		end
 	end
 
+	local function telescope_float(picker)
+		return function()
+			require("utils.float-command").open_telescope(picker)
+		end
+	end
+
 	local function lsp_jump(action, open_cmd)
 		return function()
 			if open_cmd then
@@ -45,7 +51,9 @@ M.on_attach = function(client, bufnr)
 			buffer = bufnr, desc = 'LSP: [G]oto [D]efinition in split' },
 		{ '<leader>gvd', telescope_jump(telescope.lsp_definitions, "vsplit"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]efinition in vertical split' },
-		{ '<leader>gTd', telescope_jump(telescope.lsp_definitions, "tab"),
+		{ '<leader>gfd', telescope_float(telescope.lsp_definitions),
+			buffer = bufnr, desc = 'LSP: [G]oto [D]efinition in float' },
+		{ '<leader>gtd', telescope_jump(telescope.lsp_definitions, "tab"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]efinition in tab' },
 
 		{ '<leader>gr', telescope_jump(telescope.lsp_references),
@@ -54,7 +62,9 @@ M.on_attach = function(client, bufnr)
 			buffer = bufnr, desc = 'LSP: [G]oto [R]eferences in split' },
 		{ '<leader>gvr', telescope_jump(telescope.lsp_references, "vsplit"),
 			buffer = bufnr, desc = 'LSP: [G]oto [R]eferences in vertical split' },
-		{ '<leader>gTr', telescope_jump(telescope.lsp_references, "tab"),
+		{ '<leader>gfr', telescope_float(telescope.lsp_references),
+			buffer = bufnr, desc = 'LSP: [G]oto [R]eferences in float' },
+		{ '<leader>gtr', telescope_jump(telescope.lsp_references, "tab"),
 			buffer = bufnr, desc = 'LSP: [G]oto [R]eferences in tab' },
 
 		{ '<leader>gI', telescope_jump(telescope.lsp_implementations),
@@ -63,17 +73,21 @@ M.on_attach = function(client, bufnr)
 			buffer = bufnr, desc = 'LSP: [G]oto [I]mplementation in split' },
 		{ '<leader>gvI', telescope_jump(telescope.lsp_implementations, "vsplit"),
 			buffer = bufnr, desc = 'LSP: [G]oto [I]mplementation in vertical split' },
-		{ '<leader>gTI', telescope_jump(telescope.lsp_implementations, "tab"),
+		{ '<leader>gfI', telescope_float(telescope.lsp_implementations),
+			buffer = bufnr, desc = 'LSP: [G]oto [I]mplementation in float' },
+		{ '<leader>gtI', telescope_jump(telescope.lsp_implementations, "tab"),
 			buffer = bufnr, desc = 'LSP: [G]oto [I]mplementation in tab' },
 
-		{ '<leader>gD', telescope_jump(telescope.lsp_type_definitions),
-			buffer = bufnr, desc = 'LSP: Type [D]efinition' },
-		{ '<leader>gsD', telescope_jump(telescope.lsp_type_definitions, "split"),
-			buffer = bufnr, desc = 'LSP: Type [D]efinition in split' },
-		{ '<leader>gvD', telescope_jump(telescope.lsp_type_definitions, "vsplit"),
-			buffer = bufnr, desc = 'LSP: Type [D]efinition in vertical split' },
-		{ '<leader>gTD', telescope_jump(telescope.lsp_type_definitions, "tab"),
-			buffer = bufnr, desc = 'LSP: Type [D]efinition in tab' },
+		{ '<leader>gT', telescope_jump(telescope.lsp_type_definitions),
+			buffer = bufnr, desc = 'LSP: [G]oto [T]ype definition' },
+		{ '<leader>gsT', telescope_jump(telescope.lsp_type_definitions, "split"),
+			buffer = bufnr, desc = 'LSP: [G]oto [T]ype definition in split' },
+		{ '<leader>gvT', telescope_jump(telescope.lsp_type_definitions, "vsplit"),
+			buffer = bufnr, desc = 'LSP: [G]oto [T]ype definition in vertical split' },
+		{ '<leader>gfT', telescope_float(telescope.lsp_type_definitions),
+			buffer = bufnr, desc = 'LSP: [G]oto [T]ype definition in float' },
+		{ '<leader>gtT', telescope_jump(telescope.lsp_type_definitions, "tab"),
+			buffer = bufnr, desc = 'LSP: [G]oto [T]ype definition in tab' },
 
 		{ '<leader>ws', telescope_jump(telescope.lsp_dynamic_workspace_symbols),
 			buffer = bufnr, desc = 'LSP: [W]orkspace [S]ymbols' },
@@ -93,22 +107,16 @@ M.on_attach = function(client, bufnr)
 		{ '<leader>wTd', telescope_jump(telescope.lsp_document_symbols, "tab"),
 			buffer = bufnr, desc = 'LSP: [W]orkspace [D]ocument Symbols in tab' },
 
-		{ '<leader>gt', telescope_jump(telescope.lsp_type_definitions),
-			buffer = bufnr, desc = 'LSP: [G]o to type definitions' },
-		{ '<leader>gst', telescope_jump(telescope.lsp_type_definitions, "split"),
-			buffer = bufnr, desc = 'LSP: [G]o to type definitions in split' },
-		{ '<leader>gvt', telescope_jump(telescope.lsp_type_definitions, "vsplit"),
-			buffer = bufnr, desc = 'LSP: [G]o to type definitions in vertical split' },
-		{ '<leader>gTt', telescope_jump(telescope.lsp_type_definitions, "tab"),
-			buffer = bufnr, desc = 'LSP: [G]o to type definitions in tab' },
-
 		{ '<leader>gD', vim.lsp.buf.declaration,
 			buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration' },
 		{ '<leader>gsD', lsp_jump(vim.lsp.buf.declaration, "split"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in split' },
 		{ '<leader>gvD', lsp_jump(vim.lsp.buf.declaration, "vsplit"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in vertical split' },
-		{ '<leader>gTD', lsp_jump(vim.lsp.buf.declaration, "tab split"),
+		{ '<leader>gfD', function()
+			require("utils.float-command").open_lsp(vim.lsp.buf.declaration)
+		end, buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in float' },
+		{ '<leader>gtD', lsp_jump(vim.lsp.buf.declaration, "tab split"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in tab' },
 	})
 end

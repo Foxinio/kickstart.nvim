@@ -74,17 +74,21 @@ M.opts = {
 }
 
 M.opts.on_attach = function(bufnr)
-	-- local api = require('nvim-tree.api')
+	local api = require('nvim-tree.api')
 	require('nvim-tree').config = { view = { side = 'left', }, }
-	require('nvim-tree.api').map.on_attach.default(bufnr)
+	api.map.on_attach.default(bufnr)
 
 	local preview = require('nvim-tree-preview')
 
 	require('which-key').add({
+		{ '<C-f>', function()
+			local node = api.tree.get_node_under_cursor()
+			if node and vim.fn.filereadable(node.absolute_path) == 1 then
+				require('utils.float-command').open_file(node.absolute_path)
+			end
+		end, desc = "Open file in float", buffer = bufnr, },
 		{ 'P', preview.watch, desc = "Preview file", buffer = bufnr, },
 		{ '<Esc>', preview.unwatch(), desc = "Preview file", buffer = bufnr, },
-		{ '<C-f>', function() return preview.scroll(4) end, desc = "Scroll Down", buffer = bufnr,  },
-		{ '<C-b>', function() return preview.scroll(-4) end, desc = "Scroll Up", buffer = bufnr,  },
 	})
 end
 

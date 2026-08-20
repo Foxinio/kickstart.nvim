@@ -77,8 +77,4 @@ function M.open_telescope(picker)
 	})
 end
 
-function M.resume()
-	require("telescope.builtin").resume()
-end
-
 return M

@@ -75,6 +75,7 @@ local overseer_opts = {
 		components = {
 			"force_color",
 			{ "ansi_colorize", mode = "conceal", on = "output" },
+			"strip_ansi_lines",
 			{
 				"on_output_quickfix",
 				errorformat = cmake_test_errorformat,
