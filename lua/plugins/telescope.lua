@@ -4,7 +4,7 @@ local M = {
 }
 
 M.version = '*'
-M.cmd = 'LiveGrepGitRoot'
+M.event = 'VeryLazy'
 
 M.dependencies = {
 	'nvim-lua/plenary.nvim',

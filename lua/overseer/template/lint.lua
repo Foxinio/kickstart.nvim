@@ -35,5 +35,8 @@ M.generator = function()
 	}
 end
 
-return {}
-
+if vim.fn.filereadable(vim.fn.expand(lint_script)) == 1 then
+	return M
+else
+	return {}
+end

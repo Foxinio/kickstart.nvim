@@ -39,6 +39,7 @@ M.keys = {
 }
 
 M.opts = {
+	sync_root_with_cwd = true,
 	sort = {
 		sorter = "name",
 	},
