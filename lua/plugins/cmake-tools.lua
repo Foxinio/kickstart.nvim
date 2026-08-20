@@ -150,6 +150,7 @@ M.config = function(_, opts)
 	end, {
 		nargs = "*",
 		desc = "CMake run test",
+		force = true,
 	})
 
 	vim.api.nvim_create_user_command("CMakeRunTestRegex", function(command_opts)
@@ -157,6 +158,7 @@ M.config = function(_, opts)
 	end, {
 		nargs = "*",
 		desc = "CMake run tests matching the Telescope prompt as a regex",
+		force = true,
 	})
 
 	vim.api.nvim_create_user_command("CMakeBuildSingleTarget", function(command_opts)
@@ -164,6 +166,7 @@ M.config = function(_, opts)
 	end, {
 		nargs = "?",
 		desc = "CMake build a single target",
+		force = true,
 	})
 
 	vim.api.nvim_create_user_command("CMakeRunSingleTarget", function(command_opts)
@@ -171,6 +174,7 @@ M.config = function(_, opts)
 	end, {
 		nargs = "*",
 		desc = "CMake run a single target",
+		force = true,
 	})
 
 	vim.api.nvim_create_user_command("CMakeRun", function(command_opts)

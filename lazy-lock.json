@@ -2,7 +2,7 @@
   "ChatGPT.nvim": { "branch": "main", "commit": "5c54a7e9de67e2f8f8c3ed60f872f4a34a3e65ff" },
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
   "Coqtail": { "branch": "main", "commit": "c5ab7d8127ebfb7e18f124efdfc568e1a59c5cc1" },
-  "LuaSnip": { "branch": "master", "commit": "642b0c595e11608b4c18219e93b88d7637af27bc" },
+  "LuaSnip": { "branch": "master", "commit": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24" },
   "apidocs.nvim": { "branch": "dev", "commit": "b96b6b8909896d7c73fd19ecb9a97c7322fdc06f" },
   "auto-session": { "branch": "main", "commit": "c8e6139a2e52a38101fecaba6014d7dd75489044" },
   "blink-cmp-latex": { "branch": "main", "commit": "4f2910b98dabed17a1667ab806354faa8763098e" },
