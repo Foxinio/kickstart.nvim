@@ -37,7 +37,9 @@ local required_servers = {
 
 -- Specific server configuration
 local servers = {
-	clangd = {},
+	bashls = {},
+	cmake = {},
+	jsonls = {},
 	rust_analyzer = { },
 	-- csharp_ls = { },
 	ocamllsp = {
@@ -137,7 +139,7 @@ M.opts = {
 		timeout_ms = nil,
 	},
 	mason_lspconfig = {
-		automatic_enable = true,
+		automatic_enable = { exclude = vim.tbl_keys(servers) },
 		ensure_installed = required_servers,
 	},
 	servers = servers,

@@ -92,14 +92,10 @@ local overseer_opts = {
 				statuses = { "SUCCESS", "FAILURE" },
 				system = "never",
 			},
-			{
-				"on_complete_dispose",
-				timeout = 900,
-				require_view = { "SUCCESS", "FAILURE" },
-			},
 		},
 	},
-	on_new_task = function()
+	on_new_task = function(task)
+		task.name = require("plugin-utils.cmake-tools").task_name(task.cmd)
 		require("overseer").open({ enter = false })
 	end,
 }

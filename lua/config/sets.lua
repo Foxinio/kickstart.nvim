@@ -2,6 +2,8 @@
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+vim.g.vim_json_conceal = 0
+
 -- Set spellcheck on
 vim.o.spellsuggest  = 'best'
 vim.o.spell         = true

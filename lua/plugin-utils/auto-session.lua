@@ -62,13 +62,15 @@ end
 
 function M.clean_session_buffers()
 	for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-		for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
-			if vim.api.nvim_win_get_config(win).relative == "" and not has_real_file(vim.api.nvim_win_get_buf(win)) then
-				if #vim.api.nvim_tabpage_list_wins(tab) > 1 then
-					pcall(vim.api.nvim_win_close, win, true)
-				elseif #vim.api.nvim_list_tabpages() > 1 then
-					pcall(vim.api.nvim_set_current_tabpage, tab)
-					pcall(vim.cmd, "tabclose")
+		if vim.api.nvim_tabpage_is_valid(tab) then
+			for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+				if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_config(win).relative == "" and not has_real_file(vim.api.nvim_win_get_buf(win)) then
+					if #vim.api.nvim_tabpage_list_wins(tab) > 1 then
+						pcall(vim.api.nvim_win_close, win, true)
+					elseif #vim.api.nvim_list_tabpages() > 1 then
+						pcall(vim.api.nvim_set_current_tabpage, tab)
+						pcall(vim.cmd, "tabclose")
+					end
 				end
 			end
 		end

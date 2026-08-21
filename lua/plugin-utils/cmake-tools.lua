@@ -1,5 +1,37 @@
 local M = {}
 
+local function first_shell_word(text)
+	local quote = text:sub(1, 1)
+	if quote == "'" or quote == '"' then
+		return text:match("^" .. quote .. "(.-)" .. quote)
+	end
+	return text:match("^(%S+)")
+end
+
+local function argument_after(command, flag)
+	return first_shell_word(command:match("%s" .. flag .. "%s+(.+)") or "")
+end
+
+function M.task_name(command)
+	if type(command) == "table" then
+		command = table.concat(command, " ")
+	end
+
+	local executable = first_shell_word(command:gsub("^&%s+", ""))
+	local program = executable and vim.fs.basename(executable):gsub("%.exe$", "") or ""
+	if program == "cmake" then
+		if command:find("%s%-%-build%s") then
+			return "CMake: build " .. (argument_after(command, "%-%-target") or "all")
+		end
+		return "CMake: generate"
+	elseif program == "ctest" then
+		local regex = argument_after(command, "%-R")
+		return regex and "CMake: test /" .. regex .. "/" or "CMake: test all"
+	end
+
+	return "CMake: run " .. program
+end
+
 local function result_ok(result)
 	return result and (result.code == 0 or (type(result.is_ok) == "function" and result:is_ok()))
 end
