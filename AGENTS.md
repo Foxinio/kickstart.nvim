@@ -12,6 +12,8 @@ Guidance for future coding agents working in this Neovim config.
 - Keep Lua modules boring: return a table
 - Keep behavior in helper modules
 - Keep plugin specs mostly declarative - module defined at the top of the file, and filled throughout it.
+- Lua modules should use `local M = {}` near the top and `return M` at the end.
+- Plugin spec files should stay mostly declarative; move larger callback/config behavior into plugin specific helper modules.
 - Validate changed Lua with `luac -p <files>`.
 - `nvim --headless -u init.lua +q` may fail on older local Neovim/plugin-version mismatches; do not treat that alone as a regression.
 
@@ -24,38 +26,11 @@ Guidance for future coding agents working in this Neovim config.
 - Keep callback-heavy behavior out of plugin config files when it grows past a tiny wrapper.
 - Overseer custom components live in `lua/overseer/component/*.lua`.
 
-## Merge Review Checklist
-
-When checking a merge, always compare against the source branch as well as `HEAD`:
-
-```sh
-git status --porcelain=v1
-git merge-base HEAD dev
-git diff --name-status dev
-git diff --check
-rg -n "<<<<<<<|=======|>>>>>>>" lua init.lua lazy-lock.json
-```
-
-Also search for stale module paths after moves:
-
-```sh
-rg -n "utils\.float-command|plugin-utils\.float-command" lua
-```
-
-Do not assume a clean `git diff` means no changes: check staged diff too.
-
-```sh
-git diff --cached --name-status
-git diff --cached --check
-```
-
 ## General plugin intuitions
 
-- There is an unwritten set of `core` plugins which are to be loaded immediately
-    or to not delay loading for single file quick change, to be loaded on `VeryLazy`.
-- All other plugins (technology specific, etc.) should not be loaded and should have
-    clear loading handle (ft, cmd, mapping,...). Those plugins should have `M.module = false`
-
+- Only a small set of core plugins should load immediately or on `VeryLazy`.
+  These are plugins needed for normal single-file editing without explicit user action.
+- Technology-specific plugins should be lazy-loaded via a clear loading handle (`ft`, `cmd`, `keys`, etc.) and should set `M.module = false`.
 
 ## Plugin specific instructions
 ### CMake Tools
@@ -122,11 +97,5 @@ Minimum useful checks after edits:
 ```sh
 luac -p <changed lua files>
 git diff --check
-rg -n "<<<<<<<|=======|>>>>>>>" lua init.lua lazy-lock.json
 ```
 
-For merge/keymap regressions, compare with `dev`:
-
-```sh
-git diff dev -- lua/plugins/telescope.lua lua/plugin-utils/lspconfig.lua lua/plugins/nvim-tree.lua lua/plugins/cmake-tools.lua
-```
