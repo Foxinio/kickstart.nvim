@@ -1,7 +1,20 @@
 local M = {}
 
 local function open_float(buf)
-	return require("overseer.layout").open_fullscreen_float(buf)
+	local source_win = vim.api.nvim_get_current_win()
+	local float_options = require("overseer.config").task_win.win_opts
+	local source_options = {}
+	for option, info in pairs(vim.api.nvim_get_all_options_info()) do
+		if info.scope == "win" and float_options[option] == nil then
+			source_options[option] = vim.api.nvim_get_option_value(option, { win = source_win })
+		end
+	end
+
+	local win = require("overseer.layout").open_fullscreen_float(buf)
+	for option, value in pairs(source_options) do
+		vim.api.nvim_set_option_value(option, value, { scope = "local", win = win })
+	end
+	return win
 end
 
 function M.open(command)
