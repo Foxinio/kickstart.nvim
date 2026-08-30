@@ -1,5 +1,6 @@
 local M ={
   'Julian/lean.nvim',
+	tag = 'nvim-0.11',
 }
 M.event = { 'BufReadPre *.lean', 'BufNewFile *.lean' }
 
