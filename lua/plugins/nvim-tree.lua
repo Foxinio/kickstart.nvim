@@ -81,16 +81,14 @@ M.opts.on_attach = function(bufnr)
 
 	local preview = require('nvim-tree-preview')
 
-	require('which-key').add({
-		{ '<C-f>', function()
-			local node = api.tree.get_node_under_cursor()
-			if node and vim.fn.filereadable(node.absolute_path) == 1 then
-				require('utils.float-command').open_file(node.absolute_path)
-			end
-		end, desc = "Open file in float", buffer = bufnr, },
-		{ 'P', preview.watch, desc = "Preview file", buffer = bufnr, },
-		{ '<Esc>', preview.unwatch(), desc = "Preview file", buffer = bufnr, },
-	})
+	vim.keymap.set('n', '<C-f>', function()
+		local node = api.tree.get_node_under_cursor()
+		if node and vim.fn.filereadable(node.absolute_path) == 1 then
+			require('utils.float-command').open_file(node.absolute_path)
+		end
+	end, { desc = "Open file in float", buffer = bufnr })
+	vim.keymap.set('n', 'P', preview.watch, { desc = "Preview file", buffer = bufnr })
+	vim.keymap.set('n', '<Esc>', preview.unwatch, { desc = "Stop preview", buffer = bufnr })
 end
 
 return M

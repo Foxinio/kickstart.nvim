@@ -22,7 +22,10 @@ M.opts = {
 			{ "ansi_colorize", mode = "conceal", on = "output" },
 			"on_exit_set_status",
 			"on_complete_notify",
-			{ "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
+		},
+		default_builtin = {
+			"on_exit_set_status",
+			{ "unique", soft = true },
 		},
 	},
 	form = {
