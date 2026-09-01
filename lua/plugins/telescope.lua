@@ -22,6 +22,7 @@ M.dependencies = {
 	},
 	'nvim-telescope/telescope-ui-select.nvim',
 	"Foxinio/editable-telescope.nvim",
+	"Foxinio/float-telescope-preview.nvim",
 	"Foxinio/search-replace.nvim",
 }
 
@@ -62,10 +63,14 @@ M.opts = {
 			i = {
 				['<C-u>'] = false,
 				['<C-d>'] = false,
-				['<C-f>'] = require('utils.float-command').open_telescope_selection,
+				['<C-f>'] = function(prompt_bufnr)
+					require('float-command').open_telescope_selection(prompt_bufnr)
+				end,
 			},
 			n = {
-				['<C-f>'] = require('utils.float-command').open_telescope_selection,
+				['<C-f>'] = function(prompt_bufnr)
+					require('float-command').open_telescope_selection(prompt_bufnr)
+				end,
 			},
 		},
 	},
@@ -79,6 +84,7 @@ M.config = function(_, opts)
 	telescope.load_extension('fzf')
 	telescope.load_extension('ui-select')
 	telescope.load_extension('editable')
+	telescope.load_extension('float_command')
 	telescope.load_extension('search_replace')
 end
 

@@ -13,7 +13,7 @@ M.on_attach = function(client, bufnr)
 
 	local function telescope_float(picker)
 		return function()
-			require("utils.float-command").open_telescope(picker)
+			require('float-command').open_telescope(picker)
 		end
 	end
 
@@ -114,7 +114,7 @@ M.on_attach = function(client, bufnr)
 		{ '<leader>gvD', lsp_jump(vim.lsp.buf.declaration, "vsplit"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in vertical split' },
 		{ '<leader>gfD', function()
-			require("utils.float-command").open_lsp(vim.lsp.buf.declaration)
+			require('float-command').open_lsp(vim.lsp.buf.declaration)
 		end, buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in float' },
 		{ '<leader>gtD', lsp_jump(vim.lsp.buf.declaration, "tab split"),
 			buffer = bufnr, desc = 'LSP: [G]oto [D]eclaration in tab' },

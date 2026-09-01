@@ -59,14 +59,14 @@ Guidance for future coding agents working in this Neovim config.
 ### Telescope
 
 - Preserve these mappings:
-  - Telescope `<C-f>` in insert and normal mode opens the selected entry in Float via `utils.float-command.open_telescope_selection`.
+  - Telescope `<C-f>` in insert and normal mode opens the selected entry in Float via `float-command.open_telescope_selection`.
 - Editable live grep uses `<C-s>` for changing search root and `<C-a>` for changing runtime arguments.
-- `plugin-utils.telescope` owns editable-root/search-root picker behavior.
+- `Foxinio/editable-telescope.nvim` owns editable-root/search-root picker behavior.
 
 ### Float
 
 - `:Float` is a command wrapper for opening command results/files in a floating window.
-- The implementation currently lives at `lua/utils/float-command.lua`.
+- The implementation lives in the separate `Foxinio/float-telescope-preview.nvim` plugin.
 - LSP, Telescope, and nvim-tree integrations depend on it. Before changing paths, update every caller.
 
 ### Lspconfig
@@ -98,4 +98,3 @@ Minimum useful checks after edits:
 luac -p <changed lua files>
 git diff --check
 ```
-

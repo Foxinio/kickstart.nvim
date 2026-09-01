@@ -84,7 +84,7 @@ M.opts.on_attach = function(bufnr)
 	vim.keymap.set('n', '<C-f>', function()
 		local node = api.tree.get_node_under_cursor()
 		if node and vim.fn.filereadable(node.absolute_path) == 1 then
-			require('utils.float-command').open_file(node.absolute_path)
+			require('float-command').open_file(node.absolute_path)
 		end
 	end, { desc = "Open file in float", buffer = bufnr })
 	vim.keymap.set('n', 'P', preview.watch, { desc = "Preview file", buffer = bufnr })

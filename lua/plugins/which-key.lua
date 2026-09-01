@@ -12,10 +12,6 @@ M.opts = {
 	},
 }
 
-M.keys = {
-	{ "<leader>wk", "<cmd>WhichKey<CR>", mode = { "n", "x", "s", "v", "t" }, silent = true },
-}
-
 M.config = function(_, opts)
 	require("which-key").setup(opts)
 
@@ -23,6 +19,7 @@ M.config = function(_, opts)
 	presets.operators["v"] = nil
 
 	require("which-key").add({
+		{ "<leader>wk", "<cmd>WhichKey<CR>", mode = { "n", "x", "s", "v" }, silent = true },
 		{ "m",         group = "Marks" },
 		{ "m,",        desc = "Set next lowercase mark" },
 		{ "m;",        desc = "Toggle next mark on current line" },
