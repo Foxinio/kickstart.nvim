@@ -19,6 +19,9 @@ M.opts = {
 }
 
 M.keys = {
+	{ '<leader>pf', function()
+			require('plugin-utils.goto-preview').file_under_cursor() end,
+		desc = '[P]review [F]ile under cursor' },
 	{ '<leader>pd', function()
 			require('goto-preview').goto_preview_definition() end,
 		desc = '[P]review [D]efinition' },

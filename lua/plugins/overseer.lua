@@ -13,6 +13,15 @@ M.keys = {
 }
 
 M.opts = {
+	actions = {
+		["rerun as new task"] = {
+			desc = "Clone and run the task, preserving its output",
+			condition = function(task)
+				return vim.startswith(task.name, "CMake:")
+			end,
+			run = require("plugin-utils.overseer").rerun_as_new,
+		},
+	},
 	output = {
 		use_terminal = false,
 	},

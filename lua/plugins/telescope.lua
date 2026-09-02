@@ -33,7 +33,6 @@ M.keys = {
 	{ '<leader>/', function() require('plugin-utils.telescope').current_buffer_fuzzy_find() end, desc = '[/] Fuzzily search in current buffer' },
 	{ '<leader>s/', function() require('plugin-utils.telescope').live_grep_open_files() end, desc = '[S]earch [/] in Open Files' },
 	{ '<leader>ss', function() require('telescope.builtin').builtin() end, desc = '[S]earch [S]elect Telescope' },
-	{ '<leader>gf', function() require('telescope.builtin').git_files() end, desc = 'Search [G]it [F]iles' },
 	{ '<leader>sf', function()
 		require('telescope').extensions.editable.find_files({
 			prompt_title = 'Find Files',

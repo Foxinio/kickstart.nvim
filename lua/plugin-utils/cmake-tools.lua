@@ -123,7 +123,7 @@ local function run_tests_matching(cmake_tools, regex)
 	}
 
 	if regex and regex ~= "" then
-		vim.list_extend(args, { "-R", regex })
+		vim.list_extend(args, { "-R", "'" .. regex .. "'" })
 	end
 
 	local const = require("cmake-tools.const")

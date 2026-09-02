@@ -1,5 +1,9 @@
 local M = {}
 
+function M.rerun_as_new(task)
+	task:clone():start()
+end
+
 function M.clear_list()
 	local overseer = require("overseer")
 	local tasks = overseer.list_tasks({ include_ephemeral = true })

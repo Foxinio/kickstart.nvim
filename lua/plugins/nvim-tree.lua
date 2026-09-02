@@ -16,6 +16,11 @@ M.dependencies = {
 }
 
 M.keys = {
+	{ '<leader>tx', function()
+		require('plugin-utils.nvim-tree').find_current_file()
+	end,
+	desc = "Find current file in nvim-tree", { silent = true } },
+
 	{ '<leader>tt', function ()
 		require("nvim-tree.api").tree.toggle({
 			path = "<args>", find_file = false, update_root = false, focus = true })
