@@ -85,6 +85,8 @@ M.opts = {
 }
 
 M.config = function(_, opts)
+	vim.treesitter.language.register('lean', 'leaninfo')
+
 	-- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 	vim.defer_fn(function()
 		require('nvim-treesitter.configs').setup(opts)
