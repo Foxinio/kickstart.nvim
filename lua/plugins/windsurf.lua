@@ -2,8 +2,8 @@ local M = {
 	"Exafunction/windsurf.nvim",
 }
 
--- M.enabled = false
-M.event = "VeryLazy"
+M.module = false
+M.cmd = { "StartCodeium" }
 
 M.dependencies = {
 	"nvim-lua/plenary.nvim",
@@ -26,9 +26,13 @@ M.opts = {
 
 M.config = function(_, opts)
 	require("codeium").setup(opts)
-	require("codeium").disable()
+	require("blink.cmp").add_source_provider("codeium", {
+		name = "Codeium",
+		module = "codeium.blink",
+		async = true,
+	})
 
-	vim.api.nvim_create_user_command("CodeiumEnable", function()
+	vim.api.nvim_create_user_command("StartCodeium", function()
 		require("codeium").enable()
 	end, {})
 end

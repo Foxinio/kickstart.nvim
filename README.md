@@ -36,6 +36,8 @@ https://github.com/civitasv/cmake-tools.nvim
 https://github.com/stevearc/overseer.nvim
 https://github.com/olimorris/codecompanion.nvim
 
+https://yutkat.github.io/my-neovim-pluginlist/ai.html
+
 ## Previous README
 
 ### Introduction

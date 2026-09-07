@@ -1,7 +1,11 @@
 -- Set lualine as statusline
 
 local function windsurf()
-	local status = require('codeium.virtual_text').status_string()
+	local virtual_text = package.loaded["codeium.virtual_text"]
+	if not virtual_text then
+		return ""
+	end
+	local status = virtual_text.status_string()
 	if status == " ON" then
 		return " ✔ "
 	elseif status == "OFF" then

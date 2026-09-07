@@ -23,7 +23,6 @@ M.dependencies = {
 		dependencies = { 'saghen/blink.compat' },
 	},
 	'erooke/blink-cmp-latex',
-	"Exafunction/windsurf.nvim",
 
 	-- Snippet Engine & its associated nvim-cmp source
 	{
@@ -170,21 +169,14 @@ M.opts.keymap = {
 
 M.opts.sources = {
 	-- add lazydev to your completion providers
-	default = {
-		"latex_symbols",
-		"lazydev",
-		"lsp",
-		"path",
-		"snippets",
-		"buffer",
-		"codeium",
-	},
+	default = function()
+		local providers = { "latex_symbols", "lazydev", "lsp", "path", "snippets", "buffer" }
+		if package.loaded.codeium then
+			table.insert(providers, "codeium")
+		end
+		return providers
+	end,
 	providers = {
-		codeium = {
-			name = 'Codeium',
-			module = 'codeium.blink',
-			async = true
-		},
 		lazydev = {
 			name = "LazyDev",
 			module = "lazydev.integrations.blink",
