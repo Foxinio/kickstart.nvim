@@ -89,7 +89,7 @@ M.opts.on_attach = function(bufnr)
 	vim.keymap.set('n', '<C-f>', function()
 		local node = api.tree.get_node_under_cursor()
 		if node and vim.fn.filereadable(node.absolute_path) == 1 then
-			require('float-command').open_file(node.absolute_path)
+			require('goto-preview.lib').open_floating_win(vim.uri_from_fname(node.absolute_path), { 1, 0 })
 		end
 	end, { desc = "Open file in float", buffer = bufnr })
 	vim.keymap.set('n', 'P', preview.watch, { desc = "Preview file", buffer = bufnr })
