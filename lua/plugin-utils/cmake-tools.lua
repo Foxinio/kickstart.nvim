@@ -1,5 +1,22 @@
 local M = {}
 
+function M.fix_compile_commands_softlink()
+	local uv = vim.uv or vim.loop
+	local utils = require("cmake-tools.utils")
+	local softlink = utils.softlink
+
+	utils.softlink = function(src, target)
+		local stat = uv.fs_lstat(target)
+		if stat and stat.type == "link" then
+			if uv.fs_realpath(target) == uv.fs_realpath(src) then
+				return
+			end
+			uv.fs_unlink(target)
+		end
+		softlink(src, target)
+	end
+end
+
 local function first_shell_word(text)
 	local quote = text:sub(1, 1)
 	if quote == "'" or quote == '"' then

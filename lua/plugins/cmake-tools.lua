@@ -139,6 +139,7 @@ M.config = function(_, opts)
 	local cmake_tools = require("cmake-tools")
 	local cmake_utils = require("plugin-utils.cmake-tools")
 
+	cmake_utils.fix_compile_commands_softlink()
 	cmake_tools.setup(opts)
 
 	vim.api.nvim_create_user_command("CMakeRunTest", function(command_opts)
