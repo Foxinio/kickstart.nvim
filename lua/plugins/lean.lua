@@ -16,6 +16,10 @@ M.dependencies = {
   ---@type lean.Config
 M.opts = { -- see the manual for full configuration options
 	mappings = true,
+	infoview = {
+		width = 40,
+		orientation = 'vertical',
+	},
 }
 
 return M
