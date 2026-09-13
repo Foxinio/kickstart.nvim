@@ -3,6 +3,7 @@ local M ={
 	tag = 'nvim-0.11',
 }
 M.event = { 'BufReadPre *.lean', 'BufNewFile *.lean' }
+M.module = false
 
 M.dependencies = {
 	-- optional dependencies:
@@ -21,5 +22,12 @@ M.opts = { -- see the manual for full configuration options
 		orientation = 'vertical',
 	},
 }
+
+M.config = function(_, opts)
+	vim.lsp.config('leanls', {
+		on_attach = require('plugin-utils.lspconfig').on_attach,
+	})
+	require('lean').setup(opts)
+end
 
 return M
