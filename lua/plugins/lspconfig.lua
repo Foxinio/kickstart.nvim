@@ -41,6 +41,7 @@ local servers = {
 	cmake = {},
 	jsonls = {},
 	rust_analyzer = { },
+	slang_server = {},
 	-- csharp_ls = { },
 	ocamllsp = {
 		single_file_support = true,
