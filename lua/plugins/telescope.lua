@@ -48,6 +48,7 @@ M.keys = {
 	{ '<leader>sh', function() require('telescope.builtin').help_tags() end, desc = '[S]earch [H]elp' },
 	{ '<leader>sw', function() require('telescope.builtin').grep_string() end, desc = '[S]earch current [W]ord' },
 	{ '<leader>sg', function() require('telescope').extensions.editable.live_grep() end, desc = '[S]earch with editable rg flags' },
+	{ '<leader>sG', function() require('telescope').extensions.editable.live_grep({ additional_args = { '--no-ignore', '--hidden' } }) end, desc = '[S]earch all with editable rg flags' },
 	{ '<leader>sd', function() require('telescope.builtin').diagnostics() end, desc = '[S]earch [D]iagnostics' },
 	{ '<leader>sr', function() require('telescope.builtin').resume() end, desc = '[S]earch [R]esume' },
 	{ '<leader>sj', function() require('telescope.builtin').jumplist() end, desc = "[S]how [J]ump list" },
