@@ -2,6 +2,10 @@ local M = {
 	"coder/claudecode.nvim",
 }
 
+M.dependencies = {
+	"folke/snacks.nvim",
+}
+
 M.module = false
 M.cmd = {
 	"ClaudeCode", "ClaudeCodeFocus", "ClaudeCodeSelectModel", "ClaudeCodeAdd",
@@ -12,9 +16,16 @@ M.cmd = {
 M.opts = {
 	terminal_cmd = nil, -- set to the output of `which claude` if Neovim can't find it
 	terminal = {
-		provider = "native", -- no snacks.nvim needed
-		split_side = "right",
-		split_width_percentage = 0.35,
+		provider = "snacks",
+		snacks_win_opts = {
+			position = "float",
+			width = 0.8,
+			height = 0.8,
+			border = "rounded",
+			keys = {
+				claude_hide = { "<C-q>", function(self) self:hide() end, mode = "t", desc = "Hide Claude" },
+			},
+		},
 	},
 	diff_opts = {
 		layout = "vertical",

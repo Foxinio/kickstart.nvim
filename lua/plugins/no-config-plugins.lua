@@ -6,9 +6,6 @@ local M = {
 
 	"norcalli/nvim_utils",
 
-	-- A Vim plugin for visually displaying indent levels in code
-	"nathanaelkane/vim-indent-guides",
-
 	"nvim-lua/plenary.nvim",
 	"bfredl/nvim-luadev",
 

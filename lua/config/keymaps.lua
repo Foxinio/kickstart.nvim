@@ -21,6 +21,13 @@ vim.keymap.set('n', '<c-s-tab>', function() vim.cmd('tabNext') end, { desc = "Pr
 -- Terminal exit
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
+-- Terminal <C-r>: which-key register list, paste selected register like insert mode
+whichKey.add({ '<C-r>', mode = 't', group = 'registers', expand = function()
+	return vim.tbl_map(function(item)
+		return { item.key, function() vim.api.nvim_paste(vim.fn.getreg(item.key), false, -1) end, desc = item.value }
+	end, require('which-key.plugins.registers').expand())
+end })
+
 --  Indent management
 vim.keymap.set('n', '<TAB>', 'i<C-t><ESC>', { desc = "Indent line" })
 vim.keymap.set('n', '<S-TAB>', 'i<C-d><ESC>', { desc = "Unindent line" })
