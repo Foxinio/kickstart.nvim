@@ -8,15 +8,29 @@ M.opts = {
 			codex = function()
 				return require("codecompanion.adapters").extend("codex", {
 					defaults = {
-						auth_method = "openai-api-key", -- "openai-api-key"|"codex-api-key"|"chatgpt"
-					},
-					env = {
-						OPENAI_API_KEY = "my-api-key",
+						auth_method = "chat-gpt",
 					},
 				})
 			end,
 		},
 	},
+	interactions = {
+		chat = {
+			adapter = "codex",
+		},
+	},
+		-- acp = {
+		-- 	codex = function()
+		-- 		return require("codecompanion.adapters").extend("codex", {
+		-- 			defaults = {
+		-- 				auth_method = "openai-api-key", -- "openai-api-key"|"codex-api-key"|"chatgpt"
+		-- 			},
+		-- 			env = {
+		-- 				OPENAI_API_KEY = "my-api-key",
+		-- 			},
+		-- 		})
+		-- 	end,
+		-- },
 }
 
 M.keys = {
