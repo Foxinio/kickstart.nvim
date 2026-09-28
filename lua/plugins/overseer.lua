@@ -9,6 +9,7 @@ M.keys = {
 	{ "<leader>oo", "<cmd>OverseerToggle<cr>", desc = "Toggle Overseer" },
 	{ "<leader>or", "<cmd>OverseerRun<cr>", desc = "Run Overseer task" },
 	{ "<leader>os", "<cmd>OverseerShell<cr>", desc = "Run shell task" },
+	{ "<leader>os", function() require("plugin-utils.overseer").run_visual_shell() end, mode = "x", desc = "Run selection as shell task" },
 	{ "<leader>oa", "<cmd>OverseerTaskAction<cr>", desc = "Task action" },
 }
 

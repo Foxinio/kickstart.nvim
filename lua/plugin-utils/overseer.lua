@@ -1,5 +1,13 @@
 local M = {}
 
+function M.run_visual_shell()
+	local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() })
+	local command = table.concat(lines, "\n")
+	if command:match("%S") then
+		require("overseer").new_task({ cmd = command }):start()
+	end
+end
+
 function M.rerun_as_new(task)
 	task:clone():start()
 end
