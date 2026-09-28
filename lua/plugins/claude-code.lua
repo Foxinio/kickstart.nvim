@@ -23,6 +23,7 @@ M.opts = {
 			height = 0.8,
 			border = "rounded",
 			keys = {
+				term_normal = false,
 				claude_hide = { "<C-q>", function(self) self:hide() end, mode = "t", desc = "Hide Claude" },
 			},
 		},

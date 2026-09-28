@@ -19,7 +19,10 @@ vim.keymap.set('n', '<c-tab>', function() vim.cmd('tabnext') end, { desc = "Next
 vim.keymap.set('n', '<c-s-tab>', function() vim.cmd('tabNext') end, { desc = "Prev tab" })
 
 -- Terminal exit
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+-- Keep Escape out of which-key's blocking trigger; Neovim handles the 300 ms sequence timeout.
+vim.keymap.set('t', '<Esc>', '<Esc>')
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>')
+vim.keymap.set('t', '<C-\\>', '<C-\\><C-n>')
 
 -- Terminal <C-r>: which-key register list, paste selected register like insert mode
 whichKey.add({ '<C-r>', mode = 't', group = 'registers', expand = function()
