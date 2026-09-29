@@ -19,14 +19,23 @@ M.build = function()
 end
 
 M.init = function()
-	vim.g.filetype_v = "coq"
-	vim.filetype.add({
-		extension = {
-			v = function()
-				return vim.g.filetype_v
-			end,
-		},
-	})
+	-- vim.g.filetype_v = "coq"
+	-- vim.filetype.add({
+	-- 	extension = {
+	-- 		v = function()
+	-- 			return vim.g.filetype_v
+	-- 		end,
+	-- 	},
+	-- })
+	vim.api.nvim_create_user_command("VFiletypeCoq", function()
+		vim.g.filetype_v = "coq"
+		for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+			local name = vim.api.nvim_buf_get_name(buf)
+			if vim.api.nvim_buf_is_loaded(buf) and vim.fn.fnamemodify(name, ":e") == "v" then
+				vim.bo[buf].filetype = "coq"
+			end
+		end
+	end, {})
 	vim.api.nvim_create_user_command("VFiletypeVerilog", function()
 		vim.g.filetype_v = "verilog"
 		for _, buf in ipairs(vim.api.nvim_list_bufs()) do

@@ -2,10 +2,12 @@ local M = {
 	"oskarrrrrrr/symbols.nvim",
 }
 
-M.enabled = false
+M.module = false
+M.cmd = { "Symbols", "SymbolsClose" }
 
 M.opts = {
 	sidebar = {
+		open_direction = "right",
 		preview = {
 			show_always = true,
 			show_line_number = true,
