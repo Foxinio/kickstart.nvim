@@ -2,7 +2,7 @@ local M = {
 	"oskarrrrrrr/symbols.nvim",
 }
 
-M.module = false
+-- M.module = false
 M.cmd = { "Symbols", "SymbolsClose" }
 
 M.opts = {
@@ -14,7 +14,9 @@ M.opts = {
 		},
 		keymaps = {
 			["<BS>"] = "fold",
-			["<Tab>"] = "unfold",
+			["<Tab>"] = "toggle-fold",
+			["<Left>"] = "fold",
+			["<Right>"] = "unfold",
 		},
 	},
 }
