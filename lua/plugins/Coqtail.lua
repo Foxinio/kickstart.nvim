@@ -6,27 +6,20 @@ M.dependencies = {
 	'nvim-telescope/telescope.nvim',
 }
 
-M.ft = "coq"
+M.event = "FileType coq"
 M.module = false
-
-M.keys = {
-	{ '<M-down>', '<Plug>CoqNext', noremap = true },
-	{ '<M-up>', '<Plug>CoqUndo', noremap = true },
-}
 
 M.build = function()
 	vim.cmd("!pip install --user -r requirements.txt")
 end
 
+M.config = function()
+	-- Coqtail's detector forces empty .v files to coq even after VFiletypeVerilog.
+	vim.api.nvim_clear_autocmds({ group = 'filetypedetect', event = { 'BufRead', 'BufNewFile' }, pattern = '*.v' })
+end
+
 M.init = function()
-	-- vim.g.filetype_v = "coq"
-	-- vim.filetype.add({
-	-- 	extension = {
-	-- 		v = function()
-	-- 			return vim.g.filetype_v
-	-- 		end,
-	-- 	},
-	-- })
+	vim.g.filetype_v = "verilog"
 	vim.api.nvim_create_user_command("VFiletypeCoq", function()
 		vim.g.filetype_v = "coq"
 		for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -51,8 +44,12 @@ M.init = function()
 
 	vim.api.nvim_create_autocmd('FileType', {
 		pattern = { 'coq', 'coq-infos', 'coq-goals' },
-		callback = function()
+		callback = function(args)
 			vim.opt_local.spell = false
+			if args.match == 'coq' then
+				vim.keymap.set('n', '<M-down>', '<Plug>CoqNext', { buffer = args.buf })
+				vim.keymap.set('n', '<M-up>', '<Plug>CoqUndo', { buffer = args.buf })
+			end
 			vim.api.nvim_set_hl(0, "CoqtailChecked", {
 				bg = "#1c4d29",
 			})

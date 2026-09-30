@@ -6,6 +6,9 @@ local M = {
 M.cmd = { "Symbols", "SymbolsClose" }
 
 M.opts = {
+	providers = {
+		lsp = { timeout_ms = 5000 },
+	},
 	sidebar = {
 		open_direction = "right",
 		preview = {
