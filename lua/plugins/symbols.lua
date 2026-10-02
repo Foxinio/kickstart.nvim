@@ -25,8 +25,8 @@ M.opts = {
 }
 
 M.keys = {
-	{ ",s", "<cmd>Symbols<CR>" },
-	{ ",S", "<cmd>SymbolsClose<CR>" },
+	{ ",s", "<cmd>Symbols<CR>",      desc = "Open symbols sidebar" },
+	{ ",S", "<cmd>SymbolsClose<CR>", desc = "Close symbols sidebar" },
 }
 
 M.config = function(_, opts)
