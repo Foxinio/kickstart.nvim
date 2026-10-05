@@ -1,5 +1,7 @@
 local M = { "stevearc/overseer.nvim" }
 
+M.cmd = { "VerilatorRegress" }
+
 M.dependencies = {
 	"franco-ruggeri/overseer-extra.nvim",
 	"Foxinio/term-color-parser.nvim",
@@ -79,6 +81,13 @@ M.opts = {
 
 M.config = function(_, opts)
 	require("overseer").setup(opts)
+
+	vim.api.nvim_create_user_command("VerilatorRegress", function()
+		require("overseer.custom.verilator_regress").run()
+	end, {
+		desc = "Select and run a Verilator regression test",
+		force = true,
+	})
 
 	vim.api.nvim_create_user_command("OverseerDisposeAll", function()
 		require("plugin-utils.overseer").clear_list()
