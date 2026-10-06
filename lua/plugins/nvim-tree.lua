@@ -4,6 +4,11 @@ local M = {
 
 M.lazy = false
 
+M.init = function()
+	vim.api.nvim_create_user_command("NvimTreeExtraSize", "NvimTreeResize 50", {})
+	vim.api.nvim_create_user_command("NvimTreeXExtraSize", "NvimTreeResize 70", {})
+end
+
 M.dependencies = {
 	'nvim-tree/nvim-web-devicons',
 	{

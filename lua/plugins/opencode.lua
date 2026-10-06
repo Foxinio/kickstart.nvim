@@ -5,7 +5,22 @@ local M = {
 M.lazy = true
 M.module = false
 
+local terminal_opts = {
+	win = { position = "float", width = 0.8, height = 0.8, border = "rounded" },
+}
+
+M.config = function()
+	require("opencode.config").opts.server.start = function()
+		require("snacks.terminal").open("opencode", terminal_opts)
+	end
+end
+
 M.keys = {
+	{
+		"<leader>ioc",
+		function() require("snacks.terminal").toggle("opencode", terminal_opts) end,
+		desc = "Toggle OpenCode chat",
+	},
 	{
 		"<leader>ioa",
 		function() require("opencode").ask("@this: ") end,
