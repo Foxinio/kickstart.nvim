@@ -10,6 +10,13 @@ M.opts = {
 	bigfile = { enabled = true },
 	indent = { enabled = true },
 	input = { enabled = true },
+	terminal = {
+		win = {
+			keys = {
+				term_hide = { "<C-q>", "hide", mode = { "n", "t" }, desc = "Hide terminal" },
+			},
+		},
+	},
 }
 
 return M
