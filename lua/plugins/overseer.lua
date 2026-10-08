@@ -92,7 +92,7 @@ M.config = function(_, opts)
 	vim.api.nvim_create_user_command("VerilatorHtml", function(opts)
 		require("overseer.custom.verilator").html(opts.fargs)
 	end, {
-		nargs = 1,
+		nargs = "*",
 		desc = "Generate and open HTML for a Verilator AST dump",
 		force = true,
 	})
@@ -100,7 +100,7 @@ M.config = function(_, opts)
 	vim.api.nvim_create_user_command("VerilatorDiff", function(opts)
 		require("overseer.custom.verilator").diff(opts.fargs)
 	end, {
-		nargs = "+",
+		nargs = "*",
 		desc = "Generate and open an HTML diff of two Verilator AST dumps",
 		force = true,
 	})
