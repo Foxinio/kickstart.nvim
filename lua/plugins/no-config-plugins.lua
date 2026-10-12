@@ -1,5 +1,5 @@
 local M = {
-	'tpope/vim-fugitive',
+	-- 'tpope/vim-fugitive',
 	'tpope/vim-rhubarb',
 
 	"ap/vim-css-color",
