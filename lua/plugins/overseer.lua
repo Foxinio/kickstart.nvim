@@ -1,6 +1,6 @@
 local M = { "stevearc/overseer.nvim" }
 
-M.cmd = { "VerilatorRegress", "VerilatorHtml", "VerilatorDiff" }
+M.cmd = { "OverseerShell", "VerilatorRegress", "VerilatorHtml", "VerilatorDiff" }
 
 M.dependencies = {
 	"franco-ruggeri/overseer-extra.nvim",

@@ -16,3 +16,5 @@ local abbreviations = {
 for left, right in pairs(abbreviations) do
 	vim.cmd.cnoreabbrev(('%s %s'):format(left, right))
 end
+
+vim.cmd([[cnoreabbrev <expr> make getcmdtype() == ':' && getcmdline() == 'make' && getcmdpos() == 5 ? 'OverseerShell make' : 'make']])

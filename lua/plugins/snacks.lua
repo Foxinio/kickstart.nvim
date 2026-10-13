@@ -13,6 +13,7 @@ M.opts = {
 	terminal = {
 		win = {
 			keys = {
+				term_normal = false,
 				term_hide = { "<C-q>", "hide", mode = { "n", "t" }, desc = "Hide terminal" },
 			},
 		},
