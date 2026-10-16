@@ -182,7 +182,7 @@ M.config = function(_, opts)
     vim.cmd("LspStart clangd")
 	end, {})
 	vim.api.nvim_create_user_command("LspSetupCpp", function()
-		vim.lsp.config.clangd.init_optiosn = {
+		vim.lsp.config.clangd.init_options = {
 			fallbackFlags = { '--std=c++23' }
 		}
 		vim.lsp.enable("clangd")
