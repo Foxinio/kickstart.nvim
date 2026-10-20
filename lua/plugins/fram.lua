@@ -1,5 +1,5 @@
 local M = {
-  'Brychlikov/fram.nvim',
+  'Foxinio/fram.nvim',
 }
 
 M.ft = { "fram" }
