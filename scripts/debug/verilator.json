@@ -1,0 +1,23 @@
+{
+  "program": "/work/open-ai/openai-verilator/build/src/verilator_bin_dbg",
+  "args": [
+    "--lint-only", "--debug-check", "--x-assign", "unique",
+    "--fdedup", "--comp-limit-members", "10", "--no-skip-identical",
+    "-f", "test_regress/input.vc",
+    "--prefix", "Vt_class_extends_pkg_bad",
+    "-Mdir", "test_regress/obj_vlt/t_class_extends_pkg_bad",
+    "+define+TEST_OBJ_DIR=test_regress/obj_vlt/t_class_extends_pkg_bad",
+    "+define+TEST_DUMPFILE=test_regress/obj_vlt/t_class_extends_pkg_bad/simx.vcd",
+    "test_regress/t/t_class_extends_pkg_bad.v"
+  ],
+  "extra_args": [
+    "--debug", "-Wno-fatal", "--debug-emitv", "--debugi", "2",
+    "--dumpi-tree", "999", "--dumpi-tree-json", "999",
+    "--debugi-V3LinkDot", "999", "--debugi-V3SymTable", "999",
+    "--debugi-V3Scope", "999", "--debugi-V3Descope", "999"
+  ],
+  "simulation_args": [],
+  "environment": {},
+  "setup_commands": [],
+  "regress_args": ["--vlt"]
+}

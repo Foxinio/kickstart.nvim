@@ -4,7 +4,8 @@ local M = {
 	-- NOTE: Yes, you can install new plugins here!
 	'mfussenegger/nvim-dap',
 }
-M.enabled = false
+M.module = false
+M.cmd = { 'DebugProfile', 'VerilatorDebugBinary', 'VerilatorDebug', 'VerilatorDebugTest', 'VerilatorDebugSim' }
 
 -- NOTE: And you can specify dependencies as well
 M.dependencies = {
@@ -110,6 +111,7 @@ M.config = function(_, opts)
 		local dapui = require 'dapui'
 
 		require('mason-nvim-dap').setup(opts)
+		require('plugin-utils.verilator-debug').setup()
 
 		-- Adapter setups and configs:
 		dap.adapters.cppdbg = dap.adapters.cppdbg or {
