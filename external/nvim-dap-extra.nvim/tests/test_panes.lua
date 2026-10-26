@@ -1,18 +1,17 @@
--- Run: nvim --headless -u NONE -i NONE -l scripts/debug/test_panes.lua
-vim.opt.rtp:prepend(vim.fn.getcwd())
-for _, dir in ipairs(vim.fn.globpath(vim.fn.stdpath('data') .. '/lazy', '*', false, true)) do vim.opt.rtp:append(dir) end
+local root = dofile(vim.fs.dirname(debug.getinfo(1, 'S').source:sub(2)) .. '/bootstrap.lua').root
 local dap, dapui = require('dap'), require('dapui')
 local original_session, stopped = dap.session, nil
 dap.session = function() return stopped end
-local ui = require('plugin-utils.debug-ui')
+local ui = require('dap-extra.ui')
 local breakpoints = require('dap.breakpoints')
-dapui.setup({ element_mappings = {
-	stacks = { open = { '<CR>', 'o' }, toggle = { '<Space>', 't' } },
-	breakpoints = { open = { '<CR>', 'o' }, toggle = 't', remove = 'd' },
-} })
-require('plugin-utils.debug-panes').setup()
+require('dap-extra').setup()
+require('dap-extra.panes').setup()
+local util = require('dapui.util')
+local open_buf, render_before = util.open_buf, dapui.elements.breakpoints.render
+require('dap-extra.panes').setup()
+assert(util.open_buf == open_buf and dapui.elements.breakpoints.render == render_before)
 dap.defaults.fallback.switchbuf = ui.jump
-vim.cmd.edit('scripts/debug/test_panes.lua')
+vim.cmd.edit(root .. '/tests/test_panes.lua')
 local buffer = vim.api.nvim_get_current_buf()
 ui.open()
 local source = vim.api.nvim_get_current_win()

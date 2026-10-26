@@ -1,15 +1,12 @@
--- Run: nvim --headless -u NONE -i NONE -l scripts/debug/test_focus_live.lua
-vim.opt.rtp:prepend(vim.fn.getcwd())
-local data = vim.fn.stdpath('data')
-for _, dir in ipairs(vim.fn.globpath(data .. '/lazy', '*', false, true)) do vim.opt.rtp:append(dir) end
+local root = dofile(vim.fs.dirname(debug.getinfo(1, 'S').source:sub(2)) .. '/bootstrap.lua').root
 local dap = require('dap')
-local ui = require('plugin-utils.debug-ui')
+local ui = require('dap-extra.ui')
 local repl = require('dap.repl')
 require('dapui').setup()
-require('plugin-utils.verilator-debug').setup_repl()
+require('dap-extra.repl').setup()
 dap.defaults.fallback.switchbuf = ui.jump
 dap.listeners.after.event_initialized.focus_check = ui.open
-dap.adapters.cppdbg = { id = 'cppdbg', type = 'executable', command = data .. '/mason/bin/OpenDebugAD7' }
+dap.adapters.cppdbg = { id = 'cppdbg', type = 'executable', command = vim.fn.stdpath('data') .. '/mason/bin/OpenDebugAD7' }
 local directory = vim.fn.tempname()
 vim.fn.mkdir(directory, 'p')
 local file = directory .. '/focus.c'

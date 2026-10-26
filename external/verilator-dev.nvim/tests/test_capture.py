@@ -1,4 +1,4 @@
-"""Run with python3 scripts/debug/test_capture.py (simulation needs ptrace)."""
+"""Run with python3 tests/test_capture.py (simulation needs ptrace)."""
 
 import json
 import os
@@ -10,7 +10,7 @@ import tempfile
 import time
 import unittest
 
-HELPER = Path(__file__).with_name("capture.py").resolve()
+HELPER = (Path(__file__).parent.parent / "scripts/capture.py").resolve()
 
 DRIVER = '''
 import json, os, pathlib, shlex, subprocess, sys, time

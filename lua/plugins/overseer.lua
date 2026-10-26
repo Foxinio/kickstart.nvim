@@ -1,6 +1,6 @@
 local M = { "stevearc/overseer.nvim" }
 
-M.cmd = { "OverseerShell", "VerilatorRegress", "VerilatorHtml", "VerilatorDiff" }
+M.cmd = { "OverseerShell" }
 
 M.dependencies = {
 	"franco-ruggeri/overseer-extra.nvim",
@@ -81,29 +81,6 @@ M.opts = {
 
 M.config = function(_, opts)
 	require("overseer").setup(opts)
-
-	vim.api.nvim_create_user_command("VerilatorRegress", function()
-		require("overseer.custom.verilator").run()
-	end, {
-		desc = "Select and run a Verilator regression test",
-		force = true,
-	})
-
-	vim.api.nvim_create_user_command("VerilatorHtml", function(opts)
-		require("overseer.custom.verilator").html(opts.fargs)
-	end, {
-		nargs = "*",
-		desc = "Generate and open HTML for a Verilator AST dump",
-		force = true,
-	})
-
-	vim.api.nvim_create_user_command("VerilatorDiff", function(opts)
-		require("overseer.custom.verilator").diff(opts.fargs)
-	end, {
-		nargs = "*",
-		desc = "Generate and open an HTML diff of two Verilator AST dumps",
-		force = true,
-	})
 
 	vim.api.nvim_create_user_command("OverseerDisposeAll", function()
 		require("plugin-utils.overseer").clear_list()

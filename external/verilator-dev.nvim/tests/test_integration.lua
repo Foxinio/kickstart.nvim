@@ -1,15 +1,17 @@
--- MODE=compiler|simulation nvim --headless -u NONE -i NONE -l scripts/debug/test_integration.lua
-vim.opt.rtp:prepend(vim.fn.getcwd())
-local data = vim.fn.stdpath('data')
-for _, dir in ipairs(vim.fn.globpath(data .. '/lazy', '*', false, true)) do vim.opt.rtp:append(dir) end
-vim.env.PATH = data .. '/mason/bin:' .. vim.env.PATH
-require('mason').setup()
+local root = dofile(vim.fs.dirname(debug.getinfo(1, 'S').source:sub(2)) .. '/bootstrap.lua').root
+local temporary = vim.fn.tempname()
+local stdpath = vim.fn.stdpath
+vim.fn.stdpath = function(kind) return kind == 'data' and temporary or stdpath(kind) end
+local profiles = require('verilator-dev.profiles')
+local debug = require('verilator-dev.debug')
+local dap = require('dap')
 require('telescope').setup()
 require('overseer').setup({ output = { use_terminal = false } })
-require('plugins.debug').config(nil, { ensure_installed = {}, handlers = {} })
-local profiles = require('plugin-utils.debug-profiles')
-local debug = require('plugin-utils.verilator-debug')
-local dap = require('dap')
+require('verilator-dev').setup()
+dap.adapters.cppdbg = {
+	id = 'cppdbg', type = 'executable',
+	command = stdpath('data') .. '/mason/bin/OpenDebugAD7',
+}
 local profile = profiles.load('verilator')
 if vim.env.VERILATOR_DEBUG_BINARY then profiles.set_binary(vim.env.VERILATOR_DEBUG_BINARY) end
 local _, root = profiles.resolve(profile)
@@ -55,3 +57,4 @@ end
 dap.terminate()
 assert(vim.wait(10000, function() return dap.session() == nil end, 50))
 print((simulation and 'Simulation' or 'Compiler') .. ' capture, DAP launch, helpers and breakpoint integration passed')
+vim.fn.delete(temporary, 'rf')

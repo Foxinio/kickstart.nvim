@@ -245,6 +245,16 @@ Adapter-provided sources still need navigation support; their edit/save semantic
 must be assessed separately from real files. Record limitations before choosing
 the design.
 
+## Extracted ownership
+
+[verilator-dev.nvim](../../external/verilator-dev.nvim/README.md) owns profiles,
+capture/replay, Verilator GDB helpers, regression and AST commands.
+[nvim-dap-extra.nvim](../../external/nvim-dap-extra.nvim/README.md) owns routing,
+panes, generic REPL behavior and cleanup. They are independently usable.
+The host retains adapters/Mason, languages, global mappings, CMake and Telescope
+DAP pickers. DebugProfile is a host alias for VerilatorDebugProfile.
+The proposed named DAP Source window above remains investigation only.
+
 ## Acceptance checks
 
 - `DapClean` terminates debugging, clears debugger virtual text and cached
@@ -269,7 +279,5 @@ the design.
   navigation, hover and local source navigation. Headless mocks alone do not
   establish interactive focus behavior.
 
-See [README.md](README.md) for usage, [test.lua](test.lua) for headless behavior
-checks, [test_focus_live.lua](test_focus_live.lua) for a small real GDB session,
-[test_integration.lua](test_integration.lua) for Verilator integration, and
-[test_capture.py](test_capture.py) for capture checks.
+See the plugin READMEs above for the separated tests and prerequisites;
+[test_loading.lua](test_loading.lua) checks combined host lazy loading.

@@ -1,6 +1,5 @@
 local M = {}
-local profiles = require('plugin-utils.debug-profiles')
-local config_dir = vim.fn.stdpath('config')
+local profiles = require('verilator-dev.profiles')
 local capture_task
 local last_launch
 
@@ -105,10 +104,11 @@ local function capture(profile, test, simulation)
 	local overseer = require('overseer')
 	local task = overseer.new_task({
 		name = 'Capture ' .. (simulation and 'model: ' or 'compiler: ') .. vim.fn.fnamemodify(test, ':t'),
-		cmd = { python, config_dir .. '/scripts/debug/capture.py', 'runner', settings_path },
+		cmd = { python, require('verilator-dev').resource('scripts/capture.py'), 'runner', settings_path },
 		cwd = root .. '/test_regress',
 		strategy = { 'jobstart', use_terminal = false },
-		components = { 'on_exit_set_status' },
+		env = require('verilator-dev.tasks').environment(),
+		components = require('verilator-dev.tasks').components(),
 	})
 	capture_task = task
 	task:subscribe('on_complete', function(_, status)
@@ -144,39 +144,25 @@ end
 
 function M.setup_repl()
 	local repl = require('dap.repl')
-	require('plugin-utils.debug-history').setup()
-	for command, alias in pairs({ into = 's', next_ = 'n', intoi = 'si', nexti = 'ni', out = 'fin', continue = 'c' }) do
-		if not vim.tbl_contains(repl.commands[command], alias) then table.insert(repl.commands[command], alias) end
-	end
-	local function gdb(command, args)
-		local session = require('dap').session()
-		if not session or session.config.type ~= 'cppdbg' then
-			repl.append('This command requires a GDB/cppdbg session')
-			return
-		end
-		repl.execute('-exec ' .. command .. (args and args ~= '' and ' ' .. args or ''))
-	end
-	for _, name in ipairs({ 'pn', 'pnt', 'jstash', 'js', 'jtree', 'jt', 'dtf', 'watchedit', 'proot', 'p', 'i' }) do
-		local command = name
-		repl.commands.custom_commands[command] = function(args) gdb(command, args) end
-	end
-	repl.commands.custom_commands.gdb = function(args) gdb(args) end
-	for _, name in ipairs({ 'up', 'down', 'frame', 'bt' }) do
+	for _, name in ipairs({ 'pn', 'pnt', 'jstash', 'js', 'jtree', 'jt', 'dtf', 'watchedit', 'proot' }) do
 		local command = name
 		repl.commands.custom_commands[command] = function(args)
-			require('plugin-utils.debug-stack').command(command, args)
+			local session = require('dap').session()
+			if not session or session.config.type ~= 'cppdbg' then
+				repl.append('This command requires a GDB/cppdbg session')
+				return
+			end
+			repl.execute('-exec ' .. command .. (args and args ~= '' and ' ' .. args or ''))
 		end
 	end
-	repl.commands.custom_commands.f = repl.commands.custom_commands.frame
-	repl.commands.custom_commands.backtrace = repl.commands.custom_commands.bt
-	repl.commands.custom_commands.where = repl.commands.custom_commands.bt
 end
 
-function M.setup()
+function M.setup(opts)
+	opts = opts or {}
 	profiles.setup()
 	M.setup_repl()
 	local commands = {
-		DebugProfile = { callback = profiles.command, nargs = '*', bang = true },
+		VerilatorDebugProfile = { callback = profiles.command, nargs = '*', bang = true },
 		VerilatorDebugBinary = { callback = function(opts) M.binary(opts.args) end, nargs = '?', complete = 'file' },
 		VerilatorDebug = { callback = M.repeat_last, nargs = 0 },
 		VerilatorDebugBin = { callback = function(opts)
@@ -186,11 +172,12 @@ function M.setup()
 		VerilatorDebugSim = { callback = function(opts) M.regression(opts.args, true) end, nargs = '?', complete = 'file' },
 	}
 	for name, definition in pairs(commands) do
-		vim.api.nvim_create_user_command(name, guarded(require('plugin-utils.debug-ui').action(definition.callback)), {
+		vim.api.nvim_create_user_command(name, guarded(opts.wrap_debug_action and opts.wrap_debug_action(definition.callback) or definition.callback), {
 			nargs = definition.nargs, bang = definition.bang, complete = definition.complete, force = true,
 		})
 	end
 	vim.api.nvim_create_autocmd('BufWritePost', {
+		group = vim.api.nvim_create_augroup('verilator-dev-profiles', { clear = true }),
 		pattern = vim.fn.stdpath('data') .. '/verilator-debug/profiles/*.json',
 		callback = guarded(function(opts)
 			local _, name = profiles.get()

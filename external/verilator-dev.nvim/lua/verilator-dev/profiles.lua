@@ -187,7 +187,7 @@ end
 function M.setup()
 	vim.fn.mkdir(directory, 'p', 448)
 	if #M.names() == 0 then
-		local seed = vim.fn.stdpath('config') .. '/scripts/debug/verilator.json'
+		local seed = require('verilator-dev').resource('scripts/verilator.json')
 		vim.fn.writefile(vim.fn.readfile(seed), path('verilator'))
 	end
 	if vim.fn.filereadable(selected_path) == 1 then

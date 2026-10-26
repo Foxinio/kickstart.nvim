@@ -1,114 +1,32 @@
--- Run: nvim --headless -u NONE -i NONE -l scripts/debug/test.lua
-local root = vim.fn.getcwd()
-vim.opt.rtp:prepend(root)
-local data = vim.fn.stdpath('data')
-for _, dir in ipairs(vim.fn.globpath(data .. '/lazy', '*', false, true)) do vim.opt.rtp:append(dir) end
-local temporary = vim.fn.tempname()
-vim.fn.mkdir(temporary, 'p')
-local stdpath = vim.fn.stdpath
-vim.fn.stdpath = function(kind) return kind == 'data' and temporary or stdpath(kind) end
-local profiles = require('plugin-utils.debug-profiles')
-local debug = require('plugin-utils.verilator-debug')
-local directory = temporary .. '/verilator-debug/profiles'
-local function fails(callback) assert(not pcall(callback), 'Expected validation failure') end
-
-profiles.setup()
-assert(vim.deep_equal(profiles.names(), { 'verilator' }))
-local profile = profiles.load('verilator')
-assert(profile.program == nil and #profile.args == 0)
-fails(function() profiles.load('../escape') end)
-fails(function() profiles.validate({ program = 'x', args = 'bad' }) end)
-fails(function() profiles.validate({ program = 'x', environment = { BAD = 1 } }) end)
-profiles.validate({ program = 'x', environment = { GOOD = 'valid' } })
-profile.replay = { program = '/old/checkout/model', args = { 'old-test.v' } }
-profile.program = '/old/checkout/verilator_bin_dbg'
-profile.extra_args = { '--debug', '-CFLAGS', 'argument with spaces' }
-profiles.command({ fargs = { 'clone', 'copy' } })
-assert(profiles.get().extra_args[3] == 'argument with spaces')
-assert(profiles.get().replay == nil)
-assert(profiles.get().program == nil)
-assert(vim.json.decode(table.concat(vim.fn.readfile(directory .. '/copy.json'), '\n')).replay == nil)
-vim.fn.writefile({ '{}' }, directory .. '/copy.json')
-fails(function() profiles.save('copy') end)
-profiles.save('copy', true)
-assert(vim.deep_equal(profiles.load('copy').extra_args, profile.extra_args))
-
-local checkout = temporary .. '/checkout'
-vim.fn.mkdir(checkout .. '/build/src', 'p')
-vim.fn.mkdir(checkout .. '/bin', 'p')
-vim.fn.mkdir(checkout .. '/include', 'p')
-vim.fn.mkdir(checkout .. '/src', 'p')
-vim.fn.writefile({}, checkout .. '/bin/verilator')
-vim.fn.writefile({}, checkout .. '/include/verilated.h')
-vim.fn.writefile({}, checkout .. '/src/.gdbinit')
-assert(vim.uv.fs_symlink('/bin/true', checkout .. '/build/src/verilator_bin_dbg'))
-profiles.set_binary(checkout .. '/build/src/verilator_bin_dbg')
-local _, resolved = profiles.resolve(profile)
-assert(resolved == checkout, 'Prefer selected binary location over symlink target')
-vim.cmd.cd('/tmp')
-assert(select(2, profiles.resolve(profile)) == checkout)
-vim.cmd.cd(checkout)
-profiles.set_binary('build/src/verilator_bin_dbg')
-assert(select(2, profiles.resolve(profile)) == checkout)
-vim.fn.mkdir(temporary .. '/other/build/src', 'p')
-vim.fn.mkdir(temporary .. '/other/bin', 'p')
-vim.fn.mkdir(temporary .. '/other/include', 'p')
-vim.fn.writefile({}, temporary .. '/other/bin/verilator')
-vim.fn.writefile({}, temporary .. '/other/include/verilated.h')
-assert(vim.uv.fs_symlink('/bin/true', temporary .. '/other/build/src/verilator_bin_dbg'))
-vim.cmd.cd(temporary .. '/other')
-assert(select(2, profiles.resolve(profile)) == temporary .. '/other', 'Relative binary must follow cwd')
-vim.cmd.cd(checkout .. '/src')
-profiles.set_binary('../build/src/verilator_bin_dbg')
-assert(select(2, profiles.resolve(profile)) == checkout, 'Support paths outside cwd')
-vim.cmd.cd(checkout)
-profiles.set_binary('build/src/verilator_bin_dbg')
-profiles.load('copy')
-assert(select(2, profiles.resolve(profile)) == checkout, 'Loading profiles must not change the binary')
-fails(function() profiles.set_binary('missing-binary') end)
-assert(select(2, profiles.resolve(profile)) == checkout, 'Invalid override must preserve the binary')
-local builtin = require('telescope.builtin')
-local find_files, picker_cwd = builtin.find_files, nil
-builtin.find_files = function(opts) picker_cwd = opts.cwd end
-debug.binary('')
-assert(picker_cwd == checkout, 'Binary picker must search Neovim cwd')
-builtin.find_files = find_files
-profile.args = { 'manual.v' }
-profile.replay = { program = '/old/model', args = { 'old-test.v' }, simulation = true }
-local config = debug.configuration(profile)
-assert(vim.deep_equal(config.args, { 'manual.v', '--debug', '-CFLAGS', 'argument with spaces' }))
-assert(config.cwd == checkout and config.stopAtEntry)
-local model = { program = '/bin/true', cwd = '/tmp', args = { '+seed=7' }, simulation = true, environment = {} }
-profile.simulation_args = { '+user=2' }
-local sim = debug.configuration(profile, model)
-assert(vim.deep_equal(sim.args, { '+seed=7', '+user=2' }))
-assert(sim.cwd == '/tmp' and sim.program == '/bin/true')
-for _, command in ipairs(sim.setupCommands) do assert(not command.text:find('catch throw', 1, true)) end
-
-local picks = {}
-local original_pick = profiles.pick
-profiles.pick = function(title, _, callback) picks[#picks + 1] = { title = title, callback = callback } end
-profiles.choose(nil, function() error('Cancellation must not invoke callback') end)
-profiles.command({ fargs = {}, bang = false })
-for _, action in ipairs({ 'load', 'edit', 'save', 'delete', 'clone' }) do profiles.command({ fargs = { action } }) end
-assert(#picks == 7)
-profiles.command({ fargs = { 'load', 'copy' } })
-assert(#picks == 7, 'Explicit names must bypass selection')
-profiles.pick = original_pick
-
-debug.setup_repl()
-local repl = require('dap.repl')
-for _, name in ipairs({ 'pn', 'pnt', 'jstash', 'js', 'jtree', 'jt', 'dtf', 'watchedit', 'proot', 'p', 'i', 'gdb' }) do
-	assert(type(repl.commands.custom_commands[name]) == 'function')
+local root = dofile(vim.fs.dirname(debug.getinfo(1, 'S').source:sub(2)) .. '/bootstrap.lua').root
+local dap, repl = require('dap'), require('dap.repl')
+require('dap-extra').setup({ dapui = { floating = { border = 'single' } } })
+assert(require('dapui.config').floating.border == 'single')
+assert(require('dapui.config').icons.current_frame == '*')
+local function listener_count()
+	local count = 0
+	for _, when in ipairs({ dap.listeners.before, dap.listeners.after }) do
+		for _, event in pairs(when) do
+			for _ in pairs(event) do count = count + 1 end
+		end
+	end
+	return count
 end
-assert(vim.tbl_contains(repl.commands.into, 's') and vim.tbl_contains(repl.commands.out, 'fin'))
-local dap, forwarded = require('dap'), {}
-local session, execute = dap.session, repl.execute
+local listeners = listener_count()
+local render = require('dapui').elements.breakpoints.render
+vim.wait(20, function() return false end)
+require('dap-extra').setup()
+assert(listener_count() == listeners and require('dapui').elements.breakpoints.render == render)
+local session = dap.session
+local execute = repl.execute
+local forwarded = {}
 dap.session = function() return { config = { type = 'cppdbg' } } end
 repl.execute = function(command) forwarded[#forwarded + 1] = command end
-repl.commands.custom_commands.pnt('node with spaces')
 repl.commands.custom_commands.gdb('info locals')
-assert(vim.deep_equal(forwarded, { '-exec pnt node with spaces', '-exec info locals' }))
+assert(vim.deep_equal(forwarded, { '-exec info locals' }))
+assert(repl.commands.custom_commands.pn == nil)
+assert(vim.tbl_contains(repl.commands.into, 's') and vim.tbl_contains(repl.commands.out, 'fin'))
+repl.execute = execute
 local frames = {
 	{ id = 100, name = 'inner', source = { path = 'inner.cpp' }, line = 10 },
 	{ id = 7, name = 'caller', source = { path = 'caller.cpp' }, line = 20 },
@@ -150,7 +68,7 @@ local prompt_buffer = vim.api.nvim_create_buf(false, true)
 vim.api.nvim_set_current_buf(prompt_buffer)
 vim.bo[prompt_buffer].buftype = 'prompt'
 vim.fn.prompt_setprompt(prompt_buffer, 'dap> ')
-require('plugin-utils.debug-history').attach(prompt_buffer)
+require('dap-extra.history').attach(prompt_buffer)
 local function typed(text) vim.api.nvim_buf_set_lines(prompt_buffer, 0, -1, false, { 'dap> ' .. text }) end
 local function key(lhs) return vim.fn.maparg(lhs, 'i', false, true).callback() end
 local function line() return vim.api.nvim_get_current_line() end
@@ -171,17 +89,17 @@ typed(''); key('<Up>'); assert(line() == 'dap> p node->name()')
 vim.api.nvim_set_current_buf(original_buffer)
 vim.api.nvim_buf_delete(prompt_buffer, { force = true })
 
--- Exercise a real Telescope picker and cancel it without choosing anything.
-require('telescope').setup({ defaults = { preview = false } })
-profiles.choose(nil, function() error('Cancelled picker invoked callback') end)
-local picker = require('telescope.actions.state').get_current_picker(vim.api.nvim_get_current_buf())
-assert(picker)
-require('telescope.actions').close(picker.prompt_bufnr)
-vim.wait(100, function() return false end)
-
+local function action(callback, cursor) return require('dap-extra.ui').action(callback, cursor) end
+local mappings = {
+	['<F10>'] = action(function() dap.step_over() end),
+	['<leader>b'] = function() dap.toggle_breakpoint() end,
+	['<leader>B'] = function() dap.set_breakpoint(vim.fn.input('Condition: ')) end,
+	['<leader>dK'] = function() require('dap.ui.widgets').hover() end,
+	['<leader>dg'] = function() require('dap-extra.ui').local_frame() end,
+	['<leader>dl'] = action(function() dap.run_to_cursor() end, true),
+}
 -- Debug panes and source jumps must leave the original tab's windows intact.
-require('dapui').setup()
-local debug_ui = require('plugin-utils.debug-ui')
+local debug_ui = require('dap-extra.ui')
 vim.cmd('vsplit')
 local original_tab = vim.api.nvim_get_current_tabpage()
 local original_layout = vim.fn.winlayout()
@@ -201,12 +119,8 @@ end)('forwarded')
 assert(called == 'forwarded' and #vim.api.nvim_list_tabpages() == tab_count + 1)
 local step_over = dap.step_over
 dap.step_over = function() assert(vim.api.nvim_get_current_tabpage() == debug_tab) end
-for _, mapping in ipairs(require('plugins.debug').keys) do
-	if mapping[1] == '<F10>' then
-		vim.api.nvim_set_current_tabpage(original_tab)
-		mapping[2]()
-	end
-end
+vim.api.nvim_set_current_tabpage(original_tab)
+mappings['<F10>']()
 dap.step_over = step_over
 vim.api.nvim_set_current_tabpage(original_tab)
 local origin_buffer = vim.api.nvim_get_current_buf()
@@ -226,8 +140,6 @@ debug_ui.close()
 assert(vim.api.nvim_get_current_tabpage() == original_tab)
 assert(vim.deep_equal(vim.fn.winlayout(), original_layout))
 assert(vim.deep_equal(vim.tbl_map(vim.api.nvim_win_get_buf, vim.api.nvim_tabpage_list_wins(original_tab)), original_buffers))
-local mappings = {}
-for _, mapping in ipairs(require('plugins.debug').keys) do mappings[mapping[1]] = mapping[2] end
 local invoking = vim.api.nvim_get_current_win()
 local toggle_breakpoint, set_breakpoint = dap.toggle_breakpoint, dap.set_breakpoint
 local widgets = require('dap.ui.widgets')
@@ -245,7 +157,7 @@ for _, key in ipairs({ '<leader>b', '<leader>B', '<leader>dK' }) do mappings[key
 assert(local_calls == 3)
 dap.toggle_breakpoint, dap.set_breakpoint, widgets.hover, vim.fn.input = toggle_breakpoint, set_breakpoint, hover, input
 
-local selected = { id = 9, source = { path = root .. '/scripts/debug/test.lua' }, line = 2, column = 1 }
+local selected = { id = 9, source = { path = root .. '/tests/test.lua' }, line = 2, column = 1 }
 dap.session = function() return { id = 1, current_frame = selected } end
 mappings['<leader>dg']()
 assert(vim.api.nvim_get_current_win() == invoking and vim.deep_equal(vim.fn.winlayout(), original_layout))
@@ -262,21 +174,14 @@ assert(vim.api.nvim_get_current_buf() == adapter_buffer)
 dap.session = session
 vim.api.nvim_win_set_buf(invoking, origin_buffer)
 
-for _, key in ipairs({ '<leader>dl', '<leader>df' }) do
-	vim.api.nvim_set_current_win(invoking)
-	local old_run, old_cmake = dap.run_to_cursor, package.loaded['cmake-tools']
-	local routed = false
-	local function check_context()
-		routed = true
-		assert(vim.api.nvim_get_current_tabpage() == debug_tab)
-		assert(vim.api.nvim_get_current_buf() == origin_buffer)
-	end
-	dap.run_to_cursor = check_context
-	package.loaded['cmake-tools'] = { is_cmake_project = function() return true end, debug_current_file = check_context }
-	mappings[key]()
-	assert(routed)
-	dap.run_to_cursor, package.loaded['cmake-tools'] = old_run, old_cmake
+vim.api.nvim_set_current_win(invoking)
+local run_to_cursor = dap.run_to_cursor
+dap.run_to_cursor = function()
+	assert(vim.api.nvim_get_current_tabpage() == debug_tab)
+	assert(vim.api.nvim_get_current_buf() == origin_buffer)
 end
+mappings['<leader>dl']()
+dap.run_to_cursor = run_to_cursor
 debug_ui.open()
 local source_win = vim.api.nvim_get_current_win()
 dap.repl.open()
@@ -312,44 +217,6 @@ vim.cmd('tabclose')
 debug_ui.open()
 assert(vim.api.nvim_get_current_tabpage() ~= original_tab, 'Recreate a manually closed debugger tab')
 debug_ui.close()
-debug.setup()
-local run, launches = dap.run, {}
-dap.run = function(configuration)
-	launches[#launches + 1] = vim.deepcopy(configuration)
-	configuration.args[1] = 'adapter mutation'
-end
-profiles.set_binary(checkout .. '/build/src/verilator_bin_dbg')
-vim.cmd('VerilatorDebugBin copy')
-assert(#launches == 1)
-local previous = vim.deepcopy(launches[1])
-profiles.get().extra_args = { 'changed after launch' }
-vim.cmd('VerilatorDebug')
-vim.cmd('VerilatorDebug')
-assert(#launches == 3 and vim.deep_equal(launches[2], previous) and vim.deep_equal(launches[3], previous))
-vim.fn.mkdir(checkout .. '/test_regress/t', 'p')
-vim.fn.writefile({}, checkout .. '/test_regress/driver.py')
-vim.fn.writefile({}, checkout .. '/test_regress/t/focus.py')
-local overseer = require('overseer')
-local new_task, open = overseer.new_task, overseer.open
-overseer.open = function() end
-overseer.new_task = function(options)
-	local settings = vim.json.decode(table.concat(vim.fn.readfile(options.cmd[4]), '\n'))
-	local complete
-	return {
-		subscribe = function(_, _, callback) complete = callback end,
-		start = function()
-			vim.fn.writefile({ vim.json.encode(model) }, settings.record)
-			complete(nil, 'SUCCESS')
-		end,
-	}
-end
-debug.regression('focus', true)
-assert(#launches == 4 and launches[4].program == model.program)
-assert(launches[4].args[1] == '+seed=7' and launches[4].cwd == '/tmp')
-debug.repeat_last()
-assert(#launches == 5 and vim.deep_equal(launches[5], launches[4]), 'Replay must retain the captured model invocation')
-overseer.new_task, overseer.open = new_task, open
-dap.run = run
 debug_ui.setup()
 local terminate, pending = dap.terminate, nil
 local virtual_text = require('nvim-dap-virtual-text/virtual_text')
@@ -380,5 +247,13 @@ vim.cmd('DapClean')
 assert(clears == 3 and vim.api.nvim_get_current_win() == invoking)
 dap.terminate = terminate
 virtual_text.clear_virtual_text, virtual_text.clear_last_frames = clear_text, clear_frames
-vim.fn.delete(temporary, 'rf')
-print('Debug profile, configuration, REPL and Telescope checks passed')
+debug_ui.focus()
+local old_source, existing_tab = vim.api.nvim_get_current_win(), vim.api.nvim_get_current_tabpage()
+vim.cmd.vsplit()
+local surviving = vim.api.nvim_get_current_win()
+vim.api.nvim_win_close(old_source, true)
+debug_ui.focus()
+assert(vim.api.nvim_get_current_tabpage() == existing_tab)
+assert(vim.api.nvim_get_current_win() ~= surviving, 'Recreate a closed source window in the same tab')
+assert(package.loaded['verilator-dev'] == nil)
+print('Standalone debugger routing, REPL, cleanup and repeated setup checks passed')

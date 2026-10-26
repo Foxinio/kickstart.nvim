@@ -5,14 +5,9 @@ local M = {
 	'mfussenegger/nvim-dap',
 }
 M.module = false
-M.cmd = { 'DapClean', 'DebugProfile', 'VerilatorDebugBinary', 'VerilatorDebug', 'VerilatorDebugBin', 'VerilatorDebugTest', 'VerilatorDebugSim' }
 
 -- NOTE: And you can specify dependencies as well
 M.dependencies = {
-	-- Creates a beautiful debugger UI
-	'rcarriga/nvim-dap-ui',
-	'nvim-neotest/nvim-nio',
-	'theHamsta/nvim-dap-virtual-text',
 	'nvim-telescope/telescope-dap.nvim',
 
 	-- Installs the debug adapters for you
@@ -63,7 +58,9 @@ local function split_args(input)
 	return vim.split(input or "", " +", { trimempty = true })
 end
 
-local action = require('plugin-utils.debug-ui').action
+local function action(callback, use_cursor)
+	return function(...) return require('dap-extra.ui').action(callback, use_cursor)(...) end
+end
 
 M.keys = {
 	{ '<F5>', action(continue_or_cmake_debug), desc = 'Debug: Start/Continue' },
@@ -76,7 +73,7 @@ M.keys = {
 	{ '<leader>df', action(cmake_debug_current_file, true), desc = 'Debug: CMake Current File' },
 	{ '<leader>dq', action(function() require('dap').terminate() end), desc = 'Debug: Terminate' },
 	{ '<leader>dR', action(function() require('dap').restart() end), desc = 'Debug: Restart' },
-	{ '<leader>dr', function() require('plugin-utils.debug-ui').repl() end, desc = 'Debug: Toggle REPL' },
+	{ '<leader>dr', function() require('dap-extra.ui').repl() end, desc = 'Debug: Toggle REPL' },
 	{ '<leader>db', action(function() require('dap').list_breakpoints() end), desc = 'Debug: List Breakpoints' },
 	{ '<leader>ds', action(function() require('telescope').extensions.dap.configurations() end), desc = 'Debug: Select Configuration' },
 	{ '<leader>dS', action(function() require('telescope').extensions.dap.frames() end), desc = 'Debug: Select Stack Frame' },
@@ -84,11 +81,11 @@ M.keys = {
 	{ '<leader>dk', action(function() require('dap').up() end), desc = 'Debug: Go up current stacktrace' },
 	{ '<leader>dj', action(function() require('dap').down() end), desc = 'Debug: Go down current stacktrace' },
 	{ '<leader>dK', function() require('dap.ui.widgets').hover() end, desc = 'Debug: Inspect value under cursor' },
-	{ '<leader>dg', function() require('plugin-utils.debug-ui').local_frame() end, desc = 'Debug: Show current frame here' },
+	{ '<leader>dg', function() require('dap-extra.ui').local_frame() end, desc = 'Debug: Show current frame here' },
 	{ '<leader>B', function()
 		require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
 	end, desc = 'Debug: Set Breakpoint' },
-	{ '<F7>', function() require('plugin-utils.debug-ui').toggle() end, desc = 'Debug: See last session result.' },
+	{ '<F7>', function() require('dap-extra.ui').toggle() end, desc = 'Debug: See last session result.' },
 }
 M.opts = {
 	-- Makes a best effort to setup the various debuggers with
@@ -111,11 +108,10 @@ M.opts = {
 }
 
 M.config = function(_, opts)
+		require('lazy').load({ plugins = { 'nvim-dap-extra.nvim' } })
 		local dap = require 'dap'
-		local dapui = require 'dapui'
 
 		require('mason-nvim-dap').setup(opts)
-		require('plugin-utils.verilator-debug').setup()
 
 		-- Adapter setups and configs:
 		dap.adapters.cppdbg = dap.adapters.cppdbg or {
@@ -254,84 +250,10 @@ M.config = function(_, opts)
 		dap.configurations.c = cpp_configurations
 		dap.configurations.cpp = cpp_configurations
 		dap.configurations.rust = cpp_configurations
-
-		require('nvim-dap-virtual-text').setup({
-			enabled = true,
-			highlight_changed_variables = true,
-			highlight_new_as_changed = true,
-			show_stop_reason = true,
-			commented = false,
-			only_first_definition = true,
-			all_references = false,
-			clear_on_continue = false,
-		})
-
-		-- Dap UI setup
-		-- For more information, see |:help nvim-dap-ui|
-		dapui.setup {
-			element_mappings = {
-				stacks = { open = { '<CR>', 'o' }, toggle = { '<Space>', 't' } },
-				breakpoints = { open = { '<CR>', 'o' }, toggle = 't', remove = 'd' },
-			},
-			icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-			layouts = {
-				{
-					elements = {
-						{ id = 'scopes', size = 0.45 },
-						{ id = 'breakpoints', size = 0.15 },
-						{ id = 'stacks', size = 0.25 },
-						{ id = 'watches', size = 0.15 },
-					},
-					position = 'left',
-					size = 48,
-				},
-				{
-					elements = {
-						{ id = 'repl', size = 0.5 },
-						{ id = 'console', size = 0.5 },
-					},
-					position = 'bottom',
-					size = 12,
-				},
-			},
-			floating = {
-				border = 'rounded',
-			},
-			controls = {
-				enabled = true,
-				element = 'repl',
-				icons = {
-					pause = '⏸',
-					play = '▶',
-					step_into = '⏎',
-					step_over = '⏭',
-					step_out = '⏮',
-					step_back = 'b',
-					run_last = '▶▶',
-					terminate = '⏹',
-					disconnect = '⏏',
-				},
-			},
-		}
-		require('plugin-utils.debug-panes').setup()
-
-		vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
-		vim.fn.sign_define('DapBreakpointCondition', { text = '🟨', texthl = '', linehl = '', numhl = '' })
-		vim.fn.sign_define('DapLogPoint', { text = '📝', texthl = '', linehl = '', numhl = '' })
-		vim.fn.sign_define('DapStopped', { text = '▶', texthl = '', linehl = 'Visual', numhl = '' })
-		vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'DiagnosticError', linehl = '', numhl = '' })
-
 		local ok_telescope, telescope = pcall(require, 'telescope')
 		if ok_telescope then
 			pcall(telescope.load_extension, 'dap')
 		end
-
-		local debug_ui = require('plugin-utils.debug-ui')
-		debug_ui.setup()
-		dap.defaults.fallback.switchbuf = debug_ui.jump
-		dap.listeners.after.event_initialized['dapui_config'] = debug_ui.open
-		dap.listeners.before.event_terminated['dapui_config'] = debug_ui.close
-		dap.listeners.before.event_exited['dapui_config'] = debug_ui.close
 end
 
 return M

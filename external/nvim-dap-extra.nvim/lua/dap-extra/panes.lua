@@ -6,13 +6,14 @@ function M.setup()
 		M.open_buf = util.open_buf
 		util.open_buf = function(buffer, line, column)
 			if vim.bo.filetype == 'dapui_stacks' or vim.bo.filetype == 'dapui_breakpoints' then
-				require('plugin-utils.debug-ui').jump(buffer, line or 1, column or 1)
+				require('dap-extra.ui').jump(buffer, line or 1, column or 1)
 				return true
 			end
 			return M.open_buf(buffer, line, column)
 		end
 	end
 	local element = require('dapui').elements.breakpoints
+	if M.element == element and element.render == M.render then return end
 	local render = element.render
 	element.render = function()
 		render()
@@ -35,6 +36,7 @@ function M.setup()
 			mappings.d()
 		end, { buffer = buffer, desc = 'Remove breakpoint', nowait = true })
 	end
+	M.element, M.render = element, element.render
 end
 
 return M
