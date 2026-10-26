@@ -24,6 +24,18 @@ vim.keymap.set('t', '<Esc>', '<Esc>')
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>')
 vim.keymap.set('t', '<C-\\>', '<C-\\><C-n>')
 
+vim.api.nvim_create_autocmd('TermOpen', {
+	callback = function(event)
+		vim.keymap.set('n', '<C-f>', function()
+			local cursor = vim.api.nvim_win_get_cursor(0)
+			require('float-command').open(function()
+				vim.api.nvim_win_set_buf(0, event.buf)
+				vim.api.nvim_win_set_cursor(0, cursor)
+			end)
+		end, { buffer = event.buf, desc = 'Open terminal in Float' })
+	end,
+})
+
 -- Terminal <C-r>: which-key register list, paste selected register like insert mode
 whichKey.add({ '<C-r>', mode = 't', group = 'registers', expand = function()
 	return vim.tbl_map(function(item)

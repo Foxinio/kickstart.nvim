@@ -2,6 +2,7 @@ local M = {}
 local profiles = require('plugin-utils.debug-profiles')
 local config_dir = vim.fn.stdpath('config')
 local capture_task
+local last_launch
 
 local function guarded(callback)
 	return function(...)
@@ -18,7 +19,6 @@ end
 
 function M.configuration(profile, record)
 	local program, root, cwd = profiles.resolve(profile)
-	record = record or profile.replay
 	local simulation = record and record.simulation
 	local environment = vim.tbl_extend('force', record and record.environment or {}, profile.environment or {})
 	environment.VERILATOR_ROOT = root
@@ -54,36 +54,34 @@ end
 
 local function launch(profile, record)
 	assert(not require('dap').session(), 'Terminate the current debug session before launching another')
-	require('dap').run(M.configuration(profile, record))
+	local configuration = M.configuration(profile, record)
+	require('dap').run(vim.deepcopy(configuration))
+	last_launch = vim.deepcopy(configuration)
+end
+
+function M.repeat_last()
+	assert(last_launch, 'No previous Verilator debug launch; use VerilatorDebugBin or VerilatorDebugTest first')
+	assert(not require('dap').session(), 'Terminate the current debug session before launching another')
+	require('dap').run(vim.deepcopy(last_launch))
 end
 
 function M.binary(filename)
-	profiles.with_current(function(profile)
-		local function set(path)
-			path = vim.fn.fnamemodify(vim.fn.expand(path), ':p')
-			local updated = vim.tbl_extend('force', profile, { program = path })
-			profiles.resolve(updated)
-			profile.program, profile.replay = path, nil
-			local _, name = profiles.get()
-			profiles.save(name)
-		end
-		if filename ~= '' then return set(filename) end
-		local ok, _, root = pcall(profiles.resolve, profile)
-		root = ok and root or vim.fn.getcwd()
-		local actions = require('telescope.actions')
-		local state = require('telescope.actions.state')
-		require('telescope.builtin').find_files({
-			prompt_title = 'Verilator executable', cwd = root, hidden = true, no_ignore = true,
-			attach_mappings = function(buf)
-				actions.select_default:replace(function()
-					local entry = state.get_selected_entry()
-					actions.close(buf)
-					if entry then vim.schedule(guarded(function() set(entry.path or root .. '/' .. entry.value) end)) end
-				end)
-				return true
-			end,
-		})
-	end)
+	local function set(path) profiles.set_binary(vim.fn.expand(path)) end
+	if filename ~= '' then return set(filename) end
+	local root = vim.fn.getcwd()
+	local actions = require('telescope.actions')
+	local state = require('telescope.actions.state')
+	require('telescope.builtin').find_files({
+		prompt_title = 'Verilator executable', cwd = root, hidden = true, no_ignore = true,
+		attach_mappings = function(buf)
+			actions.select_default:replace(function()
+				local entry = state.get_selected_entry()
+				actions.close(buf)
+				if entry then vim.schedule(guarded(function() set(entry.path or root .. '/' .. entry.value) end)) end
+			end)
+			return true
+		end,
+	})
 end
 
 local function capture(profile, test, simulation)
@@ -91,8 +89,8 @@ local function capture(profile, test, simulation)
 	assert(not require('dap').session(), 'Terminate the current debug session before capturing a test')
 	local program, root = profiles.resolve(profile)
 	assert(vim.fn.filereadable(root .. '/test_regress/driver.py') == 1, 'No regression driver under ' .. root)
-	local python = vim.fn.exepath('python3')
-	assert(python ~= '', 'python3 is required for regression capture')
+	local python = '/usr/bin/python3'
+	assert(vim.fn.executable(python) == 1, python .. ' is required for regression capture')
 	local directory = vim.fn.tempname()
 	vim.fn.mkdir(directory, 'p', 448)
 	local record_path = directory .. '/invocation.json'
@@ -119,7 +117,6 @@ local function capture(profile, test, simulation)
 			assert(status == 'SUCCESS' and vim.fn.filereadable(record_path) == 1,
 				'No invocation captured; preparation failed, was cancelled, or the test was skipped. See Overseer output.')
 			local record = vim.json.decode(table.concat(vim.fn.readfile(record_path), '\n'))
-			profile.replay = record
 			launch(profile, record)
 		end)
 		vim.fn.delete(directory, 'rf')
@@ -147,6 +144,7 @@ end
 
 function M.setup_repl()
 	local repl = require('dap.repl')
+	require('plugin-utils.debug-history').setup()
 	for command, alias in pairs({ into = 's', next_ = 'n', intoi = 'si', nexti = 'ni', out = 'fin', continue = 'c' }) do
 		if not vim.tbl_contains(repl.commands[command], alias) then table.insert(repl.commands[command], alias) end
 	end
@@ -163,6 +161,15 @@ function M.setup_repl()
 		repl.commands.custom_commands[command] = function(args) gdb(command, args) end
 	end
 	repl.commands.custom_commands.gdb = function(args) gdb(args) end
+	for _, name in ipairs({ 'up', 'down', 'frame', 'bt' }) do
+		local command = name
+		repl.commands.custom_commands[command] = function(args)
+			require('plugin-utils.debug-stack').command(command, args)
+		end
+	end
+	repl.commands.custom_commands.f = repl.commands.custom_commands.frame
+	repl.commands.custom_commands.backtrace = repl.commands.custom_commands.bt
+	repl.commands.custom_commands.where = repl.commands.custom_commands.bt
 end
 
 function M.setup()
@@ -171,14 +178,15 @@ function M.setup()
 	local commands = {
 		DebugProfile = { callback = profiles.command, nargs = '*', bang = true },
 		VerilatorDebugBinary = { callback = function(opts) M.binary(opts.args) end, nargs = '?', complete = 'file' },
-		VerilatorDebug = { callback = function(opts)
+		VerilatorDebug = { callback = M.repeat_last, nargs = 0 },
+		VerilatorDebugBin = { callback = function(opts)
 			profiles.choose(opts.args, function(name) launch(profiles.load(name)) end)
 		end, nargs = '?' },
 		VerilatorDebugTest = { callback = function(opts) M.regression(opts.args, false) end, nargs = '?', complete = 'file' },
 		VerilatorDebugSim = { callback = function(opts) M.regression(opts.args, true) end, nargs = '?', complete = 'file' },
 	}
 	for name, definition in pairs(commands) do
-		vim.api.nvim_create_user_command(name, guarded(definition.callback), {
+		vim.api.nvim_create_user_command(name, guarded(require('plugin-utils.debug-ui').action(definition.callback)), {
 			nargs = definition.nargs, bang = definition.bang, complete = definition.complete, force = true,
 		})
 	end

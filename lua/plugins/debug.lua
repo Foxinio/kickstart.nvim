@@ -5,7 +5,7 @@ local M = {
 	'mfussenegger/nvim-dap',
 }
 M.module = false
-M.cmd = { 'DebugProfile', 'VerilatorDebugBinary', 'VerilatorDebug', 'VerilatorDebugTest', 'VerilatorDebugSim' }
+M.cmd = { 'DapClean', 'DebugProfile', 'VerilatorDebugBinary', 'VerilatorDebug', 'VerilatorDebugBin', 'VerilatorDebugTest', 'VerilatorDebugSim' }
 
 -- NOTE: And you can specify dependencies as well
 M.dependencies = {
@@ -63,28 +63,32 @@ local function split_args(input)
 	return vim.split(input or "", " +", { trimempty = true })
 end
 
+local action = require('plugin-utils.debug-ui').action
+
 M.keys = {
-	{ '<F5>', continue_or_cmake_debug, desc = 'Debug: Start/Continue' },
-	{ '<F10>', function() require('dap').step_over() end, desc = 'Debug: Step Over' },
-	{ '<F11>', function() require('dap').step_into() end, desc = 'Debug: Step Into' },
-	{ '<F12>', function() require('dap').step_out() end, desc = 'Debug: Step Out' },
+	{ '<F5>', action(continue_or_cmake_debug), desc = 'Debug: Start/Continue' },
+	{ '<F10>', action(function() require('dap').step_over() end), desc = 'Debug: Step Over' },
+	{ '<F11>', action(function() require('dap').step_into() end), desc = 'Debug: Step Into' },
+	{ '<F12>', action(function() require('dap').step_out() end), desc = 'Debug: Step Out' },
 	{ '<leader>b', function() require('dap').toggle_breakpoint() end, desc = 'Debug: Toggle Breakpoint' },
-	{ '<leader>dc', continue_or_cmake_debug, desc = 'Debug: Start/Continue' },
-	{ '<leader>dC', cmake_quick_debug, desc = 'Debug: CMake Target' },
-	{ '<leader>df', cmake_debug_current_file, desc = 'Debug: CMake Current File' },
-	{ '<leader>dq', function() require('dap').terminate() end, desc = 'Debug: Terminate' },
-	{ '<leader>dR', function() require('dap').restart() end, desc = 'Debug: Restart' },
-	{ '<leader>dr', function() require('dap').repl.toggle() end, desc = 'Debug: Toggle REPL' },
-	{ '<leader>db', function() require('dap').list_breakpoints() end, desc = 'Debug: List Breakpoints' },
-	{ '<leader>ds', function() require('telescope').extensions.dap.configurations() end, desc = 'Debug: Select Configuration' },
-	{ '<leader>dS', function() require('telescope').extensions.dap.frames() end, desc = 'Debug: Select Stack Frame' },
-	{ '<leader>dl', function() require('dap').run_to_cursor() end, desc = 'Debug: Run To Cursor' },
-	{ '<leader>dk', function() require('dap').up() end, desc = 'Debug: Go up current stacktrace' },
-	{ '<leader>dj', function() require('dap').down() end, desc = 'Debug: Go down current stacktrace' },
+	{ '<leader>dc', action(continue_or_cmake_debug), desc = 'Debug: Start/Continue' },
+	{ '<leader>dC', action(cmake_quick_debug), desc = 'Debug: CMake Target' },
+	{ '<leader>df', action(cmake_debug_current_file, true), desc = 'Debug: CMake Current File' },
+	{ '<leader>dq', action(function() require('dap').terminate() end), desc = 'Debug: Terminate' },
+	{ '<leader>dR', action(function() require('dap').restart() end), desc = 'Debug: Restart' },
+	{ '<leader>dr', function() require('plugin-utils.debug-ui').repl() end, desc = 'Debug: Toggle REPL' },
+	{ '<leader>db', action(function() require('dap').list_breakpoints() end), desc = 'Debug: List Breakpoints' },
+	{ '<leader>ds', action(function() require('telescope').extensions.dap.configurations() end), desc = 'Debug: Select Configuration' },
+	{ '<leader>dS', action(function() require('telescope').extensions.dap.frames() end), desc = 'Debug: Select Stack Frame' },
+	{ '<leader>dl', action(function() require('dap').run_to_cursor() end, true), desc = 'Debug: Run To Cursor' },
+	{ '<leader>dk', action(function() require('dap').up() end), desc = 'Debug: Go up current stacktrace' },
+	{ '<leader>dj', action(function() require('dap').down() end), desc = 'Debug: Go down current stacktrace' },
+	{ '<leader>dK', function() require('dap.ui.widgets').hover() end, desc = 'Debug: Inspect value under cursor' },
+	{ '<leader>dg', function() require('plugin-utils.debug-ui').local_frame() end, desc = 'Debug: Show current frame here' },
 	{ '<leader>B', function()
 		require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
 	end, desc = 'Debug: Set Breakpoint' },
-	{ '<F7>', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
+	{ '<F7>', function() require('plugin-utils.debug-ui').toggle() end, desc = 'Debug: See last session result.' },
 }
 M.opts = {
 	-- Makes a best effort to setup the various debuggers with
@@ -265,6 +269,10 @@ M.config = function(_, opts)
 		-- Dap UI setup
 		-- For more information, see |:help nvim-dap-ui|
 		dapui.setup {
+			element_mappings = {
+				stacks = { open = { '<CR>', 'o' }, toggle = { '<Space>', 't' } },
+				breakpoints = { open = { '<CR>', 'o' }, toggle = 't', remove = 'd' },
+			},
 			icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
 			layouts = {
 				{
@@ -305,6 +313,7 @@ M.config = function(_, opts)
 				},
 			},
 		}
+		require('plugin-utils.debug-panes').setup()
 
 		vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = '', linehl = '', numhl = '' })
 		vim.fn.sign_define('DapBreakpointCondition', { text = '🟨', texthl = '', linehl = '', numhl = '' })
@@ -317,9 +326,12 @@ M.config = function(_, opts)
 			pcall(telescope.load_extension, 'dap')
 		end
 
-		dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-		dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-		dap.listeners.before.event_exited['dapui_config'] = dapui.close
+		local debug_ui = require('plugin-utils.debug-ui')
+		debug_ui.setup()
+		dap.defaults.fallback.switchbuf = debug_ui.jump
+		dap.listeners.after.event_initialized['dapui_config'] = debug_ui.open
+		dap.listeners.before.event_terminated['dapui_config'] = debug_ui.close
+		dap.listeners.before.event_exited['dapui_config'] = debug_ui.close
 end
 
 return M

@@ -14,6 +14,7 @@ HELPER = Path(__file__).with_name("capture.py").resolve()
 
 DRIVER = '''
 import json, os, pathlib, shlex, subprocess, sys, time
+assert pathlib.Path(sys.executable).resolve() == pathlib.Path("/usr/bin/python3").resolve()
 if os.environ.get("TEST_WAIT"):
     child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], start_new_session=True)
     pathlib.Path("child.pid").write_text(str(child.pid))
@@ -30,7 +31,7 @@ if "--gdbsim" in sys.argv:
     subprocess.run(debugger + ["/bin/true", "-ex", "run +seed=7 \\"spaced argument\\""], check=True)
 '''
 
-COMPILER = '''#!/usr/bin/env python3
+COMPILER = '''#!/usr/bin/python3
 import json, os, pathlib, sys
 args = sys.argv[1:]
 if "-get-supported" in args:
@@ -76,7 +77,10 @@ class CaptureTests(unittest.TestCase):
         return json.loads(self.record.read_text())
 
     def test_compiler_capture_after_capability_check(self):
-        record = self.finish(self.start())
+        shadow = self.root / "bin/python3"
+        shadow.write_text("#!/bin/sh\nexit 99\n")
+        shadow.chmod(0o755)
+        record = self.finish(self.start(environment={"PATH": str(shadow.parent) + ":" + os.environ["PATH"]}))
         self.assertEqual(record["args"], ["--prefix", "Vt_example", "-f", "input.vc", "a source.v"])
         self.assertEqual(record["cwd"], str(self.root / "test_regress"))
         self.assertEqual(record["environment"]["VERILATOR_ROOT"], str(self.root))

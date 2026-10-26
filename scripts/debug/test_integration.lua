@@ -11,7 +11,7 @@ local profiles = require('plugin-utils.debug-profiles')
 local debug = require('plugin-utils.verilator-debug')
 local dap = require('dap')
 local profile = profiles.load('verilator')
-if vim.env.VERILATOR_DEBUG_BINARY then profile.program = vim.env.VERILATOR_DEBUG_BINARY end
+if vim.env.VERILATOR_DEBUG_BINARY then profiles.set_binary(vim.env.VERILATOR_DEBUG_BINARY) end
 local _, root = profiles.resolve(profile)
 profile.regress_args = { '--vlt', '--obj-suffix=-nvim-debug-check' }
 local simulation = vim.env.MODE == 'simulation'

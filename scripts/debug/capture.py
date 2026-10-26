@@ -66,9 +66,9 @@ def run(config, config_path):
     environment.pop("TEST_REGRESS", None)
     environment["VERILATOR_ROOT"] = config["root"]
     environment["NVIM_VLT_CAPTURE"] = config_path
-    helper = [sys.executable, os.path.abspath(__file__)]
+    helper = ["/usr/bin/python3", os.path.abspath(__file__)]
     environment["VERILATOR_BIN"] = shlex.join(helper + ["compiler", config_path])
-    command = [sys.executable, config["root"] + "/test_regress/driver.py"]
+    command = ["/usr/bin/python3", config["root"] + "/test_regress/driver.py"]
     command += config.get("regress_args", ["--vlt"])
     command += ["--jobs=1"]
     if config["simulation"]:

@@ -3,6 +3,7 @@ local directory = vim.fn.stdpath('data') .. '/verilator-debug/profiles'
 local selected_path = directory .. '/../selected'
 local selected, current
 local snapshots = {}
+local binary = 'build/src/verilator_bin_dbg'
 
 local function path(name)
 	assert(type(name) == 'string' and name:match('^[%w_-]+$'), 'Profile names use letters, numbers, _ and -')
@@ -15,8 +16,6 @@ end
 
 function M.validate(profile)
 	assert(type(profile) == 'table', 'Profile must be an object')
-	assert(type(profile.program) == 'string' and profile.program ~= '', 'Profile needs a program')
-	assert(not profile.program:find('\0', 1, true), 'Program contains NUL')
 	for _, key in ipairs({ 'root', 'cwd' }) do
 		assert(profile[key] == nil or type(profile[key]) == 'string', key .. ' must be a path')
 	end
@@ -32,11 +31,6 @@ function M.validate(profile)
 		assert(type(key) == 'string' and key ~= '' and not key:find('=', 1, true) and not key:find('\0', 1, true) and type(value) == 'string'
 			and not value:find('\0', 1, true), 'Invalid environment entry')
 	end
-	if profile.replay ~= nil then
-		assert(type(profile.replay) == 'table' and profile.replay.replay == nil, 'Invalid replay')
-		M.validate(profile.replay)
-		assert(type(profile.replay.cwd) == 'string' and type(profile.replay.simulation) == 'boolean', 'Invalid replay context')
-	end
 	return profile
 end
 
@@ -45,9 +39,9 @@ local function absolute(filename, base)
 	return vim.fs.normalize(filename:sub(1, 1) == '/' and filename or base .. '/' .. filename)
 end
 
-function M.resolve(profile)
+function M.resolve(profile, executable)
 	M.validate(profile)
-	local program = absolute(profile.program, directory)
+	local program = absolute(executable or binary, vim.fn.getcwd())
 	assert(vim.fn.executable(program) == 1, 'Executable not found: ' .. program)
 	local root
 	if profile.root and profile.root ~= '' then
@@ -68,6 +62,12 @@ function M.resolve(profile)
 	end
 	assert(root and vim.fn.isdirectory(root) == 1, 'Cannot infer VERILATOR_ROOT; set root in the profile')
 	return program, root, absolute(profile.cwd or '.', root)
+end
+
+function M.set_binary(filename)
+	assert(type(filename) == 'string' and filename ~= '' and not filename:find('\0', 1, true), 'Invalid executable path')
+	M.resolve({}, filename)
+	binary = filename
 end
 
 function M.pick(title, items, callback, filenames)
@@ -110,6 +110,8 @@ function M.load(name)
 	local filename = path(name)
 	local contents = read(filename)
 	local profile = M.validate(vim.json.decode(contents))
+	profile.replay = nil
+	profile.program = nil
 	selected, current, snapshots[name] = name, profile, contents
 	vim.fn.writefile({ name }, selected_path)
 	return profile
@@ -126,7 +128,10 @@ function M.save(name, force)
 	if vim.fn.filereadable(filename) == 1 and not force then
 		assert(snapshots[name] and snapshots[name] == read(filename), 'Profile changed on disk; load it again or use save!')
 	end
-	local encoded = vim.json.encode(current)
+	local saved = vim.deepcopy(current)
+	saved.replay = nil
+	saved.program = nil
+	local encoded = vim.json.encode(saved)
 	local temporary = filename .. '.tmp'
 	vim.fn.writefile({ encoded }, temporary)
 	assert(vim.uv.fs_chmod(temporary, 384))
