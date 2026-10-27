@@ -280,4 +280,4 @@ The proposed named DAP Source window above remains investigation only.
   establish interactive focus behavior.
 
 See the plugin READMEs above for the separated tests and prerequisites;
-[test_loading.lua](test_loading.lua) checks combined host lazy loading.
+[test_loading.lua](../../external/verilator-dev.nvim/tests/test_loading.lua) checks combined host lazy loading.

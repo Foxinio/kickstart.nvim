@@ -16,6 +16,6 @@ No repositories or remotes are created by this extraction.
 Run each plugin's documented suites and the combined host check:
 
 ```sh
-nvim --headless -u NONE -i NONE -l scripts/debug/test_loading.lua
-DEBUG_LOAD_ORDER=verilator nvim --headless -u NONE -i NONE -l scripts/debug/test_loading.lua
+nvim --headless -u NONE -i NONE -l external/verilator-dev.nvim/tests/test_loading.lua
+DEBUG_LOAD_ORDER=verilator nvim --headless -u NONE -i NONE -l external/verilator-dev.nvim/tests/test_loading.lua
 ```

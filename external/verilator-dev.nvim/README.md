@@ -137,3 +137,7 @@ MODE=simulation nvim --headless -u NONE -i NONE -l tests/test_integration.lua
 Integration requires `VERILATOR_DEBUG_BINARY` pointing to a debug compiler and
 a configured OpenDebugAD7 executable in Neovim's data/mason/bin. Tests load only
 this plugin and declared dependencies, then change to an unrelated cwd.
+
+`tests/test_loading.lua` separately checks combined lazy loading against the host
+Neovim config and sibling dap-extra plugin. It requires this checkout's directory
+layout; see the host's [test commands](../../scripts/debug/README.md).

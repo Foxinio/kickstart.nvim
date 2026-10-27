@@ -1,5 +1,5 @@
 -- Run with -u NONE; use real lazy loading with the host's three extracted specs.
-local root = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':p:h:h:h')
+local root = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':p:h:h:h:h')
 vim.go.loadplugins = true
 vim.opt.rtp:prepend(root)
 vim.opt.rtp:prepend(vim.fn.stdpath('data') .. '/lazy/lazy.nvim')
