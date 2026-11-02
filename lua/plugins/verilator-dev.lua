@@ -1,4 +1,7 @@
-local M = { 'Foxinio/verilator-dev.nvim' }
+local M = {
+	'Foxinio/verilator-dev.nvim',
+	url = 'git@github.com:Foxinio/verilator-dev.nvim.git',
+}
 
 M.module = false
 
