@@ -8,6 +8,7 @@ M.module = false
 
 -- NOTE: And you can specify dependencies as well
 M.dependencies = {
+	'Foxinio/nvim-dap-extra.nvim',
 	'nvim-telescope/telescope-dap.nvim',
 
 	-- Installs the debug adapters for you
@@ -108,7 +109,6 @@ M.opts = {
 }
 
 M.config = function(_, opts)
-		require('lazy').load({ plugins = { 'nvim-dap-extra.nvim' } })
 		local dap = require 'dap'
 
 		require('mason-nvim-dap').setup(opts)
