@@ -36,6 +36,7 @@ M.config = function(_, opts)
 		r.AsciiSymbols,
 		opts
 	)
+	require('plugin-utils.symbols').guard_scroll_events()
 
 	vim.api.nvim_create_autocmd({"FileType", "BufWinEnter", }, {
 		pattern = { "SymbolsSidebar", "symbols" },

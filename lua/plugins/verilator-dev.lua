@@ -11,8 +11,9 @@ M.cmd = {
 }
 
 M.dependencies = {
+	'mfussenegger/nvim-dap',
 	'Foxinio/nvim-dap-extra.nvim',
-	'mfussenegger/nvim-dap', 'stevearc/overseer.nvim', 'nvim-telescope/telescope.nvim',
+	'stevearc/overseer.nvim', 'nvim-telescope/telescope.nvim',
 	'nvim-lua/plenary.nvim', 'Foxinio/editable-telescope.nvim', 'Foxinio/term-color-parser.nvim',
 }
 

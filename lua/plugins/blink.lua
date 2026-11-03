@@ -10,6 +10,11 @@ M.dependencies = {
 	-- Providers
 	"folke/lazydev.nvim",
 	{
+		'mayromr/blink-cmp-dap',
+		ft = 'dap-repl',
+		module = false,
+	},
+	{
 		'saghen/blink.compat',
 		-- dependencies = { "hrsh7th/nvim-cmp" },
 		version = '2.*',
@@ -176,7 +181,14 @@ M.opts.sources = {
 		end
 		return providers
 	end,
+	per_filetype = {
+		['dap-repl'] = { 'dap' },
+	},
 	providers = {
+		dap = {
+			name = 'DAP',
+			module = 'blink-cmp-dap',
+		},
 		lazydev = {
 			name = "LazyDev",
 			module = "lazydev.integrations.blink",
