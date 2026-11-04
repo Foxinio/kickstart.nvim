@@ -56,11 +56,15 @@ M.keys = {
 }
 
 M.opts = {
+	extensions = {
+		editable = { remember_query = true },
+	},
 	defaults = {
 		layout_strategy = 'vertical',
 		layout_config = { height = 0.95 },
 		mappings = {
 			i = {
+				['<M-BS>'] = { '<C-w>', type = 'command' },
 				['<C-u>'] = false,
 				['<C-d>'] = false,
 				['<C-f>'] = function(prompt_bufnr)
