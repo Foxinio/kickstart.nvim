@@ -5,6 +5,10 @@ local M = {
 
 M.module = false
 
+M.keys = {
+	{ '<leader>dv', function() require('verilator-dev.debug').regression('', false) end, desc = 'Debug Verilator test' },
+}
+
 M.cmd = {
 	'VerilatorDebugProfile', 'VerilatorDebugBinary', 'VerilatorDebug', 'VerilatorDebugBin',
 	'VerilatorDebugTest', 'VerilatorDebugSim', 'VerilatorRegress', 'VerilatorHtml', 'VerilatorDiff',
