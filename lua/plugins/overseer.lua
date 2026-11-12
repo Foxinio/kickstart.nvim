@@ -81,6 +81,7 @@ M.opts = {
 
 M.config = function(_, opts)
 	require("overseer").setup(opts)
+	require("ansi-colorize").setup({ overseer = true })
 
 	vim.api.nvim_create_user_command("OverseerDisposeAll", function()
 		require("plugin-utils.overseer").clear_list()

@@ -27,8 +27,6 @@ M.on_attach = function(client, bufnr)
 	end
 
 	require('which-key').add({
-		{ '<leader>rr', function() vim.api.nvim_echo({ { "WORKS" }, { "bufnr: "..bufnr } }, false, {}) end,
-			buffer = bufnr, desc = "bufnr: "..bufnr },
 		{ '<leader>rn', vim.lsp.buf.rename,
 			buffer = bufnr, desc = 'LSP: [R]e[n]ame' },
 		{ '<leader>ca', vim.lsp.buf.code_action,

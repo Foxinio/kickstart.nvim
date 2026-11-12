@@ -44,7 +44,7 @@ local servers = {
 	slang_server = {},
 	-- csharp_ls = { },
 	ocamllsp = {
-		single_file_support = true,
+		workspace_required = false,
 	},
 	clangd = {
 		init_options = {
@@ -55,9 +55,9 @@ local servers = {
 	coq_lsp = { },
 	texlab = { },
 	pyright = {
-		settings = {
-			openFilesOnly = false,
+		settings = { python = {
 			analysis = {
+				typeCheckingMode = "off",
 				autoSearchPaths = true,
 				useLibraryCodeForTypes = true,
 				autoImportCompletions = true,
@@ -80,8 +80,7 @@ local servers = {
 					reportUnknownVariableType = false
 				}
 			},
-			typeCheckingMode = "off",
-		},
+		} },
 	},
 	lua_ls = {
 		settings = {
@@ -97,9 +96,8 @@ local servers = {
 					globals = { "vim" },
 				},
 			},
-			single_file_support = true,
-			log_level = vim.lsp.protocol.MessageType.Warning,
 		},
+		workspace_required = false,
 	},
 }
 
@@ -151,11 +149,6 @@ M.config = function(_, opts)
 
 	require('lazydev').setup()
 
-	-- vim.lsp.config("*", {
-	-- 	capabilities = M.opts.capabilities,
-	-- 	on_attach = on_attach,
-	-- })
-
 	require("mason").setup()
 	require("mason-lspconfig").setup(opts.mason_lspconfig)
 
@@ -163,30 +156,25 @@ M.config = function(_, opts)
 		textDocument = { completion = { completionItem = { snippetSupport = false }, }, },
 	})
 
-	for server_name, settings in pairs(servers) do
-		vim.lsp.config(server_name, {
-			-- init_options = settings.init_options or {},
+	-- Each server entry is a vim.lsp.config() table (settings, init_options, ...).
+	for server_name, server in pairs(opts.servers) do
+		vim.lsp.config(server_name, vim.tbl_deep_extend('force', {
 			capabilities = opts.capabilities or {},
-			settings = settings or {},
 			on_attach = require("plugin-utils.lspconfig").on_attach,
-		})
+		}, server))
 		vim.lsp.enable(server_name)
 	end
 
 	-- Special-attention servers
 	vim.api.nvim_create_user_command("LspSetupC", function()
-		vim.lsp.config.clangd.init_options = {
-			fallbackFlags = { '--std=c23' }
-		}
+		vim.lsp.config('clangd', { init_options = { fallbackFlags = { '--std=c23' } } })
 		vim.lsp.enable("clangd")
-    vim.cmd("LspStart clangd")
+		vim.cmd("LspStart clangd")
 	end, {})
 	vim.api.nvim_create_user_command("LspSetupCpp", function()
-		vim.lsp.config.clangd.init_options = {
-			fallbackFlags = { '--std=c++23' }
-		}
+		vim.lsp.config('clangd', { init_options = { fallbackFlags = { '--std=c++23' } } })
 		vim.lsp.enable("clangd")
-    vim.cmd("LspStart clangd")
+		vim.cmd("LspStart clangd")
 	end, {})
 
 end

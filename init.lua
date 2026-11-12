@@ -7,20 +7,11 @@ vim.cmd([[
   syntax spell toplevel
 ]])
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "DebugConfigEvent",
-  callback = function() end,
-  })
-vim.api.nvim_create_user_command("TriggerDebugConfig",
-	function()
-		vim.api.nvim_exec_autocmds("User", { pattern = "DebugConfigEvent" })
-	end, {})
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system {
     'git',
     'clone',
