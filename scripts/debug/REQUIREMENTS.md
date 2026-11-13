@@ -204,14 +204,19 @@ simulation preparation supplies generated-model debug symbols separately.
   are unaffected. Stacks uses Enter/`o` to activate and Space/`t` to toggle subtle
   frames. Breakpoints uses Enter/`o` to navigate, `t` to toggle and `d` to remove.
 
-The implementation uses nvim-dap-ui's `element_mappings` and routes pane opens to
-the existing debug source pane. A helper works around upstream removal retaining
-disabled entries. Regression checks cover frame selection, source routing,
-condition preservation across toggling and removal of disabled breakpoints.
+The implementation uses nvim-dap-ui's `element_mappings`. Pane opens go to the
+debug source pane through the Foxinio/nvim-dap-ui fork's tracked source window
+(`select_window` returns dap-extra's source window). The fork also removes
+disabled breakpoints correctly. Regression checks cover frame selection, source
+routing, condition preservation across toggling and removal of disabled
+breakpoints, in both dap-extra and the fork.
 
 ### One named DAP Source window
 
-Investigation only: do not implement the named/dedicated DAP Source window.
+Status: investigated and implemented in the Foxinio/nvim-dap-ui fork as the
+tracked source window (`source_window` config) with an opt-in winbar label;
+this config enables `winbar = 'DAP Source'`. Findings are listed under
+"Investigation results" below.
 
 The intended purpose is a stable destination for debugger source navigation,
 transparent to other plugins. Track one source window in the debug tab by its
@@ -245,6 +250,29 @@ Adapter-provided sources still need navigation support; their edit/save semantic
 must be assessed separately from real files. Record limitations before choosing
 the design.
 
+#### Investigation results
+
+Checked headlessly on Neovim 0.11.7 and 0.12.6:
+
+- Real file buffers routed into the tracked window keep LSP clients,
+  Tree-sitter highlighting, undo history and unsaved edits; `:write` writes the
+  real file. Routing only calls `nvim_win_set_buf`.
+- With `'nohidden'`, switching the window away from a modified buffer fails
+  (E37). The fork reports the error and leaves the window unchanged rather than
+  discarding edits. Neovim's default `'hidden'` avoids this.
+- A window-local winbar is reset when a buffer is shown in the window for the
+  first time, and `:split` copies it into the new window. The fork re-applies the
+  label on BufWinEnter for the tracked window and clears it from new windows.
+- A closed tracked window is detected; the next navigation falls back to
+  `select_window()` (dap-extra recreates its source window) and tracks that.
+- User splits and other windows are not policed; only the tracked window is
+  labelled and used as the destination.
+- Adapter-provided sources (`sourceReference`) are scratch, nomodifiable and
+  deleted when routed away; they are fetched again on the next navigation and
+  cannot be edited or saved.
+- Routing and focus stay separate (`source_window.focus`, `open(..., { focus =
+  false })`), so automatic updates keep the REPL focus rules.
+
 ## Extracted ownership
 
 [verilator-dev.nvim](../../external/verilator-dev.nvim/README.md) owns profiles,
@@ -253,7 +281,8 @@ capture/replay, Verilator GDB helpers, regression and AST commands.
 panes, generic REPL behavior and cleanup. They are independently usable.
 The host retains adapters/Mason, languages, global mappings, CMake and Telescope
 DAP pickers. DebugProfile is a host alias for VerilatorDebugProfile.
-The proposed named DAP Source window above remains investigation only.
+Foxinio/nvim-dap-ui owns pane rendering, the tracked source window and its
+label.
 
 ## Acceptance checks
 
