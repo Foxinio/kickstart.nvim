@@ -28,7 +28,7 @@ Guidance for future coding agents working in this Neovim config.
 
 ## General plugin intuitions
 
-- Only a small set of core plugins should load immediately or on `VeryLazy`.
+- Only a small set of core plugins should load immediately or on `VeryLazy`. term-color-parser is `lazy = true`; its Overseer hook is installed from the overseer spec's config.
   These are plugins needed for normal single-file editing without explicit user action.
 - Technology-specific plugins should be lazy-loaded via a clear loading handle (`ft`, `cmd`, `keys`, etc.) and should set `M.module = false`.
 
@@ -43,7 +43,7 @@ Guidance for future coding agents working in this Neovim config.
   - `cmake_generate_options` should include color diagnostics and compile commands.
   - `cmake_build_options` should use `--parallel` with a CPU-count helper.
   - CMake/Overseer dependencies should include `Foxinio/term-color-parser.nvim`.
-- Keep `strip_ansi_lines` before `on_output_quickfix` in CMake Overseer components. It strips ANSI before quickfix parsing while `ansi_colorize` still handles output display.
+- Keep `strip_ansi_lines` before `on_output_quickfix` in CMake Overseer components. It strips ANSI before quickfix parsing while `ansi_colorize` still handles output display. `force_color`, `strip_ansi_lines` and `ansi_colorize` are provided by term-color-parser, not this repo.
 - `CMakeBuildSingleTarget` should select/build explicit targets via `cmake_tools.build`, not regress to plain `quick_build`.
 - Code-model retry logic should clear stale `.cmake/api/v1/reply` and regenerate once for ENOENT/invalid JSON file-api errors.
 - CMake notifications should be quiet during progress but still notify final success/failure through Overseer.
@@ -51,7 +51,7 @@ Guidance for future coding agents working in this Neovim config.
 ### Overseer
 
 - Overseer is the task UI. Avoid adding terminals or terminal plugins.
-- Use `force_color` for task env; preserve `TERM`, `FORCE_COLOR`, `CLICOLOR_FORCE`, `CMAKE_COLOR_DIAGNOSTICS`, `GTEST_COLOR`, and `PY_COLORS`.
+- Use `force_color` (from term-color-parser) for task env; preserve `TERM`, `FORCE_COLOR`, `CLICOLOR_FORCE`, `CMAKE_COLOR_DIAGNOSTICS`, `GTEST_COLOR`, and `PY_COLORS`.
 - `OverseerDisposeAll` should clear/dispose all tasks.
 - Keep output highlights for programs that do not emit colors.
 - `OverseerList` should not show raw ANSI sequences; strip render/list paths if needed without breaking colored output buffers.
@@ -66,8 +66,8 @@ Guidance for future coding agents working in this Neovim config.
 ### Float
 
 - `:Float` is a command wrapper for opening command results/files in a floating window.
-- The implementation lives in the separate `Foxinio/float-telescope-preview.nvim` plugin.
-- LSP, Telescope, and nvim-tree integrations depend on it. Before changing paths, update every caller.
+- The command and implementation live in the separate `Foxinio/float-telescope-preview.nvim` plugin (`plugin/float-command.lua`); `lua/plugins/float-command.lua` only gives it a `cmd` handle.
+- LSP and Telescope integrations depend on it. Before changing paths, update every caller.
 
 ### Lspconfig
 
@@ -76,7 +76,7 @@ Guidance for future coding agents working in this Neovim config.
 
 ### nvim-tree
 
-- In nvim-tree, `<C-f>` opens the selected file in Float.
+- In nvim-tree, `<C-f>` opens the selected file in a goto-preview floating window (`goto-preview.lib.open_floating_win`), not float-command.
 
 ### AutoSession and Tabs
 

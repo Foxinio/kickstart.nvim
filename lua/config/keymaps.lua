@@ -94,9 +94,6 @@ vim.api.nvim_create_user_command("Sdiff", "w !diff % -", {})
 vim.api.nvim_create_user_command("Vterm", function(opts)
 	vim.cmd("vert term " .. opts.args)
 end, { nargs = 1 })
-vim.api.nvim_create_user_command("Float", function(opts)
-	require('float-command').open(opts.args)
-end, { nargs = "+", complete = "command" })
 vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config") .. "/init.lua", {})
 
 
