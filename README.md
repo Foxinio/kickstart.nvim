@@ -22,6 +22,34 @@ sudo apt install npm
 - other utilities:
 
 
+### Checking plugin updates
+
+After `:Lazy update`, run `scripts/check/run` (or `:CheckPlugins` inside Neovim,
+which runs it as an Overseer task) before committing `lazy-lock.json`. It starts
+this config headless against the installed plugins, without installing or
+updating anything:
+
+- Every plugin is installed and loads. There are no errors or warnings during
+  startup, and deprecated API use is reported.
+- The integrations work:
+  - LSP server configs;
+  - Overseer staying lazy, and coloured task output;
+  - `:Float`;
+  - the editable Telescope pickers and search-replace;
+  - the dap-ui fork with dap-extra's "DAP Source" window.
+- The test suites of the own plugins (editable-telescope, search-replace,
+  float-telescope-preview, term-color-parser, nvim-dap-extra, nvim-dap-ui) pass
+  against the installed versions.
+
+Each check prints `PASS`, `WARN` (known issue, doesn't fail), `FAIL` or `SKIP`.
+The exit code is 0 when the lock is safe to commit. `--quick` (`:CheckPlugins!`)
+skips the plugin test suites. To run it automatically when `lazy-lock.json` is
+committed:
+
+```sh
+ln -s ../../scripts/check/pre-commit .git/hooks/pre-commit
+```
+
 ### plugins to consider adding
 - something about better bookmarks
 

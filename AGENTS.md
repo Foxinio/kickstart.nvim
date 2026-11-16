@@ -15,6 +15,7 @@ Guidance for future coding agents working in this Neovim config.
 - Lua modules should use `local M = {}` near the top and `return M` at the end.
 - Plugin spec files should stay mostly declarative; move larger callback/config behavior into plugin specific helper modules.
 - Validate changed Lua with `luac -p <files>`.
+- After plugin or integration changes, run `scripts/check/run` (see README "Checking plugin updates"); add a check to `scripts/check/spec.lua` for new cross-plugin integrations.
 - `nvim --headless -u init.lua +q` may fail on older local Neovim/plugin-version mismatches; do not treat that alone as a regression.
 
 ## Repo Layout

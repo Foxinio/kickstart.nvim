@@ -95,6 +95,13 @@ vim.api.nvim_create_user_command("Vterm", function(opts)
 	vim.cmd("vert term " .. opts.args)
 end, { nargs = 1 })
 vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config") .. "/init.lua", {})
+vim.api.nvim_create_user_command("CheckPlugins", function(opts)
+	local cmd = { vim.fn.stdpath("config") .. "/scripts/check/run" }
+	if opts.bang then cmd[#cmd + 1] = "--quick" end
+	local task = require("overseer").new_task({ name = "Plugin check", cmd = cmd, cwd = vim.fn.stdpath("config") })
+	task:start()
+	require("overseer").open({ enter = false })
+end, { bang = true, desc = "Check installed plugins before committing lazy-lock.json (! = config checks only)" })
 
 
 -- [[ Basic Keymaps ]]
