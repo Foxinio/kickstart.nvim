@@ -23,15 +23,20 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- scripts/check/run sets NVIM_PLUGIN_CHECK=1: test what is installed, never
+-- install or update anything.
+local plugin_check = vim.env.NVIM_PLUGIN_CHECK == '1'
+
 require('lazy').setup("plugins", {
   install = {
+    missing = not plugin_check,
     -- colorscheme = { "tokyonight" }
   },
   ui = {
     border = "rounded",
   },
   change_detection = { enabled = false },
-  checker = { enabled = true },
+  checker = { enabled = not plugin_check },
   debug = false,
 })
 

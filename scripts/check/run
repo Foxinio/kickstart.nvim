@@ -1,0 +1,98 @@
+#!/bin/sh
+# Check that the installed plugin versions work with this config, so an updated
+# lazy-lock.json is safe to commit. Run it after :Lazy update:
+#
+#   scripts/check/run            # config checks + plugin test suites
+#   scripts/check/run --quick    # config checks only
+#
+# Uses the real config and lazy.nvim plugin directory. Nothing is installed or
+# updated (NVIM_PLUGIN_CHECK=1 turns off lazy's install/checker in init.lua),
+# and lazy-lock.json is restored if anything touches it. Exit code 0 = safe.
+set -u
+
+here=$(cd "$(dirname "$0")" && pwd)
+config=$(cd "$here/../.." && pwd)
+nvim=${NVIM:-nvim}
+quick=0
+[ "${1:-}" = "--quick" ] && quick=1
+
+# `timeout` is optional (absent on stock macOS).
+limit() {
+	if command -v timeout >/dev/null 2>&1; then
+		timeout "${CHECK_TIMEOUT:-300}" "$@"
+	else
+		"$@"
+	fi
+}
+
+tmp=$(mktemp -d "${TMPDIR:-/tmp}/nvim-plugin-check.XXXXXX")
+cleanup() {
+	if [ -f "$tmp/lazy-lock.json" ] && ! cmp -s "$tmp/lazy-lock.json" "$config/lazy-lock.json"; then
+		cp "$tmp/lazy-lock.json" "$config/lazy-lock.json"
+		echo "note: restored lazy-lock.json"
+	fi
+	rm -r -- "$tmp"
+}
+trap cleanup EXIT INT TERM
+[ -f "$config/lazy-lock.json" ] && cp "$config/lazy-lock.json" "$tmp/lazy-lock.json"
+
+# Run against this checkout even when it isn't ~/.config/nvim.
+cfg_home=$("$nvim" --headless --clean -c 'lua io.write(vim.fn.stdpath("config"))' -c 'qa!' 2>/dev/null)
+if [ "$cfg_home" != "$config" ]; then
+	mkdir -p "$tmp/xdg"
+	ln -s "$config" "$tmp/xdg/nvim"
+	XDG_CONFIG_HOME="$tmp/xdg"
+	export XDG_CONFIG_HOME
+fi
+
+echo "== config checks ($("$nvim" --version | head -n 1))"
+limit env NVIM_PLUGIN_CHECK=1 CHECK_OUT="$tmp/report" CHECK_ROOT="$tmp/root" \
+	"$nvim" --headless \
+	--cmd 'let g:loaded_spellfile_plugin = 1' \
+	--cmd "luafile $here/early.lua" \
+	-c "luafile $here/spec.lua" >"$tmp/nvim.log" 2>&1
+status=$?
+if [ -f "$tmp/report" ]; then
+	cat "$tmp/report"
+else
+	echo "FAIL  config checks did not finish (exit $status)"
+	tail -n 20 "$tmp/nvim.log"
+fi
+failed=0
+grep -q '^FAIL' "$tmp/report" 2>/dev/null && failed=1
+[ -f "$tmp/report" ] || failed=1
+
+if [ "$quick" -eq 0 ] && [ -f "$tmp/root" ]; then
+	root=$(cat "$tmp/root")
+	echo "== plugin test suites (installed versions in $root)"
+	for spec in editable-telescope.nvim:test search-replace.nvim:check \
+		float-telescope-preview.nvim:test term-color-parser.nvim:test \
+		nvim-dap-extra.nvim:test nvim-dap-ui:test; do
+		plugin=${spec%%:*}
+		target=${spec#*:}
+		dir="$root/$plugin"
+		if [ ! -f "$dir/Makefile" ] || ! grep -q "^$target:" "$dir/Makefile"; then
+			echo "SKIP  $plugin: installed version has no 'make $target'"
+			continue
+		fi
+		if [ "$plugin" = search-replace.nvim ] && ! command -v rg >/dev/null 2>&1; then
+			echo "SKIP  $plugin: needs rg"
+			continue
+		fi
+		if limit make -s -C "$dir" "$target" NVIM="$nvim" DEPS_DIR="$root" \
+			>"$tmp/$plugin.log" 2>&1; then
+			echo "PASS  $plugin: make $target"
+		else
+			echo "FAIL  $plugin: make $target"
+			tail -n 15 "$tmp/$plugin.log" | sed 's/^/      /'
+			failed=1
+		fi
+	done
+fi
+
+if [ "$failed" -eq 0 ]; then
+	echo "== OK: safe to commit lazy-lock.json"
+else
+	echo "== FAILED: see above before committing lazy-lock.json"
+fi
+exit "$failed"
