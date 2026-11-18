@@ -12,7 +12,7 @@ M.opts = {
 	source_window = { winbar = 'DAP Source' },
 	element_mappings = {
 		stacks = { expand = '<2-LeftMouse>', open = { '<CR>', 'o' }, toggle = { '<Space>', 't' } },
-		breakpoints = { expand = '<2-LeftMouse>', open = { '<CR>', 'o' }, toggle = 't', remove = 'd' },
+		breakpoints = { expand = '<2-LeftMouse>', open = { '<CR>', 'o' } },
 	},
 	icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
 	layouts = {
@@ -37,8 +37,6 @@ M.opts = {
 	},
 	floating = { border = 'rounded' },
 	controls = {
-		enabled = true,
-		element = 'repl',
 		icons = {
 			pause = '⏸',
 			play = '▶',
