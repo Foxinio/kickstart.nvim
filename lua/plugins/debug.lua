@@ -3,6 +3,7 @@ local debug = require('plugin-utils.debug')
 M.module = false
 
 M.dependencies = {
+	'Foxinio/nvim-dap-ui',
 	'Foxinio/nvim-dap-extra.nvim',
 	'nvim-telescope/telescope-dap.nvim',
 	'nvim-telescope/telescope.nvim',
@@ -25,7 +26,7 @@ M.keys = {
 	{ '<leader>df', debug.action(debug.cmake_debug_current_file, true), desc = 'Debug: CMake Current File' },
 	{ '<leader>dq', debug.action(function() require('dap').terminate() end), desc = 'Debug: Terminate' },
 	{ '<leader>dR', debug.action(function() require('dap').restart() end), desc = 'Debug: Restart' },
-	{ '<leader>dr', function() require('dap-extra.ui').repl() end, desc = 'Debug: Toggle REPL' },
+	{ '<leader>dr', function() require('dapui').debug_tab.repl() end, desc = 'Debug: Toggle REPL' },
 	{ '<leader>db', debug.action(function() require('dap').list_breakpoints() end), desc = 'Debug: List Breakpoints' },
 	{ '<leader>ds', debug.action(function() require('telescope').extensions.dap.configurations() end), desc = 'Debug: Select Configuration' },
 	{ '<leader>dS', debug.action(function() require('telescope').extensions.dap.frames() end), desc = 'Debug: Select Stack Frame' },
@@ -33,11 +34,11 @@ M.keys = {
 	{ '<leader>dk', debug.action(function() require('dap').up() end), desc = 'Debug: Go up current stacktrace' },
 	{ '<leader>dj', debug.action(function() require('dap').down() end), desc = 'Debug: Go down current stacktrace' },
 	{ '<leader>dK', function() require('dap.ui.widgets').hover() end, desc = 'Debug: Inspect value under cursor' },
-	{ '<leader>dg', function() require('dap-extra.ui').local_frame() end, desc = 'Debug: Show current frame here' },
+	{ '<leader>dg', function() require('dap-extra').local_frame() end, desc = 'Debug: Show current frame here' },
 	{ '<leader>B', function()
 		require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
 	end, desc = 'Debug: Set Breakpoint' },
-	{ '<F7>', function() require('dap-extra.ui').toggle() end, desc = 'Debug: See last session result.' },
+	{ '<F7>', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
 }
 M.opts = {
 	handlers = {},

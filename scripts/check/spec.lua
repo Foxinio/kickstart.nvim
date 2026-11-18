@@ -130,22 +130,24 @@ local ok, err = xpcall(function()
 		assert(open, "search-replace prompt did not open")
 	end)
 
-	check("debugger UI (dap-ui fork + dap-extra)", function()
+	check("debugger UI (dap-ui fork debug tab + dap-extra)", function()
 		load("nvim-dap")
 		local dapui = require("dapui")
-		assert(dapui.source_window, "dap-ui lacks source_window (not the Foxinio fork?)")
-		assert(type(require("dapui.config").select_window) == "function", "dap-extra did not set select_window")
+		assert(dapui.debug_tab and dapui.restore_layout, "dap-ui lacks debug_tab (update the Foxinio fork)")
+		assert(api.nvim_get_commands({}).DapClean, ":DapClean missing")
+		assert(type(require("dap-extra").local_frame) == "function", "dap-extra lacks local_frame (update it)")
 		local buf = api.nvim_get_current_buf()
-		require("dap-extra.ui").open()
+		local editing_tab = api.nvim_get_current_tabpage()
+		dapui.open()
 		vim.wait(300)
-		local win = require("dap-extra.ui").source_window()
+		local in_debug_tab = api.nvim_get_current_tabpage() == dapui.debug_tab.tabpage()
+		local win = dapui.debug_tab.source_window()
 		dapui.source_window.open(buf, 1, 1)
 		local label = vim.wo[win].winbar
-		require("dap-extra.ui").close()
+		dapui.close()
+		api.nvim_set_current_tabpage(editing_tab)
+		assert(in_debug_tab and editing_tab ~= dapui.debug_tab.tabpage(), "panes did not open in the debug tab")
 		assert(label == "DAP Source", "source window label is " .. vim.inspect(label))
-		if not dapui.restore_layout then
-			return "dap-ui has no restore_layout yet (:DapRestoreLayout); update nvim-dap-ui"
-		end
 	end)
 
 	check("treesitter textobjects mapped", function()

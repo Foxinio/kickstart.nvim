@@ -177,7 +177,7 @@ function M.server_address()
 end
 
 function M.action(callback, use_cursor)
-	return function(...) return require('dap-extra.ui').action(callback, use_cursor)(...) end
+	return function(...) return require('dapui').debug_tab.action(callback, { use_cursor = use_cursor })(...) end
 end
 
 function M.setup(opts)

@@ -206,10 +206,10 @@ simulation preparation supplies generated-model debug symbols separately.
 
 The implementation uses nvim-dap-ui's `element_mappings`. Pane opens go to the
 debug source pane through the Foxinio/nvim-dap-ui fork's tracked source window
-(`select_window` returns dap-extra's source window). The fork also removes
+(by default the debug tab's source window). The fork also removes
 disabled breakpoints correctly. Regression checks cover frame selection, source
 routing, condition preservation across toggling and removal of disabled
-breakpoints, in both dap-extra and the fork.
+breakpoints, in the fork's specs.
 
 ### One named DAP Source window
 
@@ -264,7 +264,7 @@ Checked headlessly on Neovim 0.11.7 and 0.12.6:
   first time, and `:split` copies it into the new window. The fork re-applies the
   label on BufWinEnter for the tracked window and clears it from new windows.
 - A closed tracked window is detected; the next navigation falls back to
-  `select_window()` (dap-extra recreates its source window) and tracks that.
+  `select_window()` (the debug tab recreates its source window) and tracks that.
 - User splits and other windows are not policed; only the tracked window is
   labelled and used as the destination.
 - Adapter-provided sources (`sourceReference`) are scratch, nomodifiable and
@@ -277,12 +277,14 @@ Checked headlessly on Neovim 0.11.7 and 0.12.6:
 
 [verilator-dev.nvim](../../external/verilator-dev.nvim/README.md) owns profiles,
 capture/replay, Verilator GDB helpers, regression and AST commands.
-[nvim-dap-extra.nvim](../../external/nvim-dap-extra.nvim/README.md) owns routing,
-panes, generic REPL behavior and cleanup. They are independently usable.
+[nvim-dap-extra.nvim](../../external/nvim-dap-extra.nvim/README.md) owns the
+GDB-style REPL commands and history, stack navigation commands, cppdbg defaults,
+virtual text and signs, and local frame navigation; it needs only nvim-dap.
 The host retains adapters/Mason, languages, global mappings, CMake and Telescope
 DAP pickers. DebugProfile is a host alias for VerilatorDebugProfile.
-Foxinio/nvim-dap-ui owns pane rendering, the tracked source window and its
-label.
+Foxinio/nvim-dap-ui owns pane rendering, the dedicated debug tab, routing of
+pane navigation and stops to the tracked source window and its label, debug
+actions (`debug_tab.action`), `:DapRestoreLayout` and `:DapClean`.
 
 ## Acceptance checks
 
