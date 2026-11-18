@@ -28,12 +28,11 @@ M.init = function()
 	end, { nargs = '*', bang = true, force = true })
 end
 
-M.config = function()
-	require('verilator-dev').setup({
-		wrap_debug_action = function(callback, use_cursor)
-			return require('dapui').debug_tab.action(callback, { use_cursor = use_cursor })
-		end,
-	})
-end
+-- lazy.nvim passes these to require('verilator-dev').setup().
+M.opts = {
+	wrap_debug_action = function(callback, use_cursor)
+		return require('dapui').debug_tab.action(callback, { use_cursor = use_cursor })
+	end,
+}
 
 return M
