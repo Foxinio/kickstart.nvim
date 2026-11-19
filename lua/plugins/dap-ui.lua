@@ -11,8 +11,15 @@ M.dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' }
 M.opts = {
 	source_window = { winbar = 'DAP Source' },
 	element_mappings = {
-		stacks = { expand = '<2-LeftMouse>', open = { '<CR>', 'o' }, toggle = { '<Space>', 't' } },
-		breakpoints = { expand = '<2-LeftMouse>', open = { '<CR>', 'o' } },
+		stacks = {
+			expand = '<2-LeftMouse>',
+			open = { '<CR>', 'o' },
+			toggle = { '<Space>', 't', '<Tab>' }
+		},
+		breakpoints = {
+			expand = '<2-LeftMouse>',
+			open = { '<CR>', 'o' }
+		},
 	},
 	icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
 	layouts = {
