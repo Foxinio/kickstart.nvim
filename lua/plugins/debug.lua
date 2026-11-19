@@ -1,5 +1,7 @@
 local M = { 'mfussenegger/nvim-dap' }
+
 local debug = require('plugin-utils.debug')
+
 M.module = false
 
 M.dependencies = {
@@ -27,7 +29,10 @@ M.keys = {
 	{ '<leader>dq', debug.action(function() require('dap').terminate() end), desc = 'Debug: Terminate' },
 	{ '<leader>dR', debug.action(function() require('dap').restart() end), desc = 'Debug: Restart' },
 	{ '<leader>dr', function() require('dapui').debug_tab.repl() end, desc = 'Debug: Toggle REPL' },
-	{ '<leader>db', debug.action(function() require('dap').list_breakpoints() end), desc = 'Debug: List Breakpoints' },
+	-- Duplicated by <leader>sb; this binding can be removed if needed.
+	{ '<leader>dB', debug.action(function() require('dap').list_breakpoints() end), desc = 'Debug: List Breakpoints' },
+	-- Duplicated by <leader>dB; this binding can be removed if needed.
+	{ '<leader>sb', debug.action(function() require('dap').list_breakpoints() end), desc = 'Debug: List Breakpoints' },
 	{ '<leader>ds', debug.action(function() require('telescope').extensions.dap.configurations() end), desc = 'Debug: Select Configuration' },
 	{ '<leader>dS', debug.action(function() require('telescope').extensions.dap.frames() end), desc = 'Debug: Select Stack Frame' },
 	{ '<leader>dl', debug.action(function() require('dap').run_to_cursor() end, true), desc = 'Debug: Run To Cursor' },
@@ -35,9 +40,15 @@ M.keys = {
 	{ '<leader>dj', debug.action(function() require('dap').down() end), desc = 'Debug: Go down current stacktrace' },
 	{ '<leader>dK', function() require('dap.ui.widgets').hover() end, desc = 'Debug: Inspect value under cursor' },
 	{ '<leader>dg', function() require('dap-extra').local_frame() end, desc = 'Debug: Show current frame here' },
-	{ '<leader>B', function()
+	{ '<leader>dbc', function()
 		require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-	end, desc = 'Debug: Set Breakpoint' },
+	end, desc = 'Debug: Conditional Breakpoint' },
+	{ '<leader>dbn', function()
+		require('dap').set_breakpoint(nil, vim.fn.input 'Breakpoint hit condition: ')
+	end, desc = 'Debug: Hit-count Breakpoint' },
+	{ '<leader>dbl', function()
+		require('dap').set_breakpoint(nil, nil, vim.fn.input 'Log point message: ')
+	end, desc = 'Debug: Logpoint' },
 	{ '<F7>', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
 }
 M.opts = {

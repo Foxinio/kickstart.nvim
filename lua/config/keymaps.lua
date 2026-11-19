@@ -98,7 +98,12 @@ vim.api.nvim_create_user_command("Source", "source " .. vim.fn.stdpath("config")
 vim.api.nvim_create_user_command("CheckPlugins", function(opts)
 	local cmd = { vim.fn.stdpath("config") .. "/scripts/check/run" }
 	if opts.bang then cmd[#cmd + 1] = "--quick" end
-	local task = require("overseer").new_task({ name = "Plugin check", cmd = cmd, cwd = vim.fn.stdpath("config") })
+	local task = require("overseer").new_task({
+		name = "Plugin check",
+		cmd = cmd,
+		cwd = vim.fn.stdpath("config"),
+		env = { NVIM = vim.v.progpath },
+	})
 	task:start()
 	require("overseer").open({ enter = false })
 end, { bang = true, desc = "Check installed plugins before committing lazy-lock.json (! = config checks only)" })
