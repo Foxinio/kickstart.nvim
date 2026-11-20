@@ -11,9 +11,15 @@ M.dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' }
 M.opts = {
 	source_window = { winbar = 'DAP Source' },
 	element_mappings = {
+		watches = {
+			expand = { '<Tab>' },
+			edit = { '<C-e>' },
+			remove = { '<C-d>' },
+		},
 		scopes = {
 			expand = { '<Tab>' },
 			edit = { '<C-e>' },
+			remove = { '<C-d>' },
 		},
 		stacks = {
 			expand = { '<2-LeftMouse>', 'o', },
