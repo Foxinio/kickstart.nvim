@@ -11,17 +11,21 @@ M.dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' }
 M.opts = {
 	source_window = { winbar = 'DAP Source' },
 	element_mappings = {
+		scopes = {
+			expand = { '<Tab>' },
+			edit = { '<C-e>' },
+		},
 		stacks = {
-			expand = '<2-LeftMouse>',
-			open = { '<CR>', 'o' },
-			toggle = { '<Space>', 't', '<Tab>' }
+			expand = { '<2-LeftMouse>', 'o', },
+			open = { '<CR>', },
+			toggle = { '<Tab>', }
 		},
 		breakpoints = {
-			expand = '<2-LeftMouse>',
-			open = { '<CR>', 'o' }
+			expand = { '<2-LeftMouse>', '<Tab>' },
+			open = { '<CR>', 'o' },
+			toggle = { '<C-e>' },
 		},
 	},
-	icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
 	layouts = {
 		{
 			elements = {
@@ -42,22 +46,7 @@ M.opts = {
 			size = 12,
 		},
 	},
-	floating = { border = 'rounded' },
-	controls = {
-		icons = {
-			pause = '⏸',
-			play = '▶',
-			step_into = '⏎',
-			step_over = '⏭',
-			step_out = '⏮',
-			step_back = 'b',
-			run_last = '▶▶',
-			terminate = '⏹',
-			disconnect = '⏏',
-		},
-	},
+	-- floating = { border = 'rounded' },
 }
-
-M.config = function(_, opts) require('dapui').setup(opts) end
 
 return M

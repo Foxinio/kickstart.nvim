@@ -50,6 +50,8 @@ M.keys = {
 		require('dap').set_breakpoint(nil, nil, vim.fn.input 'Log point message: ')
 	end, desc = 'Debug: Logpoint' },
 	{ '<F7>', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
+	{ '<leader>de', function() require('dapui').eval(vim.fn.input 'Expression to evaluate') end, desc = 'Debug: evaluate expression.' },
+	{ '<leader>de', function() require('dapui').eval() end, mode = { 'x' }, desc = 'Debug: Evaluate selection' },
 }
 M.opts = {
 	handlers = {},
