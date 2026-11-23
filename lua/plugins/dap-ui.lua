@@ -29,7 +29,8 @@ M.opts = {
 		breakpoints = {
 			expand = { '<2-LeftMouse>', '<Tab>' },
 			open = { '<CR>', 'o' },
-			toggle = { '<C-e>' },
+			toggle = { '<C-t>' },
+			edit = { '<C-e>' },
 		},
 	},
 	layouts = {
@@ -45,14 +46,13 @@ M.opts = {
 		},
 		{
 			elements = {
-				{ id = 'repl', size = 0.5 },
-				{ id = 'console', size = 0.5 },
+				{ id = 'repl', size = 0.75 },
+				{ id = 'console', size = 0.25 },
 			},
 			position = 'bottom',
 			size = 12,
 		},
 	},
-	-- floating = { border = 'rounded' },
 }
 
 return M
