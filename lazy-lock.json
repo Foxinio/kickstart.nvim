@@ -10,6 +10,7 @@
   "blink-cmp-latex": { "branch": "main", "commit": "4f2910b98dabed17a1667ab806354faa8763098e" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "blink.compat": { "branch": "main", "commit": "2ed6d9a28b07fa6f3bface818470605f8896408c" },
+  "cash.nvim": { "branch": "main", "commit": "029be43c149087b0fa1ffb0850c16163f6c9a1fd" },
   "catppuccin": { "branch": "main", "commit": "edefef779ab08ce1a4a404713e3012b0d202bd35" },
   "claudecode.nvim": { "branch": "main", "commit": "8bcc7bb816750405b624b4a4e05f9ef367715d1e" },
   "cmake-tools.nvim": { "branch": "master", "commit": "782a254c62a61af1d4febddd0d6dbc5ea414a027" },
