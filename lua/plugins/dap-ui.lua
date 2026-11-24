@@ -15,22 +15,26 @@ M.opts = {
 			expand = { '<Tab>' },
 			edit = { '<C-e>' },
 			remove = { '<C-d>' },
+			watch = { '<C-w>' },
 		},
 		scopes = {
 			expand = { '<Tab>' },
 			edit = { '<C-e>' },
 			remove = { '<C-d>' },
+			watch = { '<C-w>' },
 		},
 		stacks = {
 			expand = { '<2-LeftMouse>', 'o', },
 			open = { '<CR>', },
-			toggle = { '<Tab>', }
+			toggle = { '<Tab>', },
+			watch = { '<C-w>' },
 		},
 		breakpoints = {
 			expand = { '<2-LeftMouse>', '<Tab>' },
 			open = { '<CR>', 'o' },
 			toggle = { '<C-t>' },
 			edit = { '<C-e>' },
+			watch = { '<C-w>' },
 		},
 	},
 	layouts = {
@@ -46,8 +50,8 @@ M.opts = {
 		},
 		{
 			elements = {
-				{ id = 'repl', size = 0.75 },
-				{ id = 'console', size = 0.25 },
+				{ id = 'repl', size = 0.25 },
+				{ id = 'console', size = 0.75 },
 			},
 			position = 'bottom',
 			size = 12,

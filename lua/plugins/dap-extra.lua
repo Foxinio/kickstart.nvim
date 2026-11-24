@@ -8,6 +8,6 @@ M.module = false
 
 M.dependencies = { 'mfussenegger/nvim-dap', 'theHamsta/nvim-dap-virtual-text' }
 
-M.config = function(_, opts) require('dap-extra').setup(opts) end
+M.opts = {}
 
 return M
