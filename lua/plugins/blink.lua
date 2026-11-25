@@ -52,8 +52,7 @@ local has_words_before = function()
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-M.opts = {}
-M.opts.cmdline = {
+local cmdline_current = {
 	keymap = {
 		-- This tells blink to use your custom logic instead of the 'cmdline' preset
 		preset = 'super-tab',
@@ -103,6 +102,23 @@ M.opts.cmdline = {
 		},
 	}
 }
+
+local cmdline_completion = require('plugin-utils.blink-cmdline')
+-- Highlight-only variants undo any filled preview when an arrow changes selection.
+-- Arrows highlight only; Tab advances past the highlight.
+local cmdline_highlight_advance = cmdline_completion.config({ insert = false, repeat_selection = false })
+-- Arrows highlight only; Tab fills the highlight before advancing.
+local cmdline_highlight_repeat = cmdline_completion.config({ insert = false, repeat_selection = true })
+-- Arrows fill immediately; Tab advances immediately.
+local cmdline_insert_advance = cmdline_completion.config({ insert = true, repeat_selection = false })
+-- Arrows fill immediately; the next Tab keeps that suggestion.
+local cmdline_insert_repeat = cmdline_completion.config({ insert = true, repeat_selection = true })
+-- Only Tab/Shift-Tab cycle suggestions; Up/Down close the menu and use history.
+local cmdline_tabs_only = cmdline_completion.config({ arrows = false })
+
+M.opts = {}
+-- Assign any of the six tables above, then restart Neovim.
+M.opts.cmdline = cmdline_insert_repeat
 
 M.opts.completion = {
 	keyword = { range = 'prefix' },

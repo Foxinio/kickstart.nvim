@@ -85,6 +85,10 @@ local ok, err = xpcall(function()
 		assert(fallback() == api.nvim_replace_termcodes("<CR>", true, true, true), "Enter fallback broken")
 	end)
 
+	check("Blink command-line completion variants", function()
+		dofile(vim.fn.stdpath('config') .. '/scripts/check/blink-cmdline.lua').run()
+	end)
+
 	check("overseer stays lazy at startup", function()
 		assert(not lazy_plugin("overseer.nvim")._.loaded, "overseer.nvim was loaded during startup")
 	end)
