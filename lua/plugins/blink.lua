@@ -7,6 +7,8 @@ local M = {
 M.version = "1.*"
 M.build = 'cargo build --release'
 M.dependencies = {
+	-- Blink must wrap Cash's command-line Enter mapping as its fallback.
+	"nullromo/cash.nvim",
 	-- Providers
 	"folke/lazydev.nvim",
 	{
