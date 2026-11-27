@@ -113,12 +113,14 @@ local cmdline_highlight_repeat = cmdline_completion.config({ insert = false, rep
 local cmdline_insert_advance = cmdline_completion.config({ insert = true, repeat_selection = false })
 -- Arrows fill immediately; the next Tab keeps that suggestion.
 local cmdline_insert_repeat = cmdline_completion.config({ insert = true, repeat_selection = true })
+-- Preview the first suggestion as ghost text; the first Tab opens and fills it.
+local cmdline_insert_repeat_ghost = cmdline_completion.config({ insert = true, repeat_selection = true, ghost = true })
 -- Only Tab/Shift-Tab cycle suggestions; Up/Down close the menu and use history.
 local cmdline_tabs_only = cmdline_completion.config({ arrows = false })
 
 M.opts = {}
--- Assign any of the six tables above, then restart Neovim.
-M.opts.cmdline = cmdline_insert_repeat
+-- Assign any of the seven tables above, then restart Neovim.
+M.opts.cmdline = cmdline_insert_repeat_ghost
 
 M.opts.completion = {
 	keyword = { range = 'prefix' },

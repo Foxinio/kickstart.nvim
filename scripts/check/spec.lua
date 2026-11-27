@@ -100,6 +100,18 @@ local ok, err = xpcall(function()
 		assert(clangd and clangd.init_options.fallbackFlags[1] == "--std=c++23", "clangd init_options")
 	end)
 
+	check("Fugitive summary mapping and commit signoff", function()
+		vim.cmd.normal({ (vim.g.mapleader or "\\") .. "hh", bang = false })
+		assert(vim.bo.filetype == "fugitive", "<leader>hh did not open the summary")
+		local args = require("nvim-fugitive.config").get().args.commit
+		assert(vim.deep_equal(args, { "--signoff" }), "commit signoff not configured")
+		local commands = api.nvim_get_commands({})
+		for _, name in ipairs({ "Git", "Gdiffsplit", "Gwrite", "Gclog", "FugitivePick" }) do
+			assert(commands[name], ":" .. name .. " missing")
+		end
+		vim.cmd("bwipeout!")
+	end)
+
 	check(":Float opens a float", function()
 		assert(api.nvim_get_commands({}).Float, ":Float missing")
 		vim.cmd("Float echo 'plugin check'")

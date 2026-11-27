@@ -3,7 +3,7 @@ local M = {}
 function M.run()
 	local root = require('lazy.core.config').options.root
 	local config = vim.fn.stdpath('config')
-	for _, variant in ipairs({ 'highlight_advance', 'highlight_repeat', 'insert_advance', 'insert_repeat', 'tabs_only' }) do
+	for _, variant in ipairs({ 'highlight_advance', 'highlight_repeat', 'insert_advance', 'insert_repeat', 'tabs_only', 'insert_repeat_ghost' }) do
 		local channel = vim.fn.jobstart({ vim.v.progpath, '--embed', '--headless', '-u', 'NONE', '-i', 'NONE' }, { rpc = true })
 		assert(channel > 0, 'could not start completion check')
 		local function lua(code, args)
@@ -51,13 +51,49 @@ function M.run()
 					return vim.g.matches or { 'alpha', 'alpine', 'algebra' }
 				end })
 				local opts = { insert = variant:match('^insert') ~= nil,
-					repeat_selection = variant:match('repeat$') ~= nil }
+					repeat_selection = variant:find('repeat', 1, true) ~= nil,
+					ghost = variant == 'insert_repeat_ghost' }
 				if variant == 'tabs_only' then opts.arrows = false end
 				require('blink.cmp').setup({ fuzzy = { implementation = 'lua' },
 					sources = { default = { 'buffer' } },
 					completion = { list = { selection = { preselect = true, auto_insert = false } } },
 					cmdline = require('plugin-utils.blink-cmdline').config(opts) })
 			]], { root, config, variant })
+			if variant == 'insert_repeat_ghost' then
+				keys(':InputCheck al')
+				local s = expect('InputCheck al', 1)
+				assert(not s.visible and #s.items == 3, 'ghost preview opened the menu or lost matches')
+				local items = s.items
+				keys('<Tab>')
+				assert(expect('InputCheck ' .. items[1], 1).visible, 'first Tab did not open and fill')
+				keys('<Down>')
+				expect('InputCheck ' .. items[2], 2)
+				keys('<Tab>')
+				expect('InputCheck ' .. items[2], 2)
+				keys('<Tab>')
+				expect('InputCheck ' .. items[3], 3)
+				keys('<Tab>')
+				expect('InputCheck al', 0)
+				keys('<S-Tab>')
+				expect('InputCheck ' .. items[3], 3)
+				keys('<C-e>')
+				expect('InputCheck al', 0)
+				keys('<C-c>')
+				keys(':InputCheck al')
+				keys('<CR>')
+				assert(vim.deep_equal(state().submitted, { 'al' }), 'Enter accepted unrequested ghost text')
+				keys(':InputCheck al')
+				keys('<Tab>')
+				keys('p')
+				expect('InputCheck ' .. items[1] .. 'p', 0)
+				keys('<BS>')
+				expect('InputCheck ' .. items[1], 0)
+				keys('<Tab>')
+				expect('InputCheck ' .. items[1], 1)
+				keys('<Tab>')
+				expect('InputCheck ' .. items[1], 0)
+				return
+			end
 			local items = open()
 			keys('<Tab>')
 			expect('InputCheck ' .. items[1], 1)

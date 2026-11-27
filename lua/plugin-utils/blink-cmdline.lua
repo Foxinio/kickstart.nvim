@@ -82,7 +82,20 @@ function M.config(opts)
 		keymap = {
 			preset = 'none',
 			['<Tab>'] = { function(cmp)
-				if not cmp.is_menu_visible() then reset(); active = true; return cmp.show() end
+				if not cmp.is_menu_visible() then
+					reset()
+					if opts.ghost then
+						local current = session
+						return cmp.show_and_insert({ callback = function()
+							vim.schedule(function()
+								if current ~= session then return end
+								active, expected = true, vim.fn.getcmdline()
+							end)
+						end })
+					end
+					active = true
+					return cmp.show()
+				end
 				local fill = pending and cmp.get_selected_item_idx() ~= nil
 				reset()
 				change(function()
@@ -118,8 +131,14 @@ function M.config(opts)
 		},
 		completion = {
 			menu = { auto_show = false },
-			ghost_text = { enabled = false },
-			list = { selection = { preselect = false, auto_insert = false } },
+			ghost_text = { enabled = opts.ghost or false },
+			list = { selection = {
+				preselect = opts.ghost and function()
+					local cmp = require('blink.cmp')
+					return not cmp.is_menu_visible() and #cmp.get_items() > 0
+				end or false,
+				auto_insert = opts.ghost or false,
+			} },
 		},
 	}
 end

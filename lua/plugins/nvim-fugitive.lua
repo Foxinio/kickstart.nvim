@@ -1,12 +1,16 @@
-local M = { "Foxinio/nvim-fugitive", }
+local M = { "Foxinio/nvim-fugitive" }
 M.branch = "main"
+M.lazy = false
+M.main = "nvim-fugitive"
 
 M.dependencies = { "nvim-lua/plenary.nvim" }
 
+M.keys = {
+	{ "<leader>hh", "<cmd>Git<CR>", desc = "Git summary" },
+}
 
-M.cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Ghdiffsplit", "Ggrep", "Glgrep",
-	"GMove", "GRename", "GDelete", "GRemove", "GUnlink", "GBrowse",
-	"FugitiveOutput", "FugitiveRestore" }
-M.opts = {} -- optional, see :help fugitive-config
+M.opts = {
+	args = { commit = { "--signoff" } },
+}
 
 return M
